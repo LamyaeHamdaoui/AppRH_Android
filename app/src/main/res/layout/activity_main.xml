@@ -6,100 +6,103 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/user"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:layout_marginTop="60dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Application RH"
+            android:layout_marginTop="20dp"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Connectez-vous pour accédez à votre espace"
+            android:layout_marginTop="20dp"
+            android:textSize="18dp"/>
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/user"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                android:layout_marginTop="60dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Application RH"
-                android:layout_marginTop="20dp"
-                android:textSize="20dp"
-                android:textStyle="bold"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Connectez-vous pour accédez à votre espace"
-                android:layout_marginTop="20dp"
-                android:textSize="18dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="50dp"/>
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="votre.email@exemple.com"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/border"
-                android:padding="10dp"
-                android:textSize="18dp"
-                android:layout_marginTop="15dp"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mot de passe"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="20dp"/>
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="••••••••"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/border"
-                android:layout_marginTop="15dp"
-                android:padding="10dp"
-                android:textSize="18dp"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="Se connecter"
-                android:backgroundTint="@color/blue"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:textColor="#FFFFFF"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="35dp"
-                />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Mot de passe oublié?"
-                    android:backgroundTint="@color/white"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="20dp"
-                    />
-            <Button
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Créer un nouveau compte"
-                android:layout_marginTop="40dp"/>
-            </LinearLayout>
-    </ScrollView>
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="50dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="votre.email@exemple.com"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/border"
+            android:padding="10dp"
+            android:textSize="18dp"
+            android:layout_marginTop="15dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mot de passe"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="••••••••"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/border"
+            android:layout_marginTop="15dp"
+            android:padding="10dp"
+            android:textSize="18dp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Se connecter"
+            android:backgroundTint="@color/blue"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="35dp"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Mot de passe oublié?"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Créer un nouveau compte"
+            android:textSize="20dp"
+            android:background="@drawable/border_blue"
+            android:textColor="@color/blue"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="225dp"
+            app:backgroundTint="@null"
+            />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
