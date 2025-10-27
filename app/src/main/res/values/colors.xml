@@ -9,7 +9,11 @@
     <color name="blue_light">#8FD6FA</color>
     <color name="green_hover">#27B0F5</color>
     <color name="green">##BBE6FC</color>
->
+    <color name="Bleu">#5863C6</color>
+    <color name="Gris">#FDFCFC</color>
+
+
+    >
 
 
 </resources>
