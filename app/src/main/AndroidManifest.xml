@@ -12,9 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
-            android:name=".employeActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
