@@ -70,7 +70,7 @@
                     android:id="@+id/accueil"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/home2" />
+                    android:src="@drawable/home" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -93,7 +93,7 @@
                     android:id="@+id/employes"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/team2" />
+                    android:src="@drawable/employe" />
 
                 <TextView
                     android:id="@+id/textemployee"
