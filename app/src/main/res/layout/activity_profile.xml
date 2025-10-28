@@ -51,128 +51,130 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/bell"/>
-            </LinearLayout>
 
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/accueil"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/home" />
-
-                <TextView
-                    android:id="@+id/textView3"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Accueil"
-                    android:textSize="15dp"
-                    android:textColor="@color/grey"/>
-            </LinearLayout>
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/accueil"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/home2" />
 
-                <ImageView
-                    android:id="@+id/employes"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/employe" />
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Accueil"
+                        android:textColor="@color/grey"
+                        android:textSize="15dp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textemployee"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Employés"
-                    android:textSize="15dp"
-                    android:textColor="@color/grey"/>
-            </LinearLayout>
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/employes"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/team2" />
 
-                <ImageView
-                    android:id="@+id/conge"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/conge" />
+                    <TextView
+                        android:id="@+id/textemployee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Employés"
+                        android:textColor="@color/grey"
+                        android:textSize="15dp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textconge"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Congés"
-                    android:textSize="15dp"
-                    android:textColor="@color/grey"/>
-            </LinearLayout>
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/conge"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/conge" />
 
-                <ImageView
-                    android:id="@+id/reunions"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/reunion" />
+                    <TextView
+                        android:id="@+id/textconge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Congés"
+                        android:textColor="@color/grey"
+                        android:textSize="15dp" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textreunion"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Réunions"
-                    android:textSize="15dp"
-                    android:textColor="@color/grey"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:orientation="vertical">
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/profil"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:maxWidth="30dp"
-                    android:src="@drawable/profil"/>
+                    <ImageView
+                        android:id="@+id/reunions"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/reunion" />
 
-                <TextView
-                    android:id="@+id/textprofil"
+                    <TextView
+                        android:id="@+id/textreunion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Réunions"
+                        android:textColor="@color/grey"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Profil"
-                    android:textSize="15dp"
-                    android:textColor="@color/grey"/>
-            </LinearLayout>
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
+                    <ImageView
+                        android:id="@+id/profil"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:maxWidth="30dp"
+                        android:src="@drawable/profil" />
+
+                    <TextView
+                        android:id="@+id/textprofil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profil"
+                        android:textColor="@color/grey"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
 
