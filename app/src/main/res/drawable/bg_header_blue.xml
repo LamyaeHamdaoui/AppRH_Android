@@ -2,7 +2,7 @@
 <!-- creer un forme rectanguler pour les des differentes header : gestion employées , conjés ... en haut -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
      <!-- couleur de background-->
-    <solid android:color="@color/blue_hover"/>
+    <solid android:color="@color/blue"/>
 
     <!--radius des coins -->
     <corners

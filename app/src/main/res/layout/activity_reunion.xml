@@ -268,26 +268,26 @@
                         </LinearLayout>
 
 
+                        <TextView
+
+                            android:layout_width="346dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left"
+                            android:layout_margin="5dp"
+                            android:gravity="left"
+                            android:text="Dans -7 jours"
+                            android:textAlignment="textStart" />
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-                            <TextView
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-                            <TextView
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -367,7 +367,7 @@
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:maxWidth="30dp"
-                        android:src="@drawable/home2" />
+                        android:src="@drawable/home" />
 
                     <TextView
                         android:id="@+id/textView3"
@@ -389,7 +389,7 @@
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:maxWidth="30dp"
-                        android:src="@drawable/team2" />
+                        android:src="@drawable/employe" />
 
                     <TextView
                         android:id="@+id/textemployee"
