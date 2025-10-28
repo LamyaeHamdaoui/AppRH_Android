@@ -69,6 +69,7 @@
             android:padding="10dp"
             android:textSize="18dp"/>
         <Button
+            android:id="@+id/id"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Se connecter"
