@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- creer un forme rectanguler pour les des differentes header : gestion employées , conjés ... en haut -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+     <!-- couleur de background-->
+    <solid android:color="@color/blue_hover"/>
+
+    <!--radius des coins -->
+    <corners
+        android:bottomLeftRadius="25dp"
+        android:bottomRightRadius="25dp"
+        android:topLeftRadius="25dp"
+        android:topRightRadius="0dp"
+        />
+
+</shape>

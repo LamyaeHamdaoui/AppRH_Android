@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#1E88E5</color>
     <color name="blue_hover">#1976D2</color>
     <color name="red">#FF0000</color>
+    <color name="red_hover">#FF0000</color>
+    <color name="blue_light">#8FD6FA</color>
+    <color name="green_hover">#27B0F5</color>
+    <color name="green">##BBE6FC</color>
+    <color name="Bleu">#5863C6</color>
+    <color name="Gris">#FDFCFC</color>
+
+
+    >
+
+
 </resources>
