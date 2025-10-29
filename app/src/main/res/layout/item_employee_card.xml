@@ -10,9 +10,7 @@
     app:cardBackgroundColor="@color/white"
     android:background="@drawable/border_gris"
     app:backgroundTint="@null"
-
     >
-
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -74,14 +72,7 @@
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/bg_departement_blue"
                 android:padding="5dp"
-
                 />
-
-
         </LinearLayout>
-
-
-
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>
