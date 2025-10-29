@@ -11,7 +11,7 @@
         >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <!-- ******* header ****** -->
             <LinearLayout
@@ -90,14 +90,38 @@
                     />
             </LinearLayout>
 
-            <Button
+            <!-- ****** Ajouter employe ********** -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+ ajouter un employé"
-                android:backgroundTint="@color/blue"
-                android:textSize="15dp"
-                android:textColor="#FFFFFF"
-                android:layout_marginTop="20dp"
+                >
+                <Button
+                    android:id="@+id/btnAddEmploye"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="+ ajouter un employé"
+                    android:backgroundTint="@color/blue"
+                    android:textSize="15dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="20dp"
+                    />
+                <FrameLayout
+                    android:id="@+id/fragmentAddEmployeContainer"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:background="#80000000"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <!-- ****** liste des employées ********** -->
+            <LinearLayout
+                android:id="@+id/itemsEmployeeCardsContainer"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
                 />
 
         </LinearLayout>
