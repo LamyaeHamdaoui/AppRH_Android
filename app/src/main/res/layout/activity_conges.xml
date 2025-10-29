@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".MainActivity2">
+    tools:context=".CongesActivity">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,60 +14,54 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/bg_header_blue"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:paddingBottom="50dp">
+            android:layout_margin="5dp"
+            android:padding="20dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Mon profil"
-                android:textSize="40sp"
-                android:textColor="@color/white"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"/>
+                android:text="Gestion des congés"
+                android:textSize="30sp"
+                android:textColor="@color/white" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Informations personnelles et paramètres"
+                android:text="Validation et suivi des demandes"
                 android:textSize="15sp"
                 android:textColor="@color/white"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="20dp"
                 />
-
         </LinearLayout>
-
     </ScrollView>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/bell"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"/>
-                <TextView
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="17dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@drawable/notification_border"
-                    android:backgroundTint="@color/red"
-                    android:text="0"
-                    android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textAlignment="center"
-                    />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/bell"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"/>
+            <TextView
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="17dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/notification_border"
+                android:backgroundTint="@color/red"
+                android:text="0"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                />
         </RelativeLayout>
-       <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="bottom"
@@ -94,15 +88,6 @@
                     android:textSize="15dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
-           <LinearLayout
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:orientation="vertical">
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-
-           </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -197,4 +182,4 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
