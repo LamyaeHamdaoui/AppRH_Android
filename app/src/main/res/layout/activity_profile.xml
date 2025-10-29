@@ -84,7 +84,7 @@
                     android:id="@+id/accueil"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/home2" />
+                    android:src="@drawable/home" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -98,9 +98,6 @@
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:orientation="vertical">
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
 
            </LinearLayout>
 
@@ -116,7 +113,7 @@
                     android:id="@+id/employes"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/team2" />
+                    android:src="@drawable/employe" />
 
                 <TextView
                     android:id="@+id/textemployee"
