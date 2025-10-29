@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -19,28 +20,29 @@
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/bg_header_blue"
-                android:padding="15dp"
+                android:padding="20dp"
                 android:layout_margin="5dp"
                 >
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gestion des employés"
-                    android:textSize="20sp"
+                    android:textSize="30sp"
                     android:textColor="@color/white"
                     android:gravity="center"
-                    android:textStyle="bold"
-                    android:layout_margin="5dp"
+
                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0 employés actifs"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/white"
                     android:gravity="center"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="10dp"
+
+
                     />
             </LinearLayout>
             <!-- ***** La recherche des employées **** -->
@@ -66,7 +68,7 @@
                         android:background="@drawable/border"
                         android:padding="10dp"
                         android:layout_gravity="center_vertical"
-                        android:paddingStart="30dp"
+                        android:paddingStart="33dp"
                         android:inputType="text"
                         android:textColor="@color/black"
                         />
@@ -76,19 +78,31 @@
                         android:layout_centerVertical="true"
                         android:layout_alignParentStart="true"
                         android:text="🔍"
-                        android:layout_marginStart="5dp"
+                        android:layout_marginStart="6dp"
                         />
                 </RelativeLayout>
+
                 <Spinner
+                    android:id="@+id/spinnerDepartement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:spinnerMode="dropdown"
                     android:background="@drawable/border"
                     android:padding="10dp"
-                    android:layout_margin="5dp"
-                    />
+                    android:layout_margin="8dp"/>
             </LinearLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="+  Ajouter un employé"
+                android:background="@drawable/btn_add"
+                app:backgroundTint="@null"
+                android:layout_margin="5dp"
+                android:textSize="15sp"
+                />
         </LinearLayout>
+
+
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -367,7 +367,7 @@
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:maxWidth="30dp"
-                        android:src="@drawable/home2" />
+                        android:src="@drawable/home" />
 
                     <TextView
                         android:id="@+id/textView3"
@@ -389,7 +389,7 @@
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:maxWidth="30dp"
-                        android:src="@drawable/team2" />
+                        android:src="@drawable/employe" />
 
                     <TextView
                         android:id="@+id/textemployee"
