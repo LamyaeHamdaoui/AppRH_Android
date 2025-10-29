@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
+            android:name=".AttestationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CongesActivity"
+            android:exported="false" />
+        <activity
             android:name=".reunionActivity"
             android:exported="false" />
         <activity
