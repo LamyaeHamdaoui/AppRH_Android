@@ -5,7 +5,6 @@
     <color name="blue">#1E88E5</color>
     <color name="blue_hover">#090DC8</color>
     <color name="red">#FF0000</color>
-    <color name="red_hover">#FF0000</color>
     <color name="blue_light">#8FD6FA</color>
     <color name="green_hover">#27B0F5</color>
     <color name="green">##BBE6FC</color>
@@ -14,5 +13,6 @@
     <color name="blue_light2">#B8D4FF
     </color>
     <color name="grey_clair">#F0F0F0</color>
+    <color name="pink">#FFE4E4</color>
 
 </resources>
