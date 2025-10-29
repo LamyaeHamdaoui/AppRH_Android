@@ -10,6 +10,7 @@
     app:cardBackgroundColor="@color/white"
     android:background="@drawable/border_gris"
     app:backgroundTint="@null"
+
     >
 
     <LinearLayout
@@ -58,7 +59,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Developpeur senior"
+                android:text="ELAAMMARI Oumeyma"
                 android:textSize="11sp"
                 android:textColor="@color/grey"
                 android:layout_marginTop="5dp"
@@ -73,102 +74,13 @@
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/bg_departement_blue"
                 android:padding="5dp"
-                />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="8dp"
-
-
-            >
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/edit"
-                android:layout_marginRight="15dp"
-                />
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/delete"
                 />
 
 
         </LinearLayout>
 
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:orientation="vertical"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="90dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-
-           >
-            <ImageView
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:src="@drawable/mail"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey"
-                android:text="elaammarioumeima@gmail.com"
-                android:layout_marginLeft="10dp"/>
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="9dp"
-         >
-            <ImageView
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:src="@drawable/phone"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey"
-                android:text="06 46 65 31 26"
-                android:layout_marginLeft="10dp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="9dp"
-            >
-
-            <ImageView
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:src="@drawable/conge"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/grey"
-                android:text="embauché le 16/05/2025"
-                android:layout_marginLeft="10dp"/>
-        </LinearLayout>
 
     </LinearLayout>
 
