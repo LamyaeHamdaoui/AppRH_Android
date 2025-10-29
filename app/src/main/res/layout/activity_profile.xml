@@ -9,12 +9,15 @@
     android:background="@color/white">
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_above="@id/footer"
+        android:fillViewport="true"
+        android:layout_marginBottom="100dp">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
             <LinearLayout
+                android:id="@+id/entete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -22,14 +25,15 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:paddingBottom="50dp">
+                android:paddingBottom="60dp"
+                android:layout_alignParentStart="true">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Mon profil"
                     android:textSize="40sp"
                     android:textColor="@color/white"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -38,225 +42,392 @@
                     android:textSize="15sp"
                     android:textColor="@color/white"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
                     />
             </LinearLayout>
+
             <LinearLayout
+                android:id="@+id/profileCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="30dp"
+                android:layout_marginTop="130dp"
                 android:layout_marginRight="30dp"
+                android:background="@drawable/border_gris"
+                android:orientation="vertical"
                 android:padding="10dp"
-                android:background="@drawable/simple_border"
-                app:backgroundTint="@null"
-                >
+                app:backgroundTint="@null">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:baselineAligned="false"
                     android:orientation="horizontal">
+
                     <FrameLayout
-                        android:layout_height="60dp"
                         android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:layout_margin="5dp"
-                        android:layout_weight="1"
-                        >
+                        android:layout_weight="1">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:background="@drawable/bg_circle_blue"
+                            android:gravity="center"
                             android:text="EN"
                             android:textColor="@color/white"
-                            android:background="@drawable/bg_circle_blue"
-                            android:layout_gravity="center"
-                            android:gravity="center"
                             android:textSize="30sp"
-                            android:visibility="visible"
-                            />
+                            android:visibility="visible" />
+
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:background="@drawable/bg_circle_blue"
-                            android:visibility="gone"
                             android:clipToOutline="true"
-                            />
+                            android:visibility="gone" />
                     </FrameLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_weight="10"
-                        android:paddingLeft="30dp"
-                        >
+                        android:orientation="vertical"
+                        android:paddingStart="30dp">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="EL MNIAI Nissrine"
                             android:textSize="20sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
                             android:text="Responsable RH"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp"
+                            tools:ignore="NestedWeights" />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
                             android:text="Ressources Humaines"
-                            android:textSize="15sp"/>
+                            android:textSize="15sp" />
                     </LinearLayout>
 
                 </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/grey"
                     android:layout_marginTop="20dp"
-                    />
+                    android:background="@color/gris_clair" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:src="" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="10"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Email"
-                            android:textStyle="bold"/>
+                            />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="rh@example.com"/>
+                            android:text="rh@example.com"
+                            android:textStyle="bold"/>
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:src="" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="10"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Poste"
-                            android:textStyle="bold"/>
+                             />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Responsable RH"/>
+                            android:text="Responsable RH"
+                            android:textStyle="bold"/>
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="10"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Départements"
-                            android:textStyle="bold"/>
+                            />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Ressources Humaines"/>
+                            android:text="Ressources Humaines"
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="10"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Date d'embauche"
-                            android:textStyle="bold"/>
+                           />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="10 Mars 2020"/>
+                            android:text="10 Mars 2020"
+                            android:textStyle="bold"/>
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/parametres"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profileCard"
+                android:background="@drawable/border_gris"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Paramètres"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="20dp"
+                        android:src="" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:text="Modifier le profil"
+                        android:textSize="20dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="20dp"
+                        android:src="" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:text="Notifications"
+                        android:textSize="20dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_weight="1"
+                        android:src="" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:text="Securité et confidentialité"
+                        android:textSize="20dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_weight="1"
+                        android:src="" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:text="Aide et support"
+                        android:textSize="20dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/sedeconnecter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/parametres"
+                android:background="@drawable/border_redlight"
+                android:layout_margin="20dp">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=" [->  Se déconnecter"
+                    android:background="@drawable/border_red"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
+                    app:backgroundTint="@null"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sedeconnecter"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/appRH"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Application RH v1.0.0"
+                    android:textAlignment="center"/>
+                <TextView
+                    android:id="@+id/copyright"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="© 2025 - Tous droits réservés"
+                    android:textAlignment="center"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
 
     </ScrollView>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/bell"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"/>
-                <TextView
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="17dp"
-                    android:layout_marginTop="7dp"
-                    android:background="@drawable/notification_border"
-                    android:backgroundTint="@color/red"
-                    android:text="0"
-                    android:textSize="15dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:textAlignment="center"
-                    />
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="top|end">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/bell"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"/>
+            <TextView
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="17dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/notification_border"
+                android:backgroundTint="@color/red"
+                android:text="0"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                />
         </RelativeLayout>
-       <LinearLayout
+        <LinearLayout
+            android:id="@+id/footer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:orientation="horizontal"
-           android:padding="5dp">
+            android:background="@color/white"
+            android:elevation="8dp"
+            android:padding="5dp"
+            android:layout_alignParentBottom="true">
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="5dp"
@@ -274,18 +445,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="15dp"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
-           <LinearLayout
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:orientation="vertical">
-
-           </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="5dp"
@@ -303,12 +470,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Employés"
-                    android:textSize="15dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="5dp"
@@ -326,12 +495,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Congés"
-                    android:textSize="15dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="5dp"
@@ -349,11 +520,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Réunions"
-                    android:textSize="15dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="5dp"
@@ -372,7 +545,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profil"
-                    android:textSize="15dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>
