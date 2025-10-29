@@ -3,7 +3,7 @@
     <color name="black">#000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#1E88E5</color>
-    <color name="blue_hover">#1976D2</color>
+    <color name="blue_hover">#090DC8</color>
     <color name="red">#FF0000</color>
     <color name="red_hover">#FF0000</color>
     <color name="blue_light">#8FD6FA</color>
@@ -11,5 +11,7 @@
     <color name="green">##BBE6FC</color>
     <color name="Bleu">#5863C6</color>
     <color name="grey">#737373</color>
+    <color name="blue_light2">#B8D4FF
+    </color>
 
 </resources>
