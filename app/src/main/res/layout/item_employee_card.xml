@@ -5,19 +5,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
     android:layout_margin="5dp"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="15dp"
     app:cardElevation="5dp"
     app:cardBackgroundColor="@color/white"
     android:background="@drawable/border_gris"
     app:backgroundTint="@null"
-
     >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:paddingRight="10dp"
         >
         <FrameLayout
             android:layout_height="60dp"
@@ -52,17 +58,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ELAAMMARI Oumeyma"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textColor="@color/black"
 
                 />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ELAAMMARI Oumeyma"
-                android:textSize="11sp"
+                android:text="Développeur"
+                android:textSize="10sp"
                 android:textColor="@color/grey"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="3dp"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -70,8 +76,8 @@
                 android:text="Développement"
                 android:textSize="10sp"
                 android:textColor="@color/blue_hover"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="3dp"
                 android:background="@drawable/bg_departement_blue"
                 android:padding="5dp"
 
@@ -80,8 +86,129 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+
+            >
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/edit"
+                android:layout_marginRight="15dp"
+                />
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/delete"
+                />
+
+            </LinearLayout>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_marginLeft="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/mail"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="elaammari@gmail.com"
+                    android:textColor="@color/grey_light"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/phone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="06 46 65 31 26"
+                    android:textColor="@color/grey_light"
+                    android:textSize="12sp"
+
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="3dp"
+                android:background="@color/gris_clair" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                >
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/conge"
+                    android:layout_alignParentLeft="true"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:text="embauché le 15/05/2025"
+                    android:textColor="@color/grey_light"
+                    android:textSize="12sp"
+
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="XX jours"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/border_gris"
+                    android:padding="4dp"
+
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
 
     </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

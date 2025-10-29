@@ -8,66 +8,7 @@
     tools:context=".MainActivity"
     android:background="@color/white">
 
-    <!-- header -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="108dp"
-            android:background="@color/Bleu"
-            android:orientation="vertical"
-            >
-
-            <LinearLayout
-                android:layout_width="379dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="317dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:layout_weight="4"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:text="Gestion des réunions"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/white"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:text="Planification et organisation"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/notification"
-                    android:layout_width="49dp"
-                    android:layout_height="39dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:src="@drawable/bell" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!--center de la page -->
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -85,16 +26,47 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/bg_header_blue"
+                        android:padding="15dp"
+                        android:layout_margin="5dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gestion des réunions"
+                            android:textSize="25sp"
+                            android:textColor="@color/white"
+                            android:gravity="center"
+
+                            android:layout_margin="5dp"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Planification et organisation"
+                            android:textSize="13sp"
+                            android:textColor="@color/white"
+                            android:gravity="center"
+                            android:layout_margin="5dp"
+                            />
+                    </LinearLayout>
 
                     <Button
                         android:id="@+id/button"
-                        android:layout_width="356dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="20dp"
-                        android:layout_marginTop="60dp"
-                        android:background="@color/Bleu"
+                        android:layout_marginTop="20dp"
+                        android:backgroundTint="@color/blue"
                         android:text="+ Planifier un reunion" />
+
 
                     <LinearLayout
                         android:layout_width="356dp"
@@ -342,155 +314,176 @@
         </ScrollView>
 
 
-        <!-- footer de la page -->
 
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="top|end">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/bell"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"/>
+            <TextView
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="17dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/notification_border"
+                android:backgroundTint="@color/red"
+                android:text="0"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                />
+        </RelativeLayout>
         <LinearLayout
+            android:id="@+id/footer"
             android:layout_width="match_parent"
-            android:layout_height="85dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
             android:background="@color/white"
-            android:orientation="vertical">
+            android:elevation="8dp"
+            android:padding="5dp"
+            android:layout_alignParentBottom="true">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/accueil"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/home" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accueil"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/employes"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/employe" />
 
-                    <ImageView
-                        android:id="@+id/accueil"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/home" />
+                <TextView
+                    android:id="@+id/textemployee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Employés"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Accueil"
-                        android:textSize="12sp" />
-                </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/conge"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/conge" />
 
-                    <ImageView
-                        android:id="@+id/employee"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/employe" />
+                <TextView
+                    android:id="@+id/textconge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Congés"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/textemployee"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Employée"
-                        android:textSize="12sp" />
-                </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/reunions"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/reunion" />
 
-                    <ImageView
-                        android:id="@+id/presence"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/presence" />
+                <TextView
+                    android:id="@+id/textreunion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Réunions"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textpresence"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Presence"
-                        android:textSize="12sp" />
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/profil"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:maxWidth="30dp"
+                    android:src="@drawable/profil"/>
 
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/conge"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/conge" />
-
-                    <TextView
-                        android:id="@+id/textconge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Congés"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/reunions"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/reunion" />
-
-                    <TextView
-                        android:id="@+id/textreunion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Réunions"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="66dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/attestation"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/attestation" />
-
-                    <TextView
-                        android:id="@+id/textattestation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Attestations"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
+                <TextView
+                    android:id="@+id/textprofil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profil"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>
+    </RelativeLayout>
 
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
