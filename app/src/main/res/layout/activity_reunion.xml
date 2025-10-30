@@ -10,43 +10,52 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_above="@id/footer"
+        android:fillViewport="true"
+        android:layout_marginBottom="100dp">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:layout_height="wrap_content">
+
             <LinearLayout
+                android:id="@+id/entete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/bg_header_blue"
                 android:orientation="vertical"
-                android:padding="20dp">
-
+                android:background="@drawable/bg_header_blue"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="60dp"
+                android:layout_alignParentStart="true">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Gestion des reunions"
+                    android:text="Mon profil"
+                    android:textSize="30sp"
                     android:textColor="@color/white"
-                    android:textSize="30sp" />
-
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Informations personnelles et paramètres"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
                     android:layout_marginTop="10dp"
-                    android:text="Validation et génération des documents"
-                    android:textColor="@color/white"
-                    android:textSize="15sp" />
+                    android:layout_marginStart="20dp"
+                    />
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="540dp"
+                android:layout_height="wrap_content"
                 android:background="#EFECEC"
                 android:gravity="center|top"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="160dp">
 
 
                 <Button
@@ -126,7 +135,7 @@
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"
                                 android:maxWidth="30dp"
-                                android:src="@drawable/calendar" />
+                                android:src="@drawable/employe" />
 
                         </FrameLayout>
 
@@ -191,14 +200,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="28dp"
+                    android:layout_marginRight="92dp"
                     android:text="Réunions à venir"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="356dp"
-                    android:layout_height="196dp"
+                    android:layout_height="226dp"
                     android:layout_gravity="center"
                     android:layout_margin="15dp"
 
@@ -338,7 +347,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 
 
@@ -371,31 +380,21 @@
     </RelativeLayout>
 
 
-
-
-
-
-
-
-
-
-
-
-
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="68dp"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
         android:background="@color/white"
         android:elevation="8dp"
+        android:orientation="horizontal"
         android:padding="5dp">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -410,15 +409,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
-                android:textSize="15dp"
-                android:textColor="@color/grey"/>
+                android:textColor="@color/grey"
+                android:textSize="15dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -433,15 +432,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Employés"
-                android:textSize="15sp"
-                android:textColor="@color/grey"/>
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -456,15 +455,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Congés"
-                android:textSize="15sp"
-                android:textColor="@color/grey"/>
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -479,14 +478,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Réunions"
-                android:textSize="15sp"
-                android:textColor="@color/grey"/>
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -495,15 +495,15 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:maxWidth="30dp"
-                android:src="@drawable/profil"/>
+                android:src="@drawable/profil" />
 
             <TextView
                 android:id="@+id/textprofil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil"
-                android:textSize="15sp"
-                android:textColor="@color/grey"/>
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

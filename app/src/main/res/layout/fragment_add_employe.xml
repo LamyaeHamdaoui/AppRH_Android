@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         >
         <!-- **** titre ***** -->
-        <relativeLayout
-            >
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
