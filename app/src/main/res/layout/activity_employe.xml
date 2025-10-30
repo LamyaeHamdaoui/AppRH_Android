@@ -91,6 +91,7 @@
             </LinearLayout>
 
             <!-- ****** Ajouter employe ********** -->
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,8 +105,8 @@
                     android:textSize="15dp"
                     android:textColor="#FFFFFF"
                     android:layout_marginTop="20dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="7dp"
                     android:layout_marginBottom="20dp"
                     />
                 <FrameLayout
