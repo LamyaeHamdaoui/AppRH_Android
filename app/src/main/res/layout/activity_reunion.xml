@@ -5,14 +5,18 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@color/white">
+    tools:context=".MainActivity">
 
-    
+    <!-- header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="108dp"
-            android:background="@color/Bleu"
+            android:background="@color/blue"
             android:orientation="vertical"
             >
 
@@ -20,7 +24,8 @@
                 android:layout_width="379dp"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@drawable/bg_header_blue">
 
                 <LinearLayout
                     android:layout_width="317dp"
@@ -80,40 +85,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_gravity="center_vertical"
-                        android:background="@drawable/bg_header_blue"
-                        android:padding="15dp"
-                        android:layout_margin="5dp"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Gestion des réunions"
-                            android:textSize="25sp"
-                            android:textColor="@color/white"
-                            android:gravity="center"
-
-                            android:layout_margin="5dp"
-                            />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Planification et organisation"
-                            android:textSize="13sp"
-                            android:textColor="@color/white"
-                            android:gravity="center"
-                            android:layout_margin="5dp"
-                            />
-                    </LinearLayout>
 
                     <Button
                         android:id="@+id/button"
-                        android:layout_width="match_parent"
+                        android:layout_width="356dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="20dp"
@@ -123,15 +98,12 @@
                         android:text="+ Planifier un reunion"
                         app:backgroundTint="@null" />
 
-
-
-
                     <LinearLayout
                         android:layout_width="356dp"
                         android:layout_height="139dp"
                         android:layout_gravity="center"
                         android:layout_margin="15dp"
-                        android:background="@color/white"
+                        android:background="@drawable/border_reunion"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -146,7 +118,7 @@
                                 android:layout_width="58dp"
                                 android:layout_height="53dp"
                                 android:layout_gravity="center"
-                                android:background="#ECD6D9">
+                                android:background="@drawable/border_roseclair">
 
                                 <ImageView
 
@@ -179,17 +151,20 @@
                             android:layout_gravity="center"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
+
                             <FrameLayout
                                 android:layout_width="58dp"
                                 android:layout_height="53dp"
                                 android:layout_gravity="center"
-                                android:background="#D6ECDD">
+                                android:background="@drawable/border_green">
+
                                 <ImageView
                                     android:layout_width="26dp"
                                     android:layout_height="26dp"
                                     android:layout_gravity="center"
                                     android:maxWidth="30dp"
                                     android:src="@drawable/calendar" />
+
                             </FrameLayout>
 
                             <TextView
@@ -218,7 +193,7 @@
                                 android:layout_width="58dp"
                                 android:layout_height="53dp"
                                 android:layout_gravity="center"
-                                android:background="#D6D9EC">
+                                android:background="@drawable/border_blueclair">
 
                                 <ImageView
                                     android:layout_width="26dp"
@@ -263,13 +238,14 @@
                         android:layout_height="196dp"
                         android:layout_gravity="center"
                         android:layout_margin="15dp"
-                        android:background="@color/white"
-                        android:gravity="center"
-                        android:orientation="vertical">
+
+                        android:background="@drawable/border_reunion"
+                        android:orientation="vertical"
+                        android:padding="2dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="37dp">
 
                             <TextView
                                 android:id="@+id/textView9"
@@ -282,16 +258,16 @@
                                 android:textSize="17sp" />
 
                             <ImageView
-                                android:layout_width="19dp"
-                                android:layout_height="19dp"
+                                android:layout_width="14dp"
+                                android:layout_height="13dp"
                                 android:layout_gravity="center"
                                 android:layout_margin="5dp"
                                 android:maxWidth="30dp"
                                 android:src="@drawable/edit" />
 
                             <ImageView
-                                android:layout_width="19dp"
-                                android:layout_height="19dp"
+                                android:layout_width="15dp"
+                                android:layout_height="17dp"
                                 android:layout_gravity="center"
                                 android:layout_margin="5dp"
                                 android:maxWidth="30dp"
@@ -299,158 +275,145 @@
                         </LinearLayout>
 
 
-                        <TextView
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
 
-                            android:layout_width="346dp"
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
-                            android:layout_margin="5dp"
-                            android:gravity="left"
-                            android:text="Dans -7 jours"
-                            android:textAlignment="textStart" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginBottom="5dp">
 
                             <TextView
-
-                                android:layout_width="match_parent"
+                                android:layout_width="96dp"
                                 android:layout_height="wrap_content"
-                                android:text="TextView" />
+                                android:background="@drawable/border_7jours"
+                                android:text="Dans -7 jours"
+                                android:textAlignment="center" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/conges" />
 
                             <TextView
-
-                                android:layout_width="match_parent"
+                                android:layout_width="296dp"
                                 android:layout_height="wrap_content"
-                                android:text="TextView" />
+                                android:layout_weight="12"
+                                android:text="Mardi 21 octobre 2025" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/conges" />
 
                             <TextView
-
-                                android:layout_width="match_parent"
+                                android:layout_width="296dp"
                                 android:layout_height="wrap_content"
-                                android:text="TextView" />
+                                android:layout_weight="12"
+                                android:text="10:30 " />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/conges" />
 
                             <TextView
-
-                                android:layout_width="match_parent"
+                                android:layout_width="296dp"
                                 android:layout_height="wrap_content"
-                                android:text="TextView" />
+                                android:layout_weight="12"
+                                android:text="salle de conference A" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="5dp"
+                                android:layout_weight="1"
+                                android:src="@drawable/conges" />
+
+                            <TextView
+                                android:layout_width="296dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="12"
+                                android:text="10/12 confirmes" />
                         </LinearLayout>
                     </LinearLayout>
 
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal" />
+                </LinearLayout>
             </LinearLayout>
         </ScrollView>
 
 
+        <!-- footer de la page -->
 
-
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="top|end">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/bell"
-                android:layout_gravity="right"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"/>
-            <TextView
-                android:layout_width="25dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="17dp"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/notification_border"
-                android:backgroundTint="@color/red"
-                android:text="0"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:textAlignment="center"
-                />
-        </RelativeLayout>
         <LinearLayout
-            android:id="@+id/footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal"
+            android:layout_height="85dp"
             android:background="@color/white"
-            android:elevation="8dp"
-            android:padding="5dp"
-            android:layout_alignParentBottom="true">
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/accueil"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/home" />
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Accueil"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/grey"/>
-            </LinearLayout>
+            android:orientation="vertical">
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="bottom"
                 android:orientation="horizontal">
-
                 <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -459,139 +422,112 @@
                         android:id="@+id/accueil"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/home" />
-
+                        android:src="@drawable/home2" />
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
-                        android:layout_height="15dp"
+                        android:layout_height="wrap_content"
                         android:text="Accueil"
-                        android:textSize="12sp" />
+                        android:textSize="15dp"
+                        android:textColor="@color/grey"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/employee"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
+                        android:id="@+id/employes"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/team2" />
 
                     <TextView
                         android:id="@+id/textemployee"
                         android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Employée"
-                        android:textSize="12sp" />
+                        android:layout_height="wrap_content"
+                        android:text="Employés"
+                        android:textSize="15dp"
+                        android:textColor="@color/grey"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/presence"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/presence" />
-
-                    <TextView
-                        android:id="@+id/textpresence"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Presence"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/conge"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/conge" />
 
                     <TextView
                         android:id="@+id/textconge"
                         android:layout_width="wrap_content"
-                        android:layout_height="15dp"
+                        android:layout_height="wrap_content"
                         android:text="Congés"
-                        android:textSize="12sp" />
+                        android:textSize="15dp"
+                        android:textColor="@color/grey"/>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/reunions"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/reunion" />
 
                     <TextView
                         android:id="@+id/textreunion"
                         android:layout_width="wrap_content"
-                        android:layout_height="15dp"
+                        android:layout_height="wrap_content"
                         android:text="Réunions"
-                        android:textSize="12sp" />
+                        android:textSize="15dp"
+                        android:textColor="@color/grey"/>
                 </LinearLayout>
-
                 <LinearLayout
-                    android:layout_width="66dp"
-                    android:layout_height="58dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/attestation"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
+                        android:id="@+id/profil"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:maxWidth="30dp"
-                        android:src="@drawable/attestation" />
+                        android:src="@drawable/profil"/>
 
                     <TextView
-                        android:id="@+id/textattestation"
+                        android:id="@+id/textprofil"
                         android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Attestations"
-                        android:textSize="12sp" />
+                        android:layout_height="wrap_content"
+                        android:text="Profil"
+                        android:textSize="15dp"
+                        android:textColor="@color/grey"/>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textprofil"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Profil"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
 
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
