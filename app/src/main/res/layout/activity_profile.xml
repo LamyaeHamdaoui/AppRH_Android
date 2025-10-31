@@ -335,12 +335,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_icon_grey" >
+
                         <ImageView
                             android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_height="18dp"
+                            android:layout_margin="7dp"
                             android:layout_weight="1"
-                            android:src="@drawable/bell"
-                            android:layout_margin="7dp"/>
+                            android:src="@drawable/bell" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
