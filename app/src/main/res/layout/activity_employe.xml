@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
     <ScrollView
         android:layout_height="wrap_content"
@@ -27,7 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gestion des employés"
-                    android:textSize="25sp"
+                    android:textSize="30sp"
                     android:textColor="@color/white"
                     android:gravity="center"
 
@@ -52,13 +53,14 @@
                 android:layout_gravity="center_vertical"
                 android:padding="15dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/border_blue"
+                android:background="@drawable/border_gris"
                 >
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:layout_marginBottom="5dp"
                     >
                     <EditText
                         android:layout_width="match_parent"
@@ -86,7 +88,8 @@
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/border"
                     android:padding="10dp"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="10dp"
+
                     />
             </LinearLayout>
 
@@ -101,10 +104,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="+ ajouter un employé"
-                    android:backgroundTint="@color/blue"
-                    android:textSize="15dp"
+                    android:background="@drawable/border_button"
+                    app:backgroundTint="@null"
+                    android:textSize="16dp"
                     android:textColor="#FFFFFF"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="7dp"
                     android:layout_marginRight="7dp"
                     android:layout_marginBottom="20dp"
@@ -115,15 +119,60 @@
                     android:layout_width="match_parent"
                     android:background="#80000000"
                     android:visibility="gone"/>
+
+                <FrameLayout
+                    android:id="@+id/fragmentEditEmployeContainer"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:background="#80000000"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
-            <!-- ****** liste des employées ********** -->
+            <!-- ****** cadrtes liste des employées ********** -->
             <LinearLayout
                 android:id="@+id/itemsEmployeeCardsContainer"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:orientation="vertical"
                 />
+
+            <!--- ******* no employé trouvé container *******  -->
+            <LinearLayout
+                android:id="@+id/noEmployeeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="40dp"
+                android:visibility="gone"
+                android:background="@drawable/border_gris"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/employe"
+                    android:layout_marginBottom="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Aucun employé trouvé"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Essayez d'autres critères de recherche"
+                    android:textSize="13sp"
+                    android:textColor="@color/grey"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
@@ -186,8 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
+                    android:textSize="15dp"
                     android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
@@ -211,8 +259,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Employés"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
@@ -236,8 +283,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Congés"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
@@ -261,8 +307,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Réunions"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
@@ -286,8 +331,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profil"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
