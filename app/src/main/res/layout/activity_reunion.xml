@@ -402,6 +402,119 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- les ruenions passees  -->
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:layout_margin="25dp">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reunions passees"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginLeft="30dp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/container"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border"
+                        app:layout_constraintTop_toBottomOf="@id/title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="8dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginRight="30dp"
+                        android:layout_marginTop="10dp"
+
+                        >
+
+                        <TextView
+                            android:id="@+id/soustitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bilan mensuel"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/statut"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="terminer"
+                            app:layout_constraintStart_toEndOf="@id/soustitle"
+                            app:layout_constraintTop_toTopOf="@id/soustitle"
+                            android:layout_marginStart="180dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mercredi 12 Octobre 2024 - 11:30"
+                            app:layout_constraintTop_toBottomOf="@+id/statut"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+
+                        <ImageView
+                            android:id="@+id/iconDate"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="3dp"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            android:src="@drawable/conges"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+                        <TextView
+                            android:id="@+id/salletxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Salle de conférence B"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            app:layout_constraintStart_toEndOf="@+id/iconDate"
+                            android:layout_marginLeft="8dp"
+
+                            />
+
+                        <ImageView
+                            android:id="@+id/iconParticip"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="15dp"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            android:src="@drawable/calendar"
+                            app:layout_constraintStart_toEndOf="@id/salletxt"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/participtxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" 15 participants"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            app:layout_constraintStart_toEndOf="@+id/iconParticip"
+                            android:layout_marginLeft="3dp"
+
+                            />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
