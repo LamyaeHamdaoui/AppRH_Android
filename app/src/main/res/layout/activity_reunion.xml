@@ -98,7 +98,7 @@
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"
                                 android:maxWidth="30dp"
-                                android:src="@drawable/calendar" />
+                                android:src="@drawable/conge" />
 
                         </FrameLayout>
 
@@ -172,7 +172,7 @@
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"
                                 android:maxWidth="30dp"
-                                android:src="@drawable/calendar" />
+                                android:src="@drawable/time" />
 
                         </FrameLayout>
 
@@ -207,7 +207,7 @@
 
                 <LinearLayout
                     android:layout_width="356dp"
-                    android:layout_height="226dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="15dp"
 
@@ -224,7 +224,7 @@
                             android:layout_width="269dp"
                             android:layout_height="33dp"
                             android:layout_margin="5dp"
-                            android:gravity="center"
+
                             android:text="Réunion d'équipe hebdomadaire"
                             android:textAlignment="textStart"
                             android:textSize="17sp" />
@@ -258,14 +258,16 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/border_7jours"
                             android:text="Dans -7 jours"
-                            android:textAlignment="center" />
+                            android:textAlignment="center"
+                            android:padding="4dp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -286,7 +288,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -307,7 +310,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -315,20 +319,22 @@
                             android:layout_gravity="center"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/conges" />
+                            android:src="@drawable/calendar" />
 
                         <TextView
                             android:layout_width="296dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="12"
-                            android:text="salle de conference A" />
+                            android:text="salle de conference A"
+                            />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -343,6 +349,56 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="12"
                             android:text="10/12 confirmes" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/gris_clair"
+                        android:layout_margin="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Point hebdomadaire sur l'avancement des projets"
+                        android:layout_marginLeft="6dp"
+                        android:textStyle="italic"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/gris_clair"
+                        android:layout_margin="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="8dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Développement"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_vide"
+                            android:textAlignment="center"
+                            android:padding="3dp"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Par Jean Martin"
+                            android:layout_weight="1"
+                            android:textAlignment="viewEnd"
+                            android:layout_marginRight="8dp"
+                            />
+
+
                     </LinearLayout>
                 </LinearLayout>
 
