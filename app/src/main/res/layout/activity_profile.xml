@@ -311,10 +311,10 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_icon_grey" >
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_weight="1"
-                            android:src="@drawable/modifier"
+                            android:src="@drawable/editGris"
                             android:layout_margin="7dp"/>
                     </LinearLayout>
                     <TextView
@@ -337,8 +337,8 @@
                         android:background="@drawable/border_icon_grey" >
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_margin="7dp"
                             android:layout_weight="1"
                             android:src="@drawable/bell" />
@@ -359,8 +359,8 @@
                     android:orientation="horizontal"
                     android:layout_margin="10dp">
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginStart="20dp"
                         android:layout_weight="1"
                         android:src="" />
@@ -379,11 +379,11 @@
                     android:orientation="horizontal"
                     android:layout_margin="10dp">
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginStart="20dp"
                         android:layout_weight="1"
-                        android:src="" />
+                        android:src="@drawable/aide" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
