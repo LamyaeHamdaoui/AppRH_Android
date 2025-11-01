@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
+            android:name=".CongesEmploye"
+            android:exported="false" />
+        <activity
             android:name=".ValidationEmailActivity"
             android:exported="false" />
         <activity
