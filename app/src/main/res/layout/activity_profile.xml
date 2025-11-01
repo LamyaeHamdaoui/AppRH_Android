@@ -53,7 +53,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="130dp"
                 android:layout_marginRight="30dp"
-                android:background="@drawable/border_gris"
+                android:background="@drawable/card_shadow"
                 android:orientation="vertical"
                 android:padding="10dp"
                 app:backgroundTint="@null">
@@ -287,7 +287,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profileCard"
-                android:background="@drawable/border_gris"
+                android:background="@drawable/card_shadow"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
@@ -311,10 +311,10 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_icon_grey" >
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_weight="1"
-                            android:src="@drawable/modifier"
+                            android:src="@drawable/editGris"
                             android:layout_margin="7dp"/>
                     </LinearLayout>
                     <TextView
@@ -337,8 +337,8 @@
                         android:background="@drawable/border_icon_grey" >
 
                         <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="18dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_margin="7dp"
                             android:layout_weight="1"
                             android:src="@drawable/bell" />
@@ -358,12 +358,17 @@
                     android:layout_marginTop="20dp"
                     android:orientation="horizontal"
                     android:layout_margin="10dp">
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_weight="1"
-                        android:src="" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_icon_grey" >
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/securite"
+                            android:layout_margin="7dp"/>
+                    </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -378,12 +383,17 @@
                     android:layout_marginTop="20dp"
                     android:orientation="horizontal"
                     android:layout_margin="10dp">
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_weight="1"
-                        android:src="" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_icon_grey" >
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/aide"
+                            android:layout_margin="7dp"/>
+                    </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
