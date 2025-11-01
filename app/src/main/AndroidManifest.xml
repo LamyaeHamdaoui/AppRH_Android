@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
+            android:name=".ForgottenPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateAccActivity"
+            android:exported="false" />
+        <activity
             android:name=".AttestationsActivity"
             android:exported="false" />
         <activity
