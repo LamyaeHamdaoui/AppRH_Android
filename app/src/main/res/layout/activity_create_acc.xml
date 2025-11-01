@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateAccActivity">
+    tools:context=".CreateAccActivity"
+    android:background="#F5F5F5">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,18 +14,13 @@
         android:layout_margin="15dp">
 
         <TextView
-            android:id="@+id/retour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="<-"
-            android:textSize="40sp" />
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Créer un nouveau compte"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
