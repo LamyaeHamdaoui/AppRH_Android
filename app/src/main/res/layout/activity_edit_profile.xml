@@ -27,9 +27,9 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivProfilePhoto"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:src="@drawable/profil"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/user"
                     app:civ_border_width="3dp"
                     app:civ_border_color="#2196F3"/>
 
@@ -76,7 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="Entrez votre prénom"
-                    android:background="@drawable/border_gris"
+                    android:background="@drawable/border"
                     android:padding="15dp"
                     android:textSize="16sp"
                     android:layout_marginBottom="12dp" />
@@ -95,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="Entrez votre nom"
-                    android:background="@drawable/border_gris"
+                    android:background="@drawable/border"
                     android:padding="15dp"
                     android:textSize="16sp"
                     android:layout_marginBottom="12dp" />
@@ -115,7 +115,7 @@
                     android:layout_height="50dp"
                     android:hint="votre.email@example.com"
                     android:inputType="textEmailAddress"
-                    android:background="@drawable/border_gris"
+                    android:background="@drawable/border"
                     android:padding="15dp"
                     android:textSize="16sp"
                     android:layout_marginBottom="12dp" />
@@ -135,7 +135,7 @@
                     android:layout_height="50dp"
                     android:hint="+212 6 23 45 67 89"
                     android:inputType="phone"
-                    android:background="@drawable/border_gris"
+                    android:background="@drawable/border"
                     android:padding="15dp"
                     android:textSize="16sp" />
 
@@ -173,7 +173,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="Votre poste"
-                    android:background="@drawable/border_gris"
+                    android:background="@drawable/border"
                     android:padding="15dp"
                     android:textSize="16sp"
                     android:layout_marginBottom="12dp" />
@@ -192,7 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="Votre département"
-                    android:background="@drawable/border_gris"
+                    android:background="@drawable/border"
                     android:padding="15dp"
                     android:textSize="16sp"
                     android:layout_marginBottom="12dp" />
@@ -212,7 +212,7 @@
                     android:layout_height="50dp"
                     android:hint="JJ/MM/AAAA"
                     android:inputType="date"
-                    android:background="@drawable/border_gris"
+                    android:background="@drawable/border"
                     android:padding="15dp"
                     android:textSize="16sp" />
 
@@ -232,7 +232,7 @@
                     android:layout_weight="1"
                     android:text="Annuler"
                     android:textColor="#666666"
-                    android:background="@drawable/border_gris"
+                    android:background="@drawable/border"
                     android:layout_marginEnd="8dp"
                     app:backgroundTint="@null"/>
 
