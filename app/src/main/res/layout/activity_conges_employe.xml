@@ -17,7 +17,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <!-- ***** header ****** -->
@@ -40,7 +40,7 @@
                     android:id="@+id/soldeCongeHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Solde disponible : 25 jours"
+                    android:text="Solde disponible : 30 jours"
                     android:textSize="15sp"
                     android:textColor="@color/white"
                     android:layout_marginTop="10dp" />
@@ -50,19 +50,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:background="@drawable/border_blue"
                 android:layout_margin="10dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
                 android:paddingLeft="25dp"
-                android:paddingRight="25dp">
+                android:paddingRight="25dp"
+
+
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_weight="1"
                     >
 
                     <LinearLayout
@@ -97,15 +99,175 @@
 
 
                     </LinearLayout>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
 
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:src="@drawable/conge_blanc"
+                        android:background="@drawable/bg_rectangle_blue"
+                        android:padding="15dp"
+                        android:layout_gravity="center_vertical"
+                        />
+
+
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:text="+  Nouvell demande"
+                    android:background="@drawable/border_button"
+                    android:layout_marginTop="10dp"
+                    app:backgroundTint="@null"
+                    />
+
+            </LinearLayout>
+
+            <!-- *** barre attente refuse approuve *** -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+               android:layout_margin="10dp"
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="15dp"
+                    android:paddingRight="20dp"
+                    android:paddingLeft="20dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/border_gris"
+                    android:layout_margin="10dp"
+                    
+                    >
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        app:backgroundTint="@null"
-                        android:background="@drawable/bg_carre_blue"
-                        android:padding="40dp"
-                        android:src="@drawable/conge_blanc"
-                        android:layout_gravity="end|center_vertical"/>
+                        android:background="@drawable/bg_orange_icones"
+                        android:src="@drawable/enAttente"
+                        android:padding="12dp"
+                        android:layout_gravity="center_horizontal"
+                        />
+                    <TextView
+                        android:id="@+id/congeAttente"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:textSize="25sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/black"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="En attente"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/grey"
+                        android:textSize="15sp"
+                        />
+
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="15dp"
+                    android:paddingRight="20dp"
+                    android:paddingLeft="20dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/border_gris"
+                  android:layout_margin="10dp"
+                    >
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_icon_green"
+                        android:src="@drawable/approuve"
+                        android:padding="12dp"
+                        android:layout_gravity="center_horizontal"
+
+                        />
+                    <TextView
+                        android:id="@+id/congeApprouve"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        android:textSize="25sp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/black"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Approuvés"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/grey"
+                        android:textSize="15sp"
+                        />
+
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="15dp"
+                    android:paddingRight="20dp"
+                    android:paddingLeft="20dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/border_gris"
+                    android:layout_margin="10dp"
+                    >
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_icon_blue"
+                        android:src="@drawable/conge_blue"
+                        android:padding="12dp"
+                        android:layout_gravity="center_horizontal"
+                        />
+
+                    <TextView
+                        android:id="@+id/congePris"
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:text="1"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="25sp"
+                         />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="     Pris     "
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@color/grey"
+                        android:textSize="15sp"
+                        />
 
 
 
@@ -116,88 +278,25 @@
 
 
 
-
             </LinearLayout>
 
-            <!-- *** barre attente refuse approuve *** -->
             <LinearLayout
+                android:id="@+id/historiqueContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/border_button"
-                android:backgroundTint="#DEDEDE"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:background="@drawable/border_gris"
+                android:layout_margin="10dp"
                 >
-                <Button
-                    android:layout_height="35dp"
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/border_gris"
-                    android:text="En attente"
-                    app:backgroundTint="@null"
-                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:text="Historique des demandes"
                     android:textStyle="bold"
-                    android:backgroundTint="@color/white"
-                    android:layout_margin="2dp"
+                    android:textSize="16sp"
                     />
-                <Button
-                    android:layout_height="35dp"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Approuvés"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    />
-                <Button
-                    android:layout_height="35dp"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Refusés"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    />
-
-
             </LinearLayout>
-
-            <!-- **** En attente Container **** -->
-            <LinearLayout
-                android:id="@+id/viewCongeAttente"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible"
-                android:padding="10dp"
-                />
-
-            <!-- **** Approuvés Container **** -->
-            <LinearLayout
-                android:id="@+id/viewCongeApprouve"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:padding="10dp"
-                />
-
-            <!-- **** Refusés Container **** -->
-            <LinearLayout
-                android:id="@+id/viewCongeRefuse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:padding="10dp"
-                />
-
-
         </LinearLayout>
     </ScrollView>
 
@@ -257,7 +356,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textColor="@color/grey"/>
         </LinearLayout>
 
