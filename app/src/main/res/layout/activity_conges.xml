@@ -110,8 +110,8 @@
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
-
                         />
+
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -195,8 +195,47 @@
             </LinearLayout>
 
             <!-- *** barre attente refuse approuve *** -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:backgroundTint="@color/gris_clair"
+                android:layout_margin="10dp"
+
+                >
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_gris"
+                    android:text="En attente"
+                    app:backgroundTint="@null"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    />
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#DFDFED"
+                    android:text="Approuvés"
+                    app:backgroundTint="@null"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    />
+                <Button
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Refusés"
+                    android:textColor="@color/black"
+                    android:background="#DFDFED"
+                    app:backgroundTint="@null"
+                    android:textStyle="bold"
+                    />
 
 
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
