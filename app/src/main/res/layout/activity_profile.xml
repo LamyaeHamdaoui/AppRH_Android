@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         android:layout_above="@id/footer"
         android:fillViewport="true"
-        android:layout_marginBottom="100dp">
+        android:layout_marginBottom="100dp"
+        android:padding="5dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -22,9 +23,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/bg_header_blue"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
                 android:paddingBottom="60dp"
                 android:layout_alignParentStart="true">
                 <TextView
@@ -315,7 +313,8 @@
                             android:layout_height="20dp"
                             android:layout_weight="1"
                             android:src="@drawable/editGris"
-                            android:layout_margin="7dp"/>
+                            android:layout_margin="7dp"
+                            android:linksClickable="true"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
@@ -323,7 +322,14 @@
                         android:layout_weight="10"
                         android:text="Modifier le profil"
                         android:textSize="20dp"
-                        android:layout_marginStart="15dp"/>
+                        android:layout_marginStart="15dp"
+                        android:linksClickable="true"/>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="#666666"
+                        android:linksClickable="true"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -341,7 +347,8 @@
                             android:layout_height="20dp"
                             android:layout_margin="7dp"
                             android:layout_weight="1"
-                            android:src="@drawable/bell" />
+                            android:src="@drawable/bell"
+                            android:linksClickable="true"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
@@ -350,7 +357,14 @@
                         android:text="Notifications"
                         android:textSize="20dp"
                         android:layout_marginStart="15dp"
+                        android:linksClickable="true"
                         />
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="#666666"
+                        android:linksClickable="true"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -367,7 +381,8 @@
                             android:layout_height="20dp"
                             android:layout_weight="1"
                             android:src="@drawable/securite"
-                            android:layout_margin="7dp"/>
+                            android:layout_margin="7dp"
+                            android:linksClickable="true"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
@@ -375,7 +390,14 @@
                         android:layout_weight="10"
                         android:text="Securité et confidentialité"
                         android:textSize="20dp"
-                        android:layout_marginStart="15dp"/>
+                        android:layout_marginStart="15dp"
+                        android:linksClickable="true"/>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="#666666"
+                        android:linksClickable="true"/>
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -392,7 +414,8 @@
                             android:layout_height="20dp"
                             android:layout_weight="1"
                             android:src="@drawable/aide"
-                            android:layout_margin="7dp"/>
+                            android:layout_margin="7dp"
+                            android:linksClickable="true"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
@@ -400,7 +423,14 @@
                         android:layout_weight="10"
                         android:text="Aide et support"
                         android:textSize="20dp"
-                        android:layout_marginStart="15dp"/>
+                        android:layout_marginStart="15dp"
+                        android:linksClickable="true"/>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="#666666"
+                        android:linksClickable="true"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -409,7 +439,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/parametres"
                 android:background="@drawable/border_redlight"
-                android:layout_margin="20dp">
+                android:layout_margin="25dp">
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -443,7 +473,6 @@
                     />
             </LinearLayout>
         </RelativeLayout>
-
     </ScrollView>
     <RelativeLayout
         android:layout_width="match_parent"
