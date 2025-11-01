@@ -20,44 +20,44 @@
         android:paddingRight="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/border_gris">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-        <!-- Type de congé -->
-        <TextView
-            android:id="@+id/TypeConge"
-            android:layout_width="wrap_content"
+        android:background="@drawable/border_orangelight">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Congé payé"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:layout_marginTop="5dp"
-           />
-    <Space
-        android:layout_weight="1"
-        android:layout_height="0dp"
-        android:layout_width="0dp"
-        />
+            android:orientation="horizontal">
+            <!-- Type de congé -->
+            <TextView
+                android:id="@+id/TypeConge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Congé payé"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                />
+            <Space
+                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_width="0dp"
+                />
 
-        <!-- Statut aligné à droite -->
-        <TextView
-            android:id="@+id/StatutConge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="En attente"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@color/orange"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:background="@drawable/border_orange"
-            android:layout_marginRight="10dp"
-            />
-    </LinearLayout>
+            <!-- Statut aligné à droite -->
+            <TextView
+                android:id="@+id/StatutConge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="En attente"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/orange"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:background="@drawable/border_orange"
+                android:layout_marginRight="10dp"
+                />
+        </LinearLayout>
         <!-- Dates -->
         <TextView
             android:id="@+id/DatesConge"
