@@ -417,7 +417,7 @@
                         android:text="Reunions passees"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="25dp"
                         android:textStyle="bold"
                         android:layout_marginTop="10dp"
                         />
@@ -431,9 +431,12 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:padding="8dp"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+
 
                         >
 
@@ -452,7 +455,7 @@
                             android:text="terminer"
                             app:layout_constraintStart_toEndOf="@id/soustitle"
                             app:layout_constraintTop_toTopOf="@id/soustitle"
-                            android:layout_marginStart="180dp"
+                            android:layout_marginStart="150dp"
                             />
 
                         <TextView
@@ -508,6 +511,100 @@
 
                             />
 
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/container2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border"
+                        app:layout_constraintTop_toBottomOf="@id/container"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="8dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+
+
+                        >
+
+                        <TextView
+                            android:id="@+id/soustitle2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bilan mensuel"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/statut2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="terminer"
+                            app:layout_constraintStart_toEndOf="@id/soustitle2"
+                            app:layout_constraintTop_toTopOf="@id/soustitle2"
+                            android:layout_marginStart="150dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/date2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mercredi 12 Octobre 2024 - 11:30"
+                            app:layout_constraintTop_toBottomOf="@+id/statut2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+
+                        <ImageView
+                            android:id="@+id/iconDate2"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="3dp"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            android:src="@drawable/conges"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+                        <TextView
+                            android:id="@+id/salletxt2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Salle de conférence B"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            app:layout_constraintStart_toEndOf="@+id/iconDate2"
+                            android:layout_marginLeft="8dp"
+
+                            />
+
+                        <ImageView
+                            android:id="@+id/iconParticip2"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="15dp"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            android:src="@drawable/calendar"
+                            app:layout_constraintStart_toEndOf="@id/salletxt2"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/participtxt2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" 15 participants"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            app:layout_constraintStart_toEndOf="@+id/iconParticip2"
+                            android:layout_marginLeft="3dp"
+
+                            />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
