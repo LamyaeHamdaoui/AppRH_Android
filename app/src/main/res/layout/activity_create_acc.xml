@@ -36,8 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="NOM"
-                android:background="@drawable/border_gris"
-                android:padding="7dp"
+                android:background="@drawable/border"
+                android:padding="15dp"
                 android:layout_marginEnd="5dp"
                 />
             <EditText
@@ -45,8 +45,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Prénom"
-                android:background="@drawable/border_gris"
-                android:padding="7dp"
+                android:background="@drawable/border"
+                android:padding="15dp"
                 android:layout_marginStart="5dp"/>
         </LinearLayout>
         <LinearLayout
@@ -61,12 +61,15 @@
                 android:text="Date de naissance:"
                 android:textSize="15sp"
                 android:textStyle="bold"/>
-            <DatePicker
+            <EditText
+                android:id="@+id/etHireDate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:datePickerMode="spinner"
-                android:calendarViewShown="false"
-                />
+                android:layout_height="50dp"
+                android:hint="JJ/MM/AAAA"
+                android:inputType="date"
+                android:background="@drawable/border"
+                android:padding="15dp"
+                android:textSize="16sp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,23 +105,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Adresse email"
-                android:background="@drawable/border_gris"
-                android:padding="10dp"
+                android:background="@drawable/border"
+                android:padding="15dp"
                 android:layout_marginTop="15dp"
                 />
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mot de passe"
-                android:background="@drawable/border_gris"
-                android:padding="10dp"
+                android:background="@drawable/border"
+                android:padding="15dp"
                 android:layout_marginTop="15dp"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Retapez le mot de passe"
-                android:background="@drawable/border_gris"
-                android:padding="10dp"
+                android:background="@drawable/border"
+                android:padding="15dp"
                 android:layout_marginTop="15dp"/>
         </LinearLayout>
         <Button

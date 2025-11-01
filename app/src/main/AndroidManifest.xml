@@ -12,6 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
+            android:name=".ValidationEmailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RecuperationPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".VerificationCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ForgottenPasswordActivity"
             android:exported="false" />
         <activity
