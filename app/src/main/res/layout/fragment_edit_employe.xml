@@ -17,7 +17,7 @@
             android:id="@+id/titreAddEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nouvel employé"
+            android:text="Modifier l'employé"
             android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="18sp"
@@ -30,11 +30,11 @@
             android:id="@+id/remplissez"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Remplissez les informations de l'employé"
+            android:text="Modifier les informations de l'employé"
             android:textColor="@color/grey"
             android:gravity="center"
             android:layout_marginBottom="30dp"
-                />
+            />
         <!-- Nom complet -->
         <TextView
             android:layout_width="match_parent"
@@ -119,25 +119,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="6dp"/>
 
-        <!-- Date d'embauche -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Date d'embauche *"
-            android:textStyle="bold"
-            android:layout_marginBottom="5dp" />
 
-        <EditText
-            android:id="@+id/dateEmbaucheEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="jj/mm/aaaa"
-            android:inputType="date"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/border"
-            android:padding="5dp"/>
 
         <!-- Solde de congés -->
         <TextView
@@ -164,19 +148,44 @@
             android:background="#E0E0E0"
             android:layout_marginBottom="20dp" />
 
-        <!-- Section Ajuster l'employé -->
+        <!-- Section Enregistrer ou annuler l'employé -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+           >
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ajouter l'employé"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@null"
-            android:textSize="15dp"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/border_button"
-          app:backgroundTint="@null"
+            android:text="Annuler"
+
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:textStyle="bold"
+            android:background="@drawable/border_gris"
+            app:backgroundTint="@null"
 
             />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Enregistrer"
+                android:layout_marginBottom="20dp"
+                android:textSize="15dp"
+                android:textColor="#FFFFFF"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:textStyle="bold"
+                android:background="@drawable/border_button"
+                app:backgroundTint="@null"
+
+                />
+
+
+        </LinearLayout>
         <!-- Vous pouvez ajouter ici les contrôles pour ajuster l'employé -->
 
     </LinearLayout>
