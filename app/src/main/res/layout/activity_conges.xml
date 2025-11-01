@@ -72,9 +72,10 @@
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/nbreTotalConge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5"
+                        android:text="0"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp" />
@@ -104,9 +105,10 @@
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/nbreAttenteConge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
@@ -138,9 +140,10 @@
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/nbreApprouveConge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
@@ -172,19 +175,20 @@
                         android:padding="6dp" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/nbreRefuseConge"
+                        android:layout_width="7dp"
                         android:layout_height="wrap_content"
-                        android:text="1"
-                        android:textStyle="bold"
                         android:layout_marginTop="7dp"
+                        android:text="0"
                         android:textSize="15sp"
+                        android:textStyle="bold"
 
                         />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Approuvés"
+                        android:text="Refusés"
                         android:textColor="@color/grey_light"
                         android:textSize="12sp"
 
@@ -199,12 +203,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:backgroundTint="@color/gris_clair"
-                android:layout_margin="10dp"
-
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/border_button"
+                android:backgroundTint="#DEDEDE"
                 >
                 <Button
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/border_gris"
@@ -212,30 +219,63 @@
                     app:backgroundTint="@null"
                     android:textColor="@color/black"
                     android:textStyle="bold"
+                    android:backgroundTint="@color/white"
+                    android:layout_margin="2dp"
                     />
                 <Button
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
-                    android:background="#DFDFED"
                     android:text="Approuvés"
-                    app:backgroundTint="@null"
                     android:textColor="@color/black"
                     android:textStyle="bold"
+                    android:backgroundTint="#DEDEDE"
+                    android:layout_margin="2dp"
                     />
                 <Button
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_width="wrap_content"
                     android:layout_weight="1"
                     android:text="Refusés"
                     android:textColor="@color/black"
-                    android:background="#DFDFED"
-                    app:backgroundTint="@null"
                     android:textStyle="bold"
+                    android:backgroundTint="#DEDEDE"
+                    android:layout_margin="2dp"
                     />
 
 
             </LinearLayout>
+
+            <!-- **** En attente Container **** -->
+        <LinearLayout
+            android:id="@+id/viewCongeAttente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:padding="10dp"
+            />
+
+            <!-- **** Approuvés Container **** -->
+            <LinearLayout
+                android:id="@+id/viewCongeApprouve"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:padding="10dp"
+                />
+
+            <!-- **** Refusés Container **** -->
+            <LinearLayout
+                android:id="@+id/viewCongeRefuse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:padding="10dp"
+                />
+
 
         </LinearLayout>
     </ScrollView>
