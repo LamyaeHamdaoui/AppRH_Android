@@ -314,7 +314,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_weight="1"
-                            android:src="@drawable/bell"
+                            android:src="@drawable/modifier"
                             android:layout_margin="7dp"/>
                     </LinearLayout>
                     <TextView
