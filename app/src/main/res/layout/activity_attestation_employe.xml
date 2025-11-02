@@ -5,9 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CongesEmploye"
-    android:background="#F5F5F5"
-    >
+    tools:context=".AttestationEmployeActivity"
+    android:background="#F5F5F5">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,7 +32,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Gestion des congés"
+                    android:text="Attestations"
                     android:textSize="30sp"
                     android:textColor="@color/white" />
 
@@ -41,7 +40,7 @@
                     android:id="@+id/soldeCongeHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Solde disponible : 30 jours"
+                    android:text="Demandez vos attestations professionnelles"
                     android:textSize="15sp"
                     android:textColor="@color/white"
                     android:layout_marginTop="10dp" />
@@ -76,23 +75,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/grey_light"
-                            android:text="Solde de congés"
-                            android:textSize="15sp"
-                            />
-                        <TextView
-                            android:id="@+id/soldeConge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="30"
-                            android:textColor="@color/blue"
-                            android:textSize="30sp"
-                            android:layout_marginTop="3dp"
+                            android:text="Nouvelle attestation"
+                            android:textSize="20sp"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/grey_light"
-                            android:text="jours disponibles"
+                            android:text="Demandez un document officiel"
                             android:textSize="14sp"
                             android:layout_marginTop="3dp"
                             />
@@ -104,24 +94,22 @@
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_weight="1" />
-
                     <ImageView
                         android:layout_width="70dp"
                         android:layout_height="70dp"
-                        android:src="@drawable/conge_blanc"
+                        android:src="@drawable/ic_pdf"
+                        app:tint="@color/white"
                         android:background="@drawable/bg_rectangle_blue"
                         android:padding="15dp"
                         android:layout_gravity="center_vertical"
                         />
-
-
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btnNouvelleDemandeConge"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:text="+  Nouvell demande"
+                    android:text="+  Faire une demande"
                     android:background="@drawable/border_button"
                     android:layout_marginTop="10dp"
                     app:backgroundTint="@null"
@@ -134,7 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-               android:layout_margin="10dp"
+                android:layout_margin="10dp"
                 >
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -147,7 +135,7 @@
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
                     android:layout_margin="10dp"
-                    
+
                     >
                     <ImageView
                         android:layout_width="50dp"
@@ -192,7 +180,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
-                  android:layout_margin="10dp"
+                    android:layout_margin="10dp"
                     >
                     <ImageView
                         android:layout_width="50dp"
@@ -244,7 +232,8 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:background="@drawable/border_icon_blue"
-                        android:src="@drawable/conge_blue"
+                        android:src="@drawable/ic_pdf"
+                        app:tint="#2196F3"
                         android:padding="12dp"
                         android:layout_gravity="center_horizontal"
                         />
@@ -259,12 +248,12 @@
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="25sp"
-                         />
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="     Pris     "
+                        android:text="     Total     "
                         android:layout_marginTop="5dp"
                         android:layout_gravity="center_horizontal"
                         android:textColor="@color/grey"
@@ -294,7 +283,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Historique des demandes"
+                    android:text="Mes demandes"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     />
