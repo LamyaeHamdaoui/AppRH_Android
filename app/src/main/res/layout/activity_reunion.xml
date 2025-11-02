@@ -549,6 +549,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
 
 
+
                         >
 
                         <TextView
@@ -756,14 +757,14 @@
                 android:id="@+id/reunions"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/reunion" />
+                android:src="@drawable/reunion_bleu" />
 
             <TextView
                 android:id="@+id/textreunion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Réunions"
-                android:textColor="@color/grey"
+                android:textColor="#4669EB"
                 android:textSize="15sp" />
         </LinearLayout>
 
