@@ -199,7 +199,7 @@
             </LinearLayout>
 
             <!-- *** barre attente refuse approuve *** -->
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -213,7 +213,7 @@
 
                     <Button
                         android:id="@+id/btnCongeAttente"
-                        android:layout_height="40dp"
+                        android:layout_height="25dp"
                         android:layout_width="wrap_content"
                         android:background="@drawable/border_gris"
                         android:text="En attente "
@@ -221,11 +221,11 @@
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:layout_margin="3dp"
-                        android:layout_alignParentLeft="true"
-                        android:textAlignment="textStart"
+                        android:layout_weight="1"
+                        android:padding="0dp"
                         />
 
-                    <TextView
+                  <!--  <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignRight="@+id/btnCongeAttente"
@@ -238,12 +238,12 @@
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginRight="3dp"
-                        />
+                        /> -->
 
 
                     <Button
                         android:id="@+id/btnCongeApprouve"
-                        android:layout_height="40dp"
+                        android:layout_height="25dp"
                         android:layout_width="wrap_content"
                         android:text="Approuvés"
                         android:textColor="@color/black"
@@ -251,12 +251,14 @@
                         android:backgroundTint="#DEDEDE"
                         android:layout_margin="2dp"
                         android:layout_centerInParent="true"
+                        android:layout_weight="1"
+                        android:padding="0dp"
                         />
 
 
                     <Button
                         android:id="@+id/btnCongeRefuse"
-                        android:layout_height="40dp"
+                        android:layout_height="25dp"
                         android:layout_width="wrap_content"
                         android:text="Refusés"
                         android:textColor="@color/black"
@@ -264,12 +266,14 @@
                         android:backgroundTint="#DEDEDE"
                         android:layout_margin="2dp"
                         android:layout_alignParentRight="true"
+                        android:layout_weight="1"
+                        android:padding="0dp"
                         />
 
 
 
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <!-- **** En attente Container **** -->
             <LinearLayout
