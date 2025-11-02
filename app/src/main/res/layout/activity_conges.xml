@@ -199,63 +199,88 @@
             </LinearLayout>
 
             <!-- *** barre attente refuse approuve *** -->
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/border_button"
                 android:backgroundTint="#DEDEDE"
+                android:gravity="center"
                 >
-                <Button
-                    android:layout_height="35dp"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/border_gris"
-                    android:text="En attente"
-                    app:backgroundTint="@null"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="@color/white"
-                    android:layout_margin="2dp"
-                    />
-                <Button
-                    android:layout_height="35dp"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Approuvés"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    />
-                <Button
-                    android:layout_height="35dp"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Refusés"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    />
+
+                    <Button
+                        android:id="@+id/btnCongeAttente"
+                        android:layout_height="40dp"
+                        android:layout_width="wrap_content"
+                        android:background="@drawable/border_gris"
+                        android:text="En attente "
+                        app:backgroundTint="@null"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_margin="3dp"
+                        android:layout_alignParentLeft="true"
+                        android:textAlignment="textStart"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignRight="@+id/btnCongeAttente"
+                        android:background="@drawable/bg_orange_hover"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="7dp"
+                        android:paddingLeft="7dp"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginRight="3dp"
+                        />
 
 
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/btnCongeApprouve"
+                        android:layout_height="40dp"
+                        android:layout_width="wrap_content"
+                        android:text="Approuvés"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:backgroundTint="#DEDEDE"
+                        android:layout_margin="2dp"
+                        android:layout_centerInParent="true"
+                        />
+
+
+                    <Button
+                        android:id="@+id/btnCongeRefuse"
+                        android:layout_height="40dp"
+                        android:layout_width="wrap_content"
+                        android:text="Refusés"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:backgroundTint="#DEDEDE"
+                        android:layout_margin="2dp"
+                        android:layout_alignParentRight="true"
+                        />
+
+
+
+
+            </RelativeLayout>
 
             <!-- **** En attente Container **** -->
-        <LinearLayout
-            android:id="@+id/viewCongeAttente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />
+            <LinearLayout
+                android:id="@+id/viewCongeAttente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                />
 
             <!-- **** Approuvés Container **** -->
             <LinearLayout
