@@ -439,13 +439,8 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_open_in_new"
                         app:tint="#666666" />
-
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
