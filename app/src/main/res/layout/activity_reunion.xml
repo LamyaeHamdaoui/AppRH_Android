@@ -18,44 +18,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- header -->
+
+            <!-- ***** header ****** -->
             <LinearLayout
-                android:id="@+id/entete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/bg_header_blue"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:paddingBottom="60dp"
-                android:layout_alignParentStart="true">
+                android:layout_margin="10dp"
+                android:padding="20dp">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mon profil"
+                    android:text="Gestion des réunions"
                     android:textSize="30sp"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"/>
+                    android:textColor="@color/white" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Informations personnelles et paramètres"
+                    android:text="Planification et organisation"
                     android:textSize="15sp"
                     android:textColor="@color/white"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    />
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#EFECEC"
                 android:gravity="center|top"
                 android:orientation="vertical"
-                android:layout_marginTop="160dp">
+                android:layout_marginTop="140dp">
 
 
                 <Button
@@ -72,7 +68,7 @@
 
                 <LinearLayout
                     android:layout_width="356dp"
-                    android:layout_height="139dp"
+                    android:layout_height="110dp"
                     android:layout_gravity="center"
                     android:layout_margin="15dp"
                     android:background="@drawable/border_reunion"
@@ -81,14 +77,14 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="96dp"
+                        android:layout_height="84dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
                         android:orientation="vertical">
 
                         <FrameLayout
-                            android:layout_width="58dp"
-                            android:layout_height="53dp"
+                            android:layout_width="45dp"
+                            android:layout_height="42dp"
                             android:layout_gravity="center"
                             android:background="@drawable/border_roseclair">
 
@@ -98,7 +94,7 @@
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"
                                 android:maxWidth="30dp"
-                                android:src="@drawable/conge" />
+                                android:src="@drawable/conge_rose" />
 
                         </FrameLayout>
 
@@ -119,14 +115,14 @@
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="96dp"
+                        android:layout_height="84dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
                         android:orientation="vertical">
 
                         <FrameLayout
-                            android:layout_width="58dp"
-                            android:layout_height="53dp"
+                            android:layout_width="45dp"
+                            android:layout_height="42dp"
                             android:layout_gravity="center"
                             android:background="@drawable/border_green">
 
@@ -135,7 +131,7 @@
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"
                                 android:maxWidth="30dp"
-                                android:src="@drawable/employe" />
+                                android:src="@drawable/employe_green" />
 
                         </FrameLayout>
 
@@ -151,19 +147,20 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Participants  "
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:textAlignment="center"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="96dp"
+                        android:layout_height="84dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
                         android:orientation="vertical">
 
                         <FrameLayout
-                            android:layout_width="58dp"
-                            android:layout_height="53dp"
+                            android:layout_width="45dp"
+                            android:layout_height="42dp"
                             android:layout_gravity="center"
                             android:background="@drawable/border_blueclair">
 
@@ -172,7 +169,7 @@
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"
                                 android:maxWidth="30dp"
-                                android:src="@drawable/time" />
+                                android:src="@drawable/time_bleu" />
 
                         </FrameLayout>
 
@@ -210,24 +207,23 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="15dp"
-
                     android:background="@drawable/border_reunion"
                     android:orientation="vertical"
                     android:padding="2dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="37dp">
+                        android:layout_height="37dp"
+                        android:layout_margin="5dp">
 
                         <TextView
                             android:id="@+id/textView9"
                             android:layout_width="269dp"
                             android:layout_height="33dp"
                             android:layout_margin="5dp"
-
                             android:text="Réunion d'équipe hebdomadaire"
                             android:textAlignment="textStart"
-                            android:textSize="17sp" />
+                            android:textSize="16sp" />
 
                         <ImageView
                             android:layout_width="14dp"
@@ -251,7 +247,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginBottom="5dp">
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="1dp">
 
                         <TextView
                             android:layout_width="96dp"
@@ -259,15 +256,18 @@
                             android:background="@drawable/border_7jours"
                             android:text="Dans -7 jours"
                             android:textAlignment="center"
-                            android:padding="4dp"/>
+                            android:padding="4dp"
+                            android:textColor="#1610B8"
+                            />
                     </LinearLayout>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:orientation="horizontal"
-                        android:layout_margin="5dp">
+                        android:layout_margin="4dp">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -275,7 +275,8 @@
                             android:layout_gravity="center"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/conges" />
+                            android:src="@drawable/conge"
+                            android:layout_marginLeft="5dp"/>
 
                         <TextView
                             android:layout_width="296dp"
@@ -289,7 +290,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:orientation="horizontal"
-                        android:layout_margin="5dp">
+                        android:layout_margin="4dp">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -297,7 +298,9 @@
                             android:layout_gravity="center"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/conges" />
+                            android:src="@drawable/time"
+                            android:layout_marginLeft="5dp"
+                            />
 
                         <TextView
                             android:layout_width="296dp"
@@ -309,9 +312,9 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="4dp"
                         android:orientation="horizontal"
-                        android:layout_margin="5dp">
+                        android:layout_margin="4dp">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -319,7 +322,8 @@
                             android:layout_gravity="center"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/calendar" />
+                            android:src="@drawable/localisation"
+                            android:layout_marginLeft="5dp"/>
 
                         <TextView
                             android:layout_width="296dp"
@@ -332,9 +336,9 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginLeft="4dp"
                         android:orientation="horizontal"
-                        android:layout_margin="5dp">
+                        android:layout_margin="4dp">
 
                         <ImageView
                             android:layout_width="15dp"
@@ -342,7 +346,8 @@
                             android:layout_gravity="center"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/conges" />
+                            android:src="@drawable/employe"
+                            android:layout_marginLeft="5dp"/>
 
                         <TextView
                             android:layout_width="296dp"
@@ -388,6 +393,7 @@
                             android:background="@drawable/border_vide"
                             android:textAlignment="center"
                             android:padding="3dp"
+                            android:textStyle="bold"
                             />
 
                         <TextView
@@ -484,7 +490,7 @@
                             android:layout_height="15dp"
                             android:layout_marginStart="3dp"
                             app:layout_constraintTop_toBottomOf="@+id/date"
-                            android:src="@drawable/conges"
+                            android:src="@drawable/localisation"
                             app:layout_constraintStart_toStartOf="parent"
                             />
 
@@ -505,7 +511,7 @@
                             android:layout_height="15dp"
                             android:layout_marginStart="15dp"
                             app:layout_constraintTop_toBottomOf="@+id/date"
-                            android:src="@drawable/calendar"
+                            android:src="@drawable/employe"
                             app:layout_constraintStart_toEndOf="@id/salletxt"
 
                             />
@@ -582,7 +588,7 @@
                             android:layout_height="15dp"
                             android:layout_marginStart="3dp"
                             app:layout_constraintTop_toBottomOf="@+id/date2"
-                            android:src="@drawable/conges"
+                            android:src="@drawable/localisation"
                             app:layout_constraintStart_toStartOf="parent"
                             />
 
@@ -603,7 +609,7 @@
                             android:layout_height="15dp"
                             android:layout_marginStart="15dp"
                             app:layout_constraintTop_toBottomOf="@+id/date2"
-                            android:src="@drawable/calendar"
+                            android:src="@drawable/employe"
                             app:layout_constraintStart_toEndOf="@id/salletxt2"
 
                             />
