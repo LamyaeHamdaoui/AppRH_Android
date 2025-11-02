@@ -19,6 +19,7 @@
     <color name="purple_light">#EBD6FD</color>
     <color name="green_light">#C5FDC5</color>
     <color name="grey_light2">#A4A1A1</color>
-    <color name="orange">#e55800</color>
+    <color name="orange">#FF8400</color>
     <color name="orange_light">#FFD08A</color>
+    <color name="orange_light2">#FFF3E6</color>
 </resources>
