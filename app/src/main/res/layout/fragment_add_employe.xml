@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="15dp"
+    android:fillViewport="true"
+    android:background="#F5F5F5"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Titre principal -->
+        <TextView
+            android:id="@+id/titreAddEmploye"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nouvel employé"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Sous-titre -->
+        <TextView
+            android:id="@+id/remplissez"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remplissez les informations de l'employé"
+            android:textColor="@color/grey"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"
+                />
+        <!-- Nom complet -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nom complet *"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/nomCompletEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="nom complet"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Email -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email *"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="email@example.com"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+        <!-- Téléphone -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Téléphone"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/telephoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="xx xx xx xx xx"
+            android:inputType="phone"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+        <!-- Poste -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Poste *"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/posteEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ex: Développeur"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+        <!-- Département -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Département *"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <Spinner
+            android:id="@+id/departementSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+        <!-- Date d'embauche -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date d'embauche *"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/dateEmbaucheEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="jj/mm/aaaa"
+            android:inputType="date"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+        <!-- Solde de congés -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Solde de congés (jours)"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/soldeCongesEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="30"
+            android:inputType="number"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+        <!-- Ligne de séparation -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Section Ajuster l'employé -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ajouter l'employé"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@null"
+            android:textSize="15dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/border_button"
+            app:backgroundTint="@null"
+
+            />
+        <!-- Vous pouvez ajouter ici les contrôles pour ajuster l'employé -->
+
+    </LinearLayout>
+</ScrollView>

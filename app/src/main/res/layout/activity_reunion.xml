@@ -1,495 +1,775 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".AttestationsActivity"
+    android:background="#F5F5F5">
 
-    <!-- header -->
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
+        android:layout_above="@id/footer"
+        android:fillViewport="true"
+        android:layout_marginBottom="100dp">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="108dp"
-            android:background="@color/Bleu"
-            android:orientation="vertical"
-            >
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_width="379dp"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="317dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:layout_weight="4"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:text="Gestion des réunions"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/white"
-                        android:textSize="25sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="monospace"
-                        android:text="Planification et organisation"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/notification"
-                    android:layout_width="49dp"
-                    android:layout_height="39dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:src="@drawable/bell" />
+                android:id="@+id/entete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_header_blue"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="60dp"
+                android:layout_alignParentStart="true">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mon profil"
+                    android:textSize="30sp"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Informations personnelles et paramètres"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="20dp"
+                    />
             </LinearLayout>
-        </LinearLayout>
 
-        <!--center de la page -->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#EFECEC"
                 android:gravity="center|top"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="160dp">
+
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="356dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:layout_marginTop="60dp"
+
+                    android:background="@drawable/border_button"
+                    android:text="+ Planifier un reunion"
+                    app:backgroundTint="@null" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="356dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="20dp"
-                        android:layout_marginTop="60dp"
-                        android:background="@color/Bleu"
-                        android:text="+ Planifier un reunion" />
+                    android:layout_width="356dp"
+                    android:layout_height="139dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/border_reunion"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="356dp"
-                        android:layout_height="139dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="15dp"
-                        android:background="@color/white"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="96dp"
-                            android:layout_gravity="center"
-                            android:layout_margin="10dp"
-                            android:orientation="vertical">
-
-                            <FrameLayout
-                                android:layout_width="58dp"
-                                android:layout_height="53dp"
-                                android:layout_gravity="center"
-                                android:background="#ECD6D9">
-
-                                <ImageView
-
-                                    android:layout_width="26dp"
-                                    android:layout_height="26dp"
-                                    android:layout_gravity="center"
-                                    android:maxWidth="30dp"
-                                    android:src="@drawable/calendar" />
-
-                            </FrameLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:text="0" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="À venir"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="96dp"
-                            android:layout_gravity="center"
-                            android:layout_margin="10dp"
-                            android:orientation="vertical">
-                            <FrameLayout
-                                android:layout_width="58dp"
-                                android:layout_height="53dp"
-                                android:layout_gravity="center"
-                                android:background="#D6ECDD">
-                                <ImageView
-                                    android:layout_width="26dp"
-                                    android:layout_height="26dp"
-                                    android:layout_gravity="center"
-                                    android:maxWidth="30dp"
-                                    android:src="@drawable/calendar" />
-                            </FrameLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:text="0" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="Participants  "
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="96dp"
-                            android:layout_gravity="center"
-                            android:layout_margin="10dp"
-                            android:orientation="vertical">
-
-                            <FrameLayout
-                                android:layout_width="58dp"
-                                android:layout_height="53dp"
-                                android:layout_gravity="center"
-                                android:background="#D6D9EC">
-
-                                <ImageView
-                                    android:layout_width="26dp"
-                                    android:layout_height="26dp"
-                                    android:layout_gravity="center"
-                                    android:maxWidth="30dp"
-                                    android:src="@drawable/calendar" />
-
-                            </FrameLayout>
-
-                            <TextView
-                                android:id="@+id/textView4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center"
-                                android:text="0" />
-
-                            <TextView
-                                android:id="@+id/textView5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="Passées"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-
-                    <!-- reunions -->
-                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="28dp"
-                        android:text="Réunions à venir"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="356dp"
-                        android:layout_height="196dp"
+                        android:layout_height="96dp"
                         android:layout_gravity="center"
-                        android:layout_margin="15dp"
-                        android:background="@color/white"
-                        android:gravity="center"
+                        android:layout_margin="10dp"
                         android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/textView9"
-                                android:layout_width="269dp"
-                                android:layout_height="33dp"
-                                android:layout_margin="5dp"
-                                android:gravity="center"
-                                android:text="Réunion d'équipe hebdomadaire"
-                                android:textAlignment="textStart"
-                                android:textSize="17sp" />
+                        <FrameLayout
+                            android:layout_width="58dp"
+                            android:layout_height="53dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/border_roseclair">
 
                             <ImageView
-                                android:layout_width="14dp"
-                                android:layout_height="13dp"
-                                android:layout_gravity="center"
-                                android:layout_margin="5dp"
-                                android:maxWidth="30dp"
-                                android:src="@drawable/edit" />
 
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="17dp"
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
                                 android:layout_gravity="center"
-                                android:layout_margin="5dp"
                                 android:maxWidth="30dp"
-                                android:src="@drawable/delete" />
-                        </LinearLayout>
+                                android:src="@drawable/conge" />
 
+                        </FrameLayout>
 
                         <TextView
-
-                            android:layout_width="346dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="left"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="À venir"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="96dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="58dp"
+                            android:layout_height="53dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/border_green">
+
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:maxWidth="30dp"
+                                android:src="@drawable/employe" />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Participants  "
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="96dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:layout_width="58dp"
+                            android:layout_height="53dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/border_blueclair">
+
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:maxWidth="30dp"
+                                android:src="@drawable/time" />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="0" />
+
+                        <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Passées"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <!-- reunions -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="92dp"
+                    android:text="Réunions à venir"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="356dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+
+                    android:background="@drawable/border_reunion"
+                    android:orientation="vertical"
+                    android:padding="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="37dp">
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_width="269dp"
+                            android:layout_height="33dp"
                             android:layout_margin="5dp"
-                            android:gravity="left"
-                            android:text="Dans -7 jours"
-                            android:textAlignment="textStart" />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:text="Réunion d'équipe hebdomadaire"
+                            android:textAlignment="textStart"
+                            android:textSize="17sp" />
 
-                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="13dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:maxWidth="30dp"
+                            android:src="@drawable/edit" />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="TextView" />
-                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="17dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:maxWidth="30dp"
+                            android:src="@drawable/delete" />
                     </LinearLayout>
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="5dp">
+
+                        <TextView
+                            android:layout_width="96dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_7jours"
+                            android:text="Dans -7 jours"
+                            android:textAlignment="center"
+                            android:padding="4dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/conges" />
+
+                        <TextView
+                            android:layout_width="296dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:text="Mardi 21 octobre 2025" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/conges" />
+
+                        <TextView
+                            android:layout_width="296dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:text="10:30 " />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/calendar" />
+
+                        <TextView
+                            android:layout_width="296dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:text="salle de conference A"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/conges" />
+
+                        <TextView
+                            android:layout_width="296dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:text="10/12 confirmes" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/gris_clair"
+                        android:layout_margin="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Point hebdomadaire sur l'avancement des projets"
+                        android:layout_marginLeft="6dp"
+                        android:textStyle="italic"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/gris_clair"
+                        android:layout_margin="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="8dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Développement"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_vide"
+                            android:textAlignment="center"
+                            android:padding="3dp"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Par Jean Martin"
+                            android:layout_weight="1"
+                            android:textAlignment="viewEnd"
+                            android:layout_marginRight="8dp"
+                            />
+
+
+                    </LinearLayout>
                 </LinearLayout>
+
+                <!-- les ruenions passees  -->
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:layout_margin="25dp">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reunions passees"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginLeft="25dp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/container"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border"
+                        app:layout_constraintTop_toBottomOf="@id/title"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="8dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+
+
+                        >
+
+                        <TextView
+                            android:id="@+id/soustitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bilan mensuel"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/statut"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="terminer"
+                            app:layout_constraintStart_toEndOf="@id/soustitle"
+                            app:layout_constraintTop_toTopOf="@id/soustitle"
+                            android:layout_marginStart="150dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mercredi 12 Octobre 2024 - 11:30"
+                            app:layout_constraintTop_toBottomOf="@+id/statut"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+
+                        <ImageView
+                            android:id="@+id/iconDate"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="3dp"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            android:src="@drawable/conges"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+                        <TextView
+                            android:id="@+id/salletxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Salle de conférence B"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            app:layout_constraintStart_toEndOf="@+id/iconDate"
+                            android:layout_marginLeft="8dp"
+
+                            />
+
+                        <ImageView
+                            android:id="@+id/iconParticip"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="15dp"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            android:src="@drawable/calendar"
+                            app:layout_constraintStart_toEndOf="@id/salletxt"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/participtxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" 15 participants"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            app:layout_constraintStart_toEndOf="@+id/iconParticip"
+                            android:layout_marginLeft="3dp"
+
+                            />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/container2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border"
+                        app:layout_constraintTop_toBottomOf="@id/container"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="8dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+
+
+                        >
+
+                        <TextView
+                            android:id="@+id/soustitle2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bilan mensuel"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/statut2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="terminer"
+                            app:layout_constraintStart_toEndOf="@id/soustitle2"
+                            app:layout_constraintTop_toTopOf="@id/soustitle2"
+                            android:layout_marginStart="150dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/date2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mercredi 12 Octobre 2024 - 11:30"
+                            app:layout_constraintTop_toBottomOf="@+id/statut2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+
+                        <ImageView
+                            android:id="@+id/iconDate2"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="3dp"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            android:src="@drawable/conges"
+                            app:layout_constraintStart_toStartOf="parent"
+                            />
+
+                        <TextView
+                            android:id="@+id/salletxt2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Salle de conférence B"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            app:layout_constraintStart_toEndOf="@+id/iconDate2"
+                            android:layout_marginLeft="8dp"
+
+                            />
+
+                        <ImageView
+                            android:id="@+id/iconParticip2"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_marginStart="15dp"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            android:src="@drawable/calendar"
+                            app:layout_constraintStart_toEndOf="@id/salletxt2"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/participtxt2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" 15 participants"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            app:layout_constraintStart_toEndOf="@+id/iconParticip2"
+                            android:layout_marginLeft="3dp"
+
+                            />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
             </LinearLayout>
-        </ScrollView>
+        </RelativeLayout>
+    </ScrollView>
 
 
-        <!-- footer de la page -->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="top|end">
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/bell"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"/>
+        <TextView
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="17dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/notification_border"
+            android:backgroundTint="@color/red"
+            android:text="0"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:background="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/accueil"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/home" />
 
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/accueil"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/home2" />
-
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Accueil"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/employee"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/team2" />
-
-                    <TextView
-                        android:id="@+id/textemployee"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Employée"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/presence"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/presence" />
-
-                    <TextView
-                        android:id="@+id/textpresence"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Presence"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/conge"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/conge" />
-
-                    <TextView
-                        android:id="@+id/textconge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Congés"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="51dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/reunions"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/reunion" />
-
-                    <TextView
-                        android:id="@+id/textreunion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Réunions"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="66dp"
-                    android:layout_height="58dp"
-                    android:layout_margin="5dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/attestation"
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/attestation" />
-
-                    <TextView
-                        android:id="@+id/textattestation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:text="Attestations"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accueil"
+                android:textColor="@color/grey"
+                android:textSize="15dp" />
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/employes"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/employe" />
+
+            <TextView
+                android:id="@+id/textemployee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Employés"
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/conge"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/conge" />
+
+            <TextView
+                android:id="@+id/textconge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Congés"
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/reunions"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/reunion" />
+
+            <TextView
+                android:id="@+id/textreunion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Réunions"
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/profil"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:maxWidth="30dp"
+                android:src="@drawable/profil" />
+
+            <TextView
+                android:id="@+id/textprofil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profil"
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

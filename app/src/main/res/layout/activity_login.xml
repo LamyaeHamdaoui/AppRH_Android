@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#F5F5F5">
         <ImageView
             android:id="@+id/logoApp"
             android:layout_width="100dp"
@@ -93,19 +94,20 @@
         <Button
             android:id="@+id/connecteBtn"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:text="Se connecter"
-            android:backgroundTint="@color/blue"
+            android:background="@drawable/border_button"
+            app:backgroundTint="@null"
             android:textStyle="bold"
             android:textSize="20dp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="35dp"
             app:layout_constraintTop_toBottomOf="@+id/passwordBox"
             app:layout_constraintBottom_toTopOf="@id/forgottenPasswordBtn"
             />
-        <Button
+        <TextView
             android:id="@+id/forgottenPasswordBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -118,7 +120,7 @@
             app:layout_constraintBottom_toTopOf="@id/createAccBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
+            android:linksClickable="true"
             />
         <Button
             android:id="@+id/createAccBtn"

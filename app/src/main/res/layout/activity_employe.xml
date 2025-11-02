@@ -2,7 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F5F5F5">
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -10,7 +12,7 @@
         >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
             <!-- ******* header ****** -->
             <LinearLayout
@@ -26,10 +28,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gestion des employés"
-                    android:textSize="20sp"
+                    android:textSize="30sp"
                     android:textColor="@color/white"
                     android:gravity="center"
-                    android:textStyle="bold"
+
                     android:layout_margin="5dp"
                     />
 
@@ -51,13 +53,14 @@
                 android:layout_gravity="center_vertical"
                 android:padding="15dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/border_blue"
+                android:background="@drawable/border_gris"
                 >
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:layout_marginBottom="5dp"
                     >
                     <EditText
                         android:layout_width="match_parent"
@@ -70,13 +73,13 @@
                         android:inputType="text"
                         android:textColor="@color/black"
                         />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="18dp"
                         android:layout_centerVertical="true"
                         android:layout_alignParentStart="true"
-                        android:text="🔍"
-                        android:layout_marginStart="5dp"
+                        android:src="@drawable/search"
+                        android:layout_marginStart="6dp"
                         />
                 </RelativeLayout>
                 <Spinner
@@ -85,10 +88,254 @@
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/border"
                     android:padding="10dp"
-                    android:layout_margin="5dp"
+                    android:layout_marginTop="10dp"
+
                     />
             </LinearLayout>
+
+            <!-- ****** Ajouter employe ********** -->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <Button
+                    android:id="@+id/btnAddEmploye"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="+ ajouter un employé"
+                    android:background="@drawable/border_button"
+                    app:backgroundTint="@null"
+                    android:textSize="16dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="7dp"
+                    android:layout_marginBottom="20dp"
+                    />
+                <FrameLayout
+                    android:id="@+id/fragmentAddEmployeContainer"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:background="#80000000"
+                    android:visibility="gone"/>
+
+                <FrameLayout
+                    android:id="@+id/fragmentEditEmployeContainer"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:background="#80000000"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <!-- ****** cadrtes liste des employées ********** -->
+            <LinearLayout
+                android:id="@+id/itemsEmployeeCardsContainer"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                />
+
+            <!--- ******* no employé trouvé container *******  -->
+            <LinearLayout
+                android:id="@+id/noEmployeeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="40dp"
+                android:visibility="gone"
+                android:background="@drawable/border_gris"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/employe"
+                    android:layout_marginBottom="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Aucun employé trouvé"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Essayez d'autres critères de recherche"
+                    android:textSize="13sp"
+                    android:textColor="@color/grey"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    />
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="top|end">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/bell"
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"/>
+            <TextView
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="17dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/notification_border"
+                android:backgroundTint="@color/red"
+                android:text="0"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                />
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:elevation="8dp"
+            android:padding="5dp"
+            android:layout_alignParentBottom="true">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/accueil"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/home" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accueil"
+                    android:textSize="15dp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/employes"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/employe" />
+
+                <TextView
+                    android:id="@+id/textemployee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Employés"
+                    android:textSize="15sp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/conge"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/conge" />
+
+                <TextView
+                    android:id="@+id/textconge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Congés"
+                    android:textSize="15sp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/reunions"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/reunion" />
+
+                <TextView
+                    android:id="@+id/textreunion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Réunions"
+                    android:textSize="15sp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/profil"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:maxWidth="30dp"
+                    android:src="@drawable/profil"/>
+
+                <TextView
+                    android:id="@+id/textprofil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profil"
+                    android:textSize="15sp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
