@@ -362,8 +362,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Point hebdomadaire sur l'avancement des projets"
-                        android:layout_marginLeft="6dp"
-                        android:textStyle="italic"/>
+                        android:layout_marginLeft="7dp"
+                        android:textStyle="italic"
+                        android:textSize="12sp"/>
 
                     <View
                         android:layout_width="match_parent"
@@ -407,32 +408,34 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
+                    android:background="@drawable/border_white"
                     android:layout_margin="25dp">
 
                     <TextView
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Reunions passees"
+                        android:text="Réunions passées"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         android:layout_marginLeft="25dp"
                         android:textStyle="bold"
                         android:layout_marginTop="10dp"
+                        android:textSize="18sp"
+
                         />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/container"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/border"
+                        android:background="@drawable/border_simple"
                         app:layout_constraintTop_toBottomOf="@id/title"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:padding="8dp"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginRight="25dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="20dp"
                         
@@ -446,7 +449,9 @@
                             android:layout_height="wrap_content"
                             android:text="Bilan mensuel"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textSize="18sp"
+                            />
 
                         <TextView
                             android:id="@+id/statut"
@@ -455,7 +460,9 @@
                             android:text="terminer"
                             app:layout_constraintStart_toEndOf="@id/soustitle"
                             app:layout_constraintTop_toTopOf="@id/soustitle"
-                            android:layout_marginStart="150dp"
+                            android:layout_marginStart="120dp"
+                            android:background="@drawable/border_vide"
+                            android:padding="6dp"
                             />
 
                         <TextView
@@ -465,6 +472,9 @@
                             android:text="Mercredi 12 Octobre 2024 - 11:30"
                             app:layout_constraintTop_toBottomOf="@+id/statut"
                             app:layout_constraintStart_toStartOf="parent"
+                            android:layout_marginBottom="8dp"
+
+
                             />
 
 
@@ -521,7 +531,7 @@
                         android:id="@+id/container2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/border"
+                        android:background="@drawable/border_simple"
                         app:layout_constraintTop_toBottomOf="@id/container"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -541,7 +551,8 @@
                             android:layout_height="wrap_content"
                             android:text="Bilan mensuel"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textSize="18sp"/>
 
                         <TextView
                             android:id="@+id/statut2"
@@ -550,7 +561,9 @@
                             android:text="terminer"
                             app:layout_constraintStart_toEndOf="@id/soustitle2"
                             app:layout_constraintTop_toTopOf="@id/soustitle2"
-                            android:layout_marginStart="150dp"
+                            android:layout_marginStart="115dp"
+                            android:background="@drawable/border_vide"
+                            android:padding="6dp"
                             />
 
                         <TextView

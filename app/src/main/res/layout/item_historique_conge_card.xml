@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:App="http://schemas.android.com/tools"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    android:backgroundTint="@color/white"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:background="@drawable/border_gris">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+        <!-- Type de congé -->
+        <TextView
+            android:id="@+id/TypeConge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Congé payé"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+           />
+    <Space
+        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:layout_width="0dp"
+        />
+
+        <!-- Statut aligné à droite -->
+        <TextView
+            android:id="@+id/StatutConge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="En attente"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/orange"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:background="@drawable/border_orange"
+            android:layout_marginRight="10dp"
+            />
+    </LinearLayout>
+        <!-- Dates -->
+        <TextView
+            android:id="@+id/DatesConge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15 nov. 2025 - 22 nov. 2025"
+            android:textColor="@color/grey"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp" />
+
+        <!-- Durée -->
+        <TextView
+            android:id="@+id/DureeConge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5 jours"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border_icon_grey"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            />
+
+        <!-- Motif -->
+        <TextView
+            android:id="@+id/MotifConge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vacances en famille"
+            android:textColor="@color/grey"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:textStyle="italic"/>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
