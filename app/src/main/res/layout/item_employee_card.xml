@@ -163,8 +163,7 @@
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginBottom="3dp"
+                android:layout_margin="10dp"
                 android:background="@color/gris_clair" />
 
             <RelativeLayout
