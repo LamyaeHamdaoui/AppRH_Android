@@ -153,7 +153,7 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="Détails"
                 android:textStyle="bold"
                 android:textSize="20sp"
@@ -163,6 +163,7 @@
                 android:paddingRight="45dp"
                 android:paddingLeft="45dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginBottom="1dp"
                 />
                 <ImageView
                     android:layout_width="90dp"
