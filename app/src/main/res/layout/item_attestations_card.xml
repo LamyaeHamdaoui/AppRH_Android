@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:App="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:backgroundTint="@color/white"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="30dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/border_orangelight">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nissrine EL MNIAI"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Developpement"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/StatutAttestation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:text="Nouveau"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/orange"
+                    android:padding="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/border_orange"
+                    />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/TypeConge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attestation de travail"
+                android:textSize="15sp"
+                android:layout_marginTop="5dp"
+                />
+            <!-- Dates -->
+            <TextView
+                android:id="@+id/DateDemandee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Demandée le 18 Octobre 2025"
+                android:textColor="@color/grey"
+                android:textSize="14sp"
+                android:layout_marginTop="10dp" />
+
+            <!-- Motif -->
+            <TextView
+                android:id="@+id/MotifAttestation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Motif : Demande de crédit bancaire"
+                android:textColor="@color/grey"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:textStyle="italic"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/orange" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="15dp">
+
+                <!-- Bouton Détails -->
+                <Button
+                    android:id="@+id/btnDetails"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="Détails"
+                    android:textColor="@color/grey"
+                    android:background="@drawable/border"
+                    app:backgroundTint="@null"
+                    android:textStyle="bold"
+                    android:padding="12dp" />
+
+                <Button
+                    android:id="@+id/btnValidate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.75"
+                    android:layout_marginEnd="5dp"
+                    android:text="Valider"
+                    android:textColor="@color/white"
+                    android:background="@drawable/button_green"
+                    app:backgroundTint="@null"
+                    android:textStyle="bold"
+                    android:padding="12dp" />
+                <Button
+                    android:id="@+id/btnReject"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:layout_marginStart="5dp"
+                    android:text="⊗"
+                    android:textColor="@color/white"
+                    app:backgroundTint="@null"
+                    android:background="@drawable/border_red"
+                    android:textStyle="bold"
+                    android:padding="12dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
