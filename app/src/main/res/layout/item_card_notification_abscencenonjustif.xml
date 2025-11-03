@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp"
+
+
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="@color/white"
+            >
+
+            <FrameLayout
+                android:id="@+id/iconvalider"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/border_icon_red"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/valider_red"
+                    android:layout_gravity="center"
+                    android:maxWidth="30dp"
+                    />
+            </FrameLayout>
+
+
+            <TextView
+                android:id="@+id/textnouvelle22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Absence non justifiée"
+                app:layout_constraintStart_toEndOf="@+id/iconvalider"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:id="@+id/textclose22"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="X"
+                app:layout_constraintStart_toEndOf="@+id/textnouvelle22"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textAlignment="textEnd"
+                android:layout_marginLeft="80dp"
+                />
+
+            <TextView
+                android:id="@+id/text111"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_margin="10dp"
+                android:text="Sophie Durand absente aujourd'hui sans justification"
+                android:textColor="@color/grey_light"
+                android:textSize="13sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iconvalider"
+
+                />
+
+            <TextView
+                android:id="@+id/text222"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Il y a 1h"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text111"
+                android:textSize="12sp"
+                android:layout_margin="10dp"
+                android:textColor="@color/grey_light"
+                />
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
