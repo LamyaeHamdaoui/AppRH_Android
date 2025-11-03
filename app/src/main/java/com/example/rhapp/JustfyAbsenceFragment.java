@@ -34,7 +34,6 @@ public class JustfyAbsenceFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment JustfyAbsenceFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static JustfyAbsenceFragment newInstance(String param1, String param2) {
         JustfyAbsenceFragment fragment = new JustfyAbsenceFragment();
         Bundle args = new Bundle();
