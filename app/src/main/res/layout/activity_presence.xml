@@ -5,9 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AttestationsActivity"
-    android:background="#F5F5F5"
-    >
+    tools:context=".PresenceActivity"
+    android:background="#F5F5F5">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <!-- ***** header ****** -->
@@ -33,20 +32,95 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Gestion des attestations"
+                    android:text="Gestion de présence"
                     android:textSize="30sp"
                     android:textColor="@color/white" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Validation et génération de documents"
+                    android:text="Marquez votre présence quotidienne"
                     android:textSize="15sp"
                     android:textColor="@color/white"
                     android:layout_marginTop="10dp" />
             </LinearLayout>
 
             <!--- ****** Sous header ****** -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/border_blue"
+                android:layout_margin="10dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+
+
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/time_bleu"
+                        app:tint="@color/blue"
+                        android:background="@drawable/border_icon_blue"
+                        android:padding="15dp"
+                        android:layout_gravity="center_vertical"
+                        />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="3"
+                        android:paddingStart="20dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/grey_light"
+                            android:text="Aujourd'hui"
+                            android:textSize="20sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/grey_light"
+                            android:text="Demandez un document officiel"
+                            android:textSize="14sp"
+                            android:layout_marginTop="3dp"
+                            />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Marquer ma présence"
+                    android:background="@drawable/border_button"
+                    android:layout_marginTop="10dp"
+                    app:backgroundTint="@null"
+                    />
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Justifier une absence"
+                    android:background="@drawable/border_vide"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
+                    app:backgroundTint="@null"
+                    />
+
+            </LinearLayout>
+
+            <!-- *** barre attente refuse approuve *** -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,73 +131,6 @@
                 android:paddingBottom="20dp"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@drawable/conge"
-                        android:background="@drawable/border_icon_grey"
-                        android:padding="6dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5"
-                        android:textStyle="bold"
-                        android:layout_marginTop="7dp"
-                        android:textSize="15sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total"
-                        android:textColor="@color/grey_light"
-                        android:textSize="12sp"
-
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:src="@drawable/en_attente"
-                        android:background="@drawable/bg_orange_icones"
-                        android:padding="6dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"
-                        android:textStyle="bold"
-                        android:layout_marginTop="7dp"
-                        android:textSize="15sp"
-                        />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="En attente"
-                        android:textColor="@color/grey_light"
-                        android:textSize="12sp"
-
-                        />
-                </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -139,9 +146,10 @@
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/nbreApprouveConge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
@@ -151,7 +159,41 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Approuvés"
+                        android:text="Présences"
+                        android:textColor="@color/grey_light"
+                        android:textSize="12sp"
+
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/refuse"
+                        android:background="@drawable/border_icon_red"
+                        android:padding="6dp" />
+
+                    <TextView
+                        android:id="@+id/nbreRefuseConge"
+                        android:layout_width="7dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:text="0"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Absences"
                         android:textColor="@color/grey_light"
                         android:textSize="12sp"
 
@@ -168,103 +210,47 @@
                     <ImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:src="@drawable/refuse"
-                        android:background="@drawable/border_icon_red"
+                        android:src="@drawable/conge_blue"
+                        android:background="@drawable/border_icon_blue"
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/nbreTotalConge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:layout_marginTop="7dp"
-                        android:textSize="15sp"
-
-                        />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Approuvés"
+                        android:text="Taux"
                         android:textColor="@color/grey_light"
                         android:textSize="12sp"
 
                         />
                 </LinearLayout>
 
-
             </LinearLayout>
-
-            <!-- *** barre attente refuse approuve *** -->
             <LinearLayout
+                android:id="@+id/historiqueContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/border_button"
-                android:backgroundTint="#DEDEDE"
-                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:background="@drawable/border_gris"
+                android:layout_margin="10dp"
                 >
-
-                <Button
-                    android:id="@+id/btnCongeAttente"
-                    android:layout_height="30dp"
+                <TextView
                     android:layout_width="wrap_content"
-                    android:background="@drawable/border_gris"
-                    android:text="En attente "
-                    app:backgroundTint="@null"
-                    android:textColor="@color/black"
+                    android:layout_height="wrap_content"
+                    android:text="Historique"
                     android:textStyle="bold"
-                    android:layout_margin="3dp"
-                    android:padding="0dp"
-                    android:layout_weight="1"
+                    android:textSize="16sp"
                     />
-
-
-
-                <Button
-                    android:id="@+id/btnCongeApprouve"
-                    android:layout_height="30dp"
-                    android:layout_width="wrap_content"
-                    android:text="Approuvés"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    android:layout_centerInParent="true"
-                    android:layout_weight="1"
-                    android:padding="0dp"
-
-                    />
-
-
-                <Button
-                    android:id="@+id/btnCongeRefuse"
-                    android:layout_height="30dp"
-                    android:layout_width="wrap_content"
-                    android:text="Refusés"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_weight="1"
-                    android:padding="0dp"
-                    />
-
-
-
-
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 
@@ -324,7 +310,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textColor="@color/grey"/>
         </LinearLayout>
 
@@ -340,13 +326,13 @@
                 android:id="@+id/employes"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/employe" />
+                android:src="@drawable/presence" />
 
             <TextView
                 android:id="@+id/textemployee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Employés"
+                android:text="Présence"
                 android:textSize="15sp"
                 android:textColor="@color/grey"/>
         </LinearLayout>
