@@ -49,28 +49,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="140dp"
+                android:layout_marginEnd="0dp"
                 android:gravity="center|top"
-                android:orientation="vertical"
-                android:layout_marginTop="140dp">
-
-
+                android:orientation="vertical">
 
 
                 <LinearLayout
-                    android:layout_width="356dp"
-                    android:layout_height="110dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="15dp"
-                    android:background="@drawable/border_reunion"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="15dp"
+                    android:background="@drawable/border_blue">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="84dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <FrameLayout
                             android:layout_width="45dp"
@@ -92,23 +94,27 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="0" />
+                            android:text="0"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="15dp"
+                            />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="À venir"
-                            android:textStyle="bold" />
+                            android:textSize="15sp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="84dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <FrameLayout
                             android:layout_width="45dp"
@@ -130,23 +136,30 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="0" />
+                            android:text="0"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_marginTop="15dp"
+                            />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Confirmées "
-                            android:textStyle="bold"
-                            android:textAlignment="center"/>
+                            android:textAlignment="center"
+                            android:textSize="15sp"
+                            android:layout_marginTop="5sp"
+                            />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="84dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <FrameLayout
                             android:layout_width="45dp"
@@ -169,7 +182,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="0" />
+                            android:text="0"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="15dp"/>
 
                         <TextView
                             android:id="@+id/textView5"
@@ -177,7 +193,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Ce mois"
-                            android:textStyle="bold" />
+                            android:textSize="15sp"
+                            android:layout_marginTop="5dp"
+                            />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -223,36 +241,35 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="1dp">
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="5dp">
 
                         <TextView
                             android:layout_width="96dp"
                             android:layout_height="wrap_content"
                             android:background="@drawable/border_7jours"
+                            android:padding="4dp"
                             android:text="Dans -7 jours"
                             android:textAlignment="center"
-                            android:padding="4dp"
-                            android:textColor="#1610B8"
-                            />
+                            android:textColor="#1610B8" />
                     </LinearLayout>
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
                         android:layout_marginLeft="5dp"
-                        android:orientation="horizontal"
-                        android:layout_margin="4dp">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/conge"
-                            android:layout_marginLeft="5dp"/>
+                            android:src="@drawable/conge" />
 
                         <TextView
                             android:layout_width="296dp"
@@ -264,19 +281,18 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
                         android:layout_marginLeft="5dp"
-                        android:orientation="horizontal"
-                        android:layout_margin="4dp">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/time"
-                            android:layout_marginLeft="5dp"
-                            />
+                            android:src="@drawable/time" />
 
                         <TextView
                             android:layout_width="296dp"
@@ -288,42 +304,41 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
                         android:layout_marginLeft="4dp"
-                        android:orientation="horizontal"
-                        android:layout_margin="4dp">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/localisation"
-                            android:layout_marginLeft="5dp"/>
+                            android:src="@drawable/localisation" />
 
                         <TextView
                             android:layout_width="296dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="12"
-                            android:text="salle de conference A"
-                            />
+                            android:text="salle de conference A" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
                         android:layout_marginLeft="4dp"
-                        android:orientation="horizontal"
-                        android:layout_margin="4dp">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/employe"
-                            android:layout_marginLeft="5dp"/>
+                            android:src="@drawable/employe" />
 
                         <TextView
                             android:layout_width="296dp"
@@ -335,241 +350,234 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_margin="10dp"
                         android:layout_marginTop="10dp"
-                        android:background="@color/gris_clair"
-                        android:layout_margin="10dp"/>
+                        android:background="@color/gris_clair" />
 
 
-                   <LinearLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:orientation="horizontal"
-                       android:layout_marginLeft="5dp"
-                       android:layout_marginBottom="8dp"
-                       >
-
-                       <TextView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="Organisé par Jean Martin"
-                           android:layout_marginLeft="7dp"
-                           android:layout_marginRight="50dp"
-                           android:textStyle="italic"
-                           android:textSize="12sp"
-                           android:layout_weight="1"/>
-
-                       <TextView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:text="confirmer"
-                           android:layout_weight="1"
-                           android:background="@drawable/border_bleu_fonce"
-                           android:textAlignment="center"
-                           android:padding="5dp"
-                           android:layout_marginLeft="50dp"
-                           android:textColor="@color/white"
-                           />
-
-                   </LinearLayout>
-                </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="356dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:background="@drawable/border_reunion"
-                android:orientation="vertical"
-                android:padding="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="37dp"
-                    android:layout_margin="5dp">
-
-                    <TextView
-                        android:id="@+id/textView9"
-                        android:layout_width="306dp"
-                        android:layout_height="33dp"
-                        android:layout_margin="5dp"
-                        android:text="Réunion d'équipe hebdomadaire"
-                        android:textAlignment="textStart"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="17dp"
-                        android:layout_gravity="center"
-
-                        android:layout_marginLeft="1dp"
-                        android:maxWidth="30dp"
-                        android:src="@drawable/valider_icon" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="1dp">
-
-                    <TextView
-                        android:layout_width="96dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_7jours"
-                        android:text="Dans -7 jours"
-                        android:textAlignment="center"
-                        android:padding="4dp"
-                        android:textColor="#1610B8"
-                        />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="horizontal"
-                    android:layout_margin="4dp">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/conge"
-                        android:layout_marginLeft="5dp"/>
-
-                    <TextView
-                        android:layout_width="296dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="12"
-                        android:text="Mardi 21 octobre 2025" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="horizontal"
-                    android:layout_margin="4dp">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/time"
-                        android:layout_marginLeft="5dp"
-                        />
-
-                    <TextView
-                        android:layout_width="296dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="12"
-                        android:text="10:30 " />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:orientation="horizontal"
-                    android:layout_margin="4dp">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/localisation"
-                        android:layout_marginLeft="5dp"/>
-
-                    <TextView
-                        android:layout_width="296dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="12"
-                        android:text="salle de conference A"
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:orientation="horizontal"
-                    android:layout_margin="4dp">
-
-                    <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="5dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/employe"
-                        android:layout_marginLeft="5dp"/>
-
-                    <TextView
-                        android:layout_width="296dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="12"
-                        android:text="10/12 confirmes" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/gris_clair"
-                    android:layout_margin="10dp"/>
-
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginBottom="8dp"
-                    >
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Organisé par Jean Martin"
-                        android:layout_marginLeft="7dp"
-                        android:layout_marginRight="50dp"
-                        android:textStyle="italic"
-                        android:textSize="12sp"
-                        android:layout_weight="1"/>
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="50dp"
+                            android:layout_weight="1"
+                            android:text="Organisé par Jean Martin"
+                            android:textSize="12sp"
+                            android:textStyle="italic" />
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="50dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/border_bleu_fonce"
+                            android:padding="5dp"
+                            android:text="confirmer"
+                            android:textAlignment="center"
+                            android:textColor="@color/white" />
 
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="356dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/border_reunion"
+                    android:orientation="vertical"
+                    android:padding="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="37dp"
+                        android:layout_margin="5dp">
+
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_width="306dp"
+                            android:layout_height="33dp"
+                            android:layout_margin="5dp"
+                            android:text="Réunion d'équipe hebdomadaire"
+                            android:textAlignment="textStart"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="17dp"
+                            android:layout_gravity="center"
+
+                            android:layout_marginLeft="1dp"
+                            android:maxWidth="30dp"
+                            android:src="@drawable/valider_icon" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="5dp">
+
+                        <TextView
+                            android:layout_width="96dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border_7jours"
+                            android:padding="4dp"
+                            android:text="Dans -7 jours"
+                            android:textAlignment="center"
+                            android:textColor="#1610B8" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/conge" />
+
+                        <TextView
+                            android:layout_width="296dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:text="Mardi 21 octobre 2025" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/time" />
+
+                        <TextView
+                            android:layout_width="296dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:text="10:30 " />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/localisation" />
+
+                        <TextView
+                            android:layout_width="296dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:text="salle de conference A" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/employe" />
+
+                        <TextView
+                            android:layout_width="296dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="12"
+                            android:text="10/12 confirmes" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_margin="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/gris_clair" />
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="7dp"
+                            android:layout_marginRight="50dp"
+                            android:layout_weight="1"
+                            android:text="Organisé par Jean Martin"
+                            android:textSize="12sp"
+                            android:textStyle="italic" />
+
+
+                    </LinearLayout>
+                </LinearLayout>
 
                 <!-- les ruenions passees  -->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border_white"
-                    android:layout_margin="25dp">
+                    android:layout_margin="25dp"
+                    android:background="@drawable/border_white">
 
                     <TextView
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="10dp"
                         android:text="Réunions passées"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginLeft="25dp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="10dp"
-                        android:textSize="18sp"
 
                         />
 
@@ -577,16 +585,15 @@
                         android:id="@+id/container"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/border_simple"
-                        app:layout_constraintTop_toBottomOf="@id/title"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:padding="8dp"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp"
                         android:layout_marginBottom="20dp"
-
+                        android:background="@drawable/border_simple"
+                        android:padding="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/title"
 
 
                         >
@@ -596,31 +603,29 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Bilan mensuel"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
                             android:textSize="18sp"
-                            />
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/statut"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="terminer"
-                            app:layout_constraintStart_toEndOf="@id/soustitle"
-                            app:layout_constraintTop_toTopOf="@id/soustitle"
                             android:layout_marginStart="120dp"
                             android:background="@drawable/border_vide"
                             android:padding="6dp"
-                            />
+                            android:text="terminer"
+                            app:layout_constraintStart_toEndOf="@id/soustitle"
+                            app:layout_constraintTop_toTopOf="@id/soustitle" />
 
                         <TextView
                             android:id="@+id/date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Mercredi 12 Octobre 2024 - 11:30"
-                            app:layout_constraintTop_toBottomOf="@+id/statut"
-                            app:layout_constraintStart_toStartOf="parent"
                             android:layout_marginBottom="8dp"
+                            android:text="Mercredi 12 Octobre 2024 - 11:30"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/statut"
 
                             />
 
@@ -630,48 +635,41 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_marginStart="3dp"
-                            app:layout_constraintTop_toBottomOf="@+id/date"
+                            android:layout_marginTop="8dp"
                             android:src="@drawable/localisation"
                             app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginTop="8dp"
-                            />
+                            app:layout_constraintTop_toBottomOf="@+id/date" />
 
                         <TextView
                             android:id="@+id/salletxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Salle de conférence B"
-                            app:layout_constraintTop_toBottomOf="@+id/date"
-                            app:layout_constraintStart_toEndOf="@+id/iconDate"
                             android:layout_marginLeft="8dp"
                             android:layout_marginTop="7dp"
+                            android:text="Salle de conférence B"
+                            app:layout_constraintStart_toEndOf="@+id/iconDate"
+                            app:layout_constraintTop_toBottomOf="@+id/date"
 
                             />
 
 
-
-
-
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/container2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/border_simple"
-                        app:layout_constraintTop_toBottomOf="@id/container"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:padding="8dp"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginRight="20dp"
                         android:layout_marginBottom="20dp"
+                        android:background="@drawable/border_simple"
+                        android:padding="8dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/container"
 
 
                         >
@@ -681,30 +679,28 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Bilan mensuel"
+                            android:textSize="18sp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:textSize="18sp"/>
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/statut2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="terminer"
-                            app:layout_constraintStart_toEndOf="@id/soustitle2"
-                            app:layout_constraintTop_toTopOf="@id/soustitle2"
                             android:layout_marginStart="115dp"
                             android:background="@drawable/border_vide"
                             android:padding="6dp"
-                            />
+                            android:text="terminer"
+                            app:layout_constraintStart_toEndOf="@id/soustitle2"
+                            app:layout_constraintTop_toTopOf="@id/soustitle2" />
 
                         <TextView
                             android:id="@+id/date2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Mercredi 12 Octobre 2024 - 11:30"
-                            app:layout_constraintTop_toBottomOf="@+id/statut2"
                             app:layout_constraintStart_toStartOf="parent"
-                            />
+                            app:layout_constraintTop_toBottomOf="@+id/statut2" />
 
 
                         <ImageView
@@ -712,21 +708,20 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_marginStart="3dp"
-                            app:layout_constraintTop_toBottomOf="@+id/date2"
+                            android:layout_marginTop="8dp"
                             android:src="@drawable/localisation"
                             app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginTop="8dp"
-                            />
+                            app:layout_constraintTop_toBottomOf="@+id/date2" />
 
                         <TextView
                             android:id="@+id/salletxt2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Salle de conférence B"
-                            app:layout_constraintTop_toBottomOf="@+id/date2"
-                            app:layout_constraintStart_toEndOf="@+id/iconDate2"
                             android:layout_marginLeft="8dp"
                             android:layout_marginTop="7dp"
+                            android:text="Salle de conférence B"
+                            app:layout_constraintStart_toEndOf="@+id/iconDate2"
+                            app:layout_constraintTop_toBottomOf="@+id/date2"
 
                             />
 
@@ -734,7 +729,6 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
             </LinearLayout>
