@@ -14,11 +14,11 @@
         android:layout_above="@id/footer"
         android:fillViewport="true"
         android:layout_marginBottom="100dp">
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <!-- header -->
 
             <!-- ***** header ****** -->
             <LinearLayout
@@ -45,36 +45,29 @@
                     android:layout_marginTop="10dp" />
             </LinearLayout>
 
+            <!-- **** planifier reunion ****-->
+            <Button
+                android:id="@+id/btnPlanifierReunion"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:padding="0dp"
+                android:background="@drawable/border_button"
+                android:text="+ Planifier un reunion"
+                app:backgroundTint="@null" />
+
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center|top"
-                android:orientation="vertical"
-                android:layout_marginTop="140dp">
-
-
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="356dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:layout_marginTop="60dp"
-
-                    android:background="@drawable/border_button"
-                    android:text="+ Planifier un reunion"
-                    app:backgroundTint="@null" />
-
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="15dp"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="1dp"
-                    android:background="@drawable/border_blue">
+                    android:padding="15dp"
+                    android:background="@drawable/border_blue"
+                    >
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -211,467 +204,57 @@
                 </LinearLayout>
 
 
-                <!-- reunions -->
+                <!-- reunions planifié container -->
+            <LinearLayout
+                android:id="@+id/reunionPlanifieContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:background="@drawable/border_gris"
+
+                >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="92dp"
+                        android:text="Réunions à venir"
+                        android:textSize="18sp"
+                        android:layout_margin="10dp"
+                       />
+           </LinearLayout>
+
+
+
+
+                <!-- les ruenions passees  container  -->
+
+            <LinearLayout
+                android:id="@+id/reunionPasseContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:background="@drawable/border_gris"
+                >
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="92dp"
-                    android:text="Réunions à venir"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    app:cardElevation="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardBackgroundColor="@android:color/white">
-
-                    <!-- Ton contenu ici -->
-                    <LinearLayout
-                        android:layout_width="356dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="15dp"
-                        android:background="@drawable/border_reunion"
-                        android:orientation="vertical"
-                        android:padding="2dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="37dp"
-                            android:layout_margin="5dp">
-
-                            <TextView
-                                android:id="@+id/textView9"
-                                android:layout_width="269dp"
-                                android:layout_height="33dp"
-                                android:layout_margin="5dp"
-                                android:text="Réunion d'équipe hebdomadaire"
-                                android:textAlignment="textStart"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:layout_width="14dp"
-                                android:layout_height="13dp"
-                                android:layout_gravity="center"
-                                android:layout_margin="5dp"
-                                android:maxWidth="30dp"
-                                android:src="@drawable/edit" />
-
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="17dp"
-                                android:layout_gravity="center"
-                                android:layout_margin="5dp"
-                                android:maxWidth="30dp"
-                                android:src="@drawable/delete" />
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginTop="1dp">
-
-                            <TextView
-                                android:layout_width="96dp"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/border_7jours"
-                                android:text="Dans -7 jours"
-                                android:textAlignment="center"
-                                android:padding="4dp"
-                                android:textColor="#1610B8"
-                                />
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:orientation="horizontal"
-                            android:layout_margin="4dp">
-
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/conge"
-                                android:layout_marginLeft="5dp"/>
-
-                            <TextView
-                                android:layout_width="296dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="12"
-                                android:text="Mardi 21 octobre 2025" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:orientation="horizontal"
-                            android:layout_margin="4dp">
-
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/time"
-                                android:layout_marginLeft="5dp"
-                                />
-
-                            <TextView
-                                android:layout_width="296dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="12"
-                                android:text="10:30 " />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:orientation="horizontal"
-                            android:layout_margin="4dp">
-
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/localisation"
-                                android:layout_marginLeft="5dp"/>
-
-                            <TextView
-                                android:layout_width="296dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="12"
-                                android:text="salle de conference A"
-                                />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:orientation="horizontal"
-                            android:layout_margin="4dp">
-
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="15dp"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="5dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/employe"
-                                android:layout_marginLeft="5dp"/>
-
-                            <TextView
-                                android:layout_width="296dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="12"
-                                android:text="10/12 confirmes" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/gris_clair"
-                            android:layout_margin="10dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Point hebdomadaire sur l'avancement des projets"
-                            android:layout_marginLeft="7dp"
-                            android:textStyle="italic"
-                            android:textSize="12sp"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/gris_clair"
-                            android:layout_margin="10dp"/>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginBottom="8dp"
-                            >
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Développement"
-                                android:layout_weight="1"
-                                android:background="@drawable/border_vide"
-                                android:textAlignment="center"
-                                android:padding="3dp"
-                                android:textStyle="bold"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Par Jean Martin"
-                                android:layout_weight="1"
-                                android:textAlignment="viewEnd"
-                                android:layout_marginRight="8dp"
-                                />
-
-
-                        </LinearLayout>
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-
-                <!-- les ruenions passees  -->
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border_white"
-                    android:layout_margin="25dp">
-
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Réunions passées"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginLeft="25dp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="10dp"
-                        android:textSize="18sp"
-
-                        />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/container"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_simple"
-                        app:layout_constraintTop_toBottomOf="@id/title"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:padding="8dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp"
-
-
-
-                        >
-
-                        <TextView
-                            android:id="@+id/soustitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Bilan mensuel"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:textSize="18sp"
-                            />
-
-                        <TextView
-                            android:id="@+id/statut"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="terminer"
-                            app:layout_constraintStart_toEndOf="@id/soustitle"
-                            app:layout_constraintTop_toTopOf="@id/soustitle"
-                            android:layout_marginStart="120dp"
-                            android:background="@drawable/border_vide"
-                            android:padding="6dp"
-                            />
-
-                        <TextView
-                            android:id="@+id/date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Mercredi 12 Octobre 2024 - 11:30"
-                            app:layout_constraintTop_toBottomOf="@+id/statut"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginBottom="8dp"
-
-
-                            />
-
-
-                        <ImageView
-                            android:id="@+id/iconDate"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginStart="3dp"
-                            app:layout_constraintTop_toBottomOf="@+id/date"
-                            android:src="@drawable/localisation"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginTop="8dp"
-                            />
-
-                        <TextView
-                            android:id="@+id/salletxt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Salle de conférence B"
-                            app:layout_constraintTop_toBottomOf="@+id/date"
-                            app:layout_constraintStart_toEndOf="@+id/iconDate"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="7dp"
-
-                            />
-
-                        <ImageView
-                            android:id="@+id/iconParticip"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginStart="15dp"
-                            app:layout_constraintTop_toBottomOf="@+id/date"
-                            android:src="@drawable/employe"
-                            app:layout_constraintStart_toEndOf="@id/salletxt"
-                            android:layout_marginTop="8dp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/participtxt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 15 participants"
-                            app:layout_constraintTop_toBottomOf="@+id/date"
-                            app:layout_constraintStart_toEndOf="@+id/iconParticip"
-                            android:layout_marginLeft="3dp"
-                            android:layout_marginTop="7dp"
-
-                            />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/container2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/border_simple"
-                        app:layout_constraintTop_toBottomOf="@id/container"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:padding="8dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-
-
-
-                        >
-
-                        <TextView
-                            android:id="@+id/soustitle2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Bilan mensuel"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:textSize="18sp"/>
-
-                        <TextView
-                            android:id="@+id/statut2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="terminer"
-                            app:layout_constraintStart_toEndOf="@id/soustitle2"
-                            app:layout_constraintTop_toTopOf="@id/soustitle2"
-                            android:layout_marginStart="120dp"
-                            android:background="@drawable/border_vide"
-                            android:padding="6dp"
-                            />
-
-                        <TextView
-                            android:id="@+id/date2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Mercredi 12 Octobre 2024 - 11:30"
-                            app:layout_constraintTop_toBottomOf="@+id/statut2"
-                            app:layout_constraintStart_toStartOf="parent"
-                            />
-
-
-                        <ImageView
-                            android:id="@+id/iconDate2"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginStart="3dp"
-                            app:layout_constraintTop_toBottomOf="@+id/date2"
-                            android:src="@drawable/localisation"
-                            app:layout_constraintStart_toStartOf="parent"
-                            android:layout_marginTop="8dp"
-                            />
-
-                        <TextView
-                            android:id="@+id/salletxt2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Salle de conférence B"
-                            app:layout_constraintTop_toBottomOf="@+id/date2"
-                            app:layout_constraintStart_toEndOf="@+id/iconDate2"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="7dp"
-
-                            />
-
-                        <ImageView
-                            android:id="@+id/iconParticip2"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_marginStart="15dp"
-                            app:layout_constraintTop_toBottomOf="@+id/date2"
-                            android:src="@drawable/employe"
-                            app:layout_constraintStart_toEndOf="@id/salletxt2"
-                            android:layout_marginTop="8dp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/participtxt2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 15 participants"
-                            app:layout_constraintTop_toBottomOf="@+id/date2"
-                            app:layout_constraintStart_toEndOf="@+id/iconParticip2"
-                            android:layout_marginLeft="3dp"
-                            android:layout_marginTop="7dp"
-
-                            />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
+                    android:text="Réunions passées"
+                    android:textSize="18sp"
+                    android:layout_margin="10dp"
+                    />
             </LinearLayout>
-        </RelativeLayout>
+
+
+
+
+
+
+        </LinearLayout>
     </ScrollView>
 
 
