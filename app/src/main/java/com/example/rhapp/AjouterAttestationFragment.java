@@ -34,7 +34,6 @@ public class AjouterAttestationFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment AjouterAttestationFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static AjouterAttestationFragment newInstance(String param1, String param2) {
         AjouterAttestationFragment fragment = new AjouterAttestationFragment();
         Bundle args = new Bundle();
