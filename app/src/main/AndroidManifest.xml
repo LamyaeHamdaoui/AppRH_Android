@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
+            android:name=".PresenceActivity"
+            android:exported="false" />
+        <activity
             android:name=".AttestationEmployeActivity"
             android:exported="false" />
         <activity
