@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        >
+
+        <TextView
+            android:id="@+id/textClose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="X"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAlignment="textEnd"
+            />
+
+        <TextView
+            android:id="@+id/textNotif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notifications"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textClose"
+            android:textStyle="bold"
+            android:textSize="20sp"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tous marquer comme lit"
+            app:layout_constraintTop_toBottomOf="@+id/textClose"
+            app:layout_constraintStart_toEndOf="@+id/textNotif"
+            android:layout_marginLeft="100dp"
+            android:textColor="@color/blue"
+            android:textStyle="bold"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/textNotif"
+            app:layout_constraintStart_toEndOf="parent">
+
+            <!-- premiere notification -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="@drawable/border_simple">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/conge_blue"/>
+
+                    <Space
+                        android:layout_weight="1"
+                        android:layout_height="0dp"
+                        android:layout_width="0dp"
+                        />
+
+                    <!-- Statut aligné à droite -->
+                    <TextView
+                        android:id="@+id/StatutConge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="En attente"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/orange"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:background="@drawable/border_orange"
+                        android:layout_marginRight="10dp"
+                        />
+                </LinearLayout>
+                <!-- Dates -->
+                <TextView
+                    android:id="@+id/DatesDemandee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Demandée le 18 Octobre 2025"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp"
+                    android:layout_marginTop="10dp" />
+
+                <!-- Motif -->
+                <TextView
+                    android:id="@+id/MotifAttestation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Demande de crédit bancaire"
+                    android:textColor="@color/grey"
+                    android:textSize="15sp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="italic"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/gris_clair" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="En cours de traitement avec le service RH"
+                    android:textColor="@color/orange"
+                    android:layout_marginTop="10dp"/>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
