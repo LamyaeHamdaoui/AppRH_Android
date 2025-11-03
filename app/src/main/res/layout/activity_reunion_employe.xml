@@ -57,20 +57,22 @@
 
 
                 <LinearLayout
-                    android:layout_width="356dp"
-                    android:layout_height="110dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="15dp"
-                    android:background="@drawable/border_reunion"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="15dp"
+                    android:background="@drawable/border_blue">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="84dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <FrameLayout
                             android:layout_width="45dp"
@@ -92,23 +94,27 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="0" />
+                            android:text="0"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="15dp"
+                            />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="À venir"
-                            android:textStyle="bold" />
+                            android:textSize="15sp"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="84dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <FrameLayout
                             android:layout_width="45dp"
@@ -130,7 +136,11 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="0" />
+                            android:text="0"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:layout_marginTop="15dp"
+                            />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -138,15 +148,18 @@
                             android:layout_gravity="center"
                             android:text="Confirmées "
                             android:textAlignment="center"
-                            android:textStyle="bold" />
+                            android:textSize="15sp"
+                            android:layout_marginTop="5sp"
+                            />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="84dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
                         <FrameLayout
                             android:layout_width="45dp"
@@ -169,7 +182,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="0" />
+                            android:text="0"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="15dp"/>
 
                         <TextView
                             android:id="@+id/textView5"
@@ -177,7 +193,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="Ce mois"
-                            android:textStyle="bold" />
+                            android:textSize="15sp"
+                            android:layout_marginTop="5dp"
+                            />
 
                     </LinearLayout>
                 </LinearLayout>
