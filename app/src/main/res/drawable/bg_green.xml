@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- cadre conteneur-->
+<!-- creer un forme rectanguler pour les des differentes header : gestion employées , conjés ... en haut -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <solid android:color="@color/orange_light2"
-
-        />
+    <!-- couleur de background-->
+    <solid android:color="@color/green"/>
 
     <!--radius des coins -->
     <corners
         android:radius="10dp"
-
         />
-    <stroke android:color="@color/orange"
-        android:width="2dp"
-
-        />
-
 
 </shape>
