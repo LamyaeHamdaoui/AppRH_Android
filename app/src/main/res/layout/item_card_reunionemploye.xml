@@ -59,34 +59,8 @@
 
 
             </LinearLayout>
-            <Space
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
 
-            <LinearLayout
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:gravity="right"
-                android:layout_marginRight="10dp"
 
-                >
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/edit"
-                    android:layout_marginRight="15dp"
-                    />
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/delete"
-                    />
-
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -180,33 +154,15 @@
                     android:src="@drawable/employe" />
 
                 <TextView
-                    android:id="@+id/employeConfirmes"
+                    android:id="@+id/participants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="10/12 confirmés"
+                    android:text="10 particpitants"
                     android:textColor="@color/grey_light"
                     android:textSize="12sp"
-
                     />
             </LinearLayout>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_margin="10dp"
-                android:background="@color/gris_clair" />
-
-            <TextView
-                android:id="@+id/descriptionReunion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="Point hebdomadaire sur l'avancement des projets"
-                android:textColor="@color/grey"
-                android:textSize="11sp"
-                android:textStyle="italic"
-                />
 
             <View
                 android:layout_width="wrap_content"
@@ -223,34 +179,37 @@
 
 
                 <TextView
-                    android:id="@+id/departementReunion"
+                    android:id="@+id/reunionLeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:text="Développement"
-                    android:textColor="@color/black"
+                    android:layout_marginRight="10dp"
+                    android:text="Organisé par Lamyae Hamdaoui"
+                    android:textColor="@color/grey"
                     android:textSize="12sp"
-                    android:background="@drawable/border_gris"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp"
-                    android:layout_gravity="left"
+                    android:layout_marginLeft="5dp"
                     />
+
                 <Space
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
                     android:layout_weight="1"/>
 
-                <TextView
-                    android:id="@+id/reunionLeader"
+
+                <Button
+                    android:id="@+id/btnConfirmerReunion"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="25dp"
+                    android:text="Confirmer"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    android:background="@drawable/border_button"
+                    app:backgroundTint="@null"
+                    android:padding="0dp"
+                    android:layout_gravity="left"
                     android:layout_marginRight="10dp"
-                    android:text="Lamyae Hamdaoui"
-                    android:textColor="@color/grey"
-                    android:textSize="11sp"
                     />
 
             </LinearLayout>
