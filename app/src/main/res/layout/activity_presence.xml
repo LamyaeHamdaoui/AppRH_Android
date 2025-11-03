@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PresenceActivity"
+    android:background="#F5F5F5">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_anchorGravity="center"
+        android:id="@+id/scrollView2"
+        app:layout_anchor="@+id/scrollView2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ***** header ****** -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_header_blue"
+                android:layout_margin="10dp"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gestion de présence"
+                    android:textSize="30sp"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Marquez votre présence quotidienne"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+
+            <!--- ****** Sous header ****** -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/border_blue"
+                android:layout_margin="10dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+
+
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/time_bleu"
+                        app:tint="@color/blue"
+                        android:background="@drawable/border_icon_blue"
+                        android:padding="15dp"
+                        android:layout_gravity="center_vertical"
+                        />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="3"
+                        android:paddingStart="20dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/grey_light"
+                            android:text="Aujourd'hui"
+                            android:textSize="20sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/grey_light"
+                            android:text="Demandez un document officiel"
+                            android:textSize="14sp"
+                            android:layout_marginTop="3dp"
+                            />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Marquer ma présence"
+                    android:background="@drawable/border_button"
+                    android:layout_marginTop="10dp"
+                    app:backgroundTint="@null"
+                    />
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Justifier une absence"
+                    android:background="@drawable/border_vide"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
+                    app:backgroundTint="@null"
+                    />
+
+            </LinearLayout>
+
+            <!-- *** barre attente refuse approuve *** -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/border_blue"
+                android:layout_margin="10dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/approuve"
+                        android:background="@drawable/border_green"
+                        android:padding="6dp" />
+
+                    <TextView
+                        android:id="@+id/nbreApprouveConge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:layout_marginTop="7dp"
+                        android:textSize="15sp"
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Présences"
+                        android:textColor="@color/grey_light"
+                        android:textSize="12sp"
+
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/refuse"
+                        android:background="@drawable/border_icon_red"
+                        android:padding="6dp" />
+
+                    <TextView
+                        android:id="@+id/nbreRefuseConge"
+                        android:layout_width="7dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:text="0"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Absences"
+                        android:textColor="@color/grey_light"
+                        android:textSize="12sp"
+
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/conge_blue"
+                        android:background="@drawable/border_icon_blue"
+                        android:padding="6dp" />
+
+                    <TextView
+                        android:id="@+id/nbreTotalConge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:layout_marginTop="7dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Taux"
+                        android:textColor="@color/grey_light"
+                        android:textSize="12sp"
+
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/historiqueContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:background="@drawable/border_gris"
+                android:layout_margin="10dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Historique"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="top|end">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/bell"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="17dp"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/notification_border"
+            android:backgroundTint="@color/red"
+            android:text="0"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:padding="5dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/accueil"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/home" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accueil"
+                android:textSize="15sp"
+                android:textColor="@color/grey"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/employes"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/presence" />
+
+            <TextView
+                android:id="@+id/textemployee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Présence"
+                android:textSize="15sp"
+                android:textColor="@color/grey"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/conge"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/conge" />
+
+            <TextView
+                android:id="@+id/textconge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Congés"
+                android:textSize="15sp"
+                android:textColor="@color/grey"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/reunions"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/reunion" />
+
+            <TextView
+                android:id="@+id/textreunion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Réunions"
+                android:textSize="15sp"
+                android:textColor="@color/grey"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/profil"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:maxWidth="30dp"
+                android:src="@drawable/profil"/>
+
+            <TextView
+                android:id="@+id/textprofil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profil"
+                android:textSize="15sp"
+                android:textColor="@color/grey"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
