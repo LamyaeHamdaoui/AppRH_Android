@@ -100,7 +100,7 @@
                     <ImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:src="@drawable/enAttente"
+                        android:src="@drawable/en_attente"
                         android:background="@drawable/bg_orange_icones"
                         android:padding="6dp" />
 
@@ -211,39 +211,25 @@
                 android:gravity="center"
                 >
 
-                    <Button
-                        android:id="@+id/btnCongeAttente"
-                        android:layout_height="25dp"
-                        android:layout_width="wrap_content"
-                        android:background="@drawable/border_gris"
-                        android:text="En attente "
-                        app:backgroundTint="@null"
-                        android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_margin="3dp"
-                        android:layout_weight="1"
-                        android:padding="0dp"
-                        />
+                        <Button
+                            android:id="@+id/btnCongeAttente"
+                            android:layout_height="30dp"
+                            android:layout_width="wrap_content"
+                            android:background="@drawable/border_gris"
+                            android:text="En attente "
+                            app:backgroundTint="@null"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_margin="3dp"
+                            android:padding="0dp"
+                            android:layout_weight="1"
+                            />
 
-                  <!--  <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignRight="@+id/btnCongeAttente"
-                        android:background="@drawable/bg_orange_hover"
-                        android:layout_centerVertical="true"
-                        android:paddingRight="7dp"
-                        android:paddingLeft="7dp"
-                        android:text="0"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:layout_marginRight="3dp"
-                        /> -->
 
 
                     <Button
                         android:id="@+id/btnCongeApprouve"
-                        android:layout_height="25dp"
+                        android:layout_height="30dp"
                         android:layout_width="wrap_content"
                         android:text="Approuvés"
                         android:textColor="@color/black"
@@ -259,7 +245,7 @@
 
                     <Button
                         android:id="@+id/btnCongeRefuse"
-                        android:layout_height="25dp"
+                        android:layout_height="30dp"
                         android:layout_width="wrap_content"
                         android:text="Refusés"
                         android:textColor="@color/black"
