@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="15dp"
+    android:background="#F5F5F5"
+    android:layout_gravity="center"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Titre principal -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nouvelle réunion"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Sous-titre -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Planifiez une nouvelle réunion pour votre équipe"
+            android:textColor="@color/grey"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"
+            />
+        <!-- Type de congé -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Titre de la réunion"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/titrereunion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ex:Réunion d'équipe "
+            android:inputType="date"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+
+
+        <!-- Date et heure -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!-- Date  -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="5dp" />
+
+                <EditText
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=" jj/mm/aaaa "
+                    android:inputType="date"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/border"
+                    android:padding="5dp"/>
+            </LinearLayout>
+
+
+            <!-- Heure  -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Heure"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="5dp" />
+
+                <EditText
+                    android:id="@+id/dateDebutConge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=" -- : --  "
+                    android:inputType="time"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/border"
+                    android:padding="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Lieu -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lieu "
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/dateFinConge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" salle de conference A"
+            android:inputType="date"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+        <!-- Departement-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Département"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <Spinner
+            android:id="@+id/typeConge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:entries="@array/departements"
+            />
+
+        <!-- Description  -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description (optionnelle) "
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/MotifConge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" Ordre du jour et points à discuter"
+            android:textSize="15dp"
+            android:inputType="textLongMessage"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/border"
+            android:padding="5dp"/>
+
+
+        <!-- button d envoyer -->
+        <Button
+            android:id="@+id/btnEnvoyerDemande"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Créer la réunion"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@null"
+            android:textSize="15dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/border_button"
+            app:backgroundTint="@null"
+            android:padding="0dp"
+            />
+
+    </LinearLayout>
+</ScrollView>

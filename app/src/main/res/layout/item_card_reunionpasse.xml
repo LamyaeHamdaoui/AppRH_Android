@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp"
+    app:cardBackgroundColor="@color/white"
+    android:background="@drawable/border"
+    app:backgroundTint="@null"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:padding="8dp"
+        android:layout_margin="15dp"
+        android:orientation="vertical"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+        <TextView
+            android:id="@+id/soustitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bilan mensuel"
+          android:layout_margin="5dp"
+            android:textSize="15sp"
+            android:textColor="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/statutReunion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="terminer"
+            android:background="@drawable/border_gris"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/dateReunion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mercredi 12 Octobre 2024 - 11:30"
+            android:textSize="11sp"
+            android:layout_margin="5dp"
+            android:textColor="@color/grey"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp">
+        <ImageView
+            android:id="@+id/iconDate"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/localisation"
+            app:tint="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/localReunion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salle de conférence B"
+            android:layout_marginLeft="5dp"
+            android:textSize="11sp"
+            />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
+        <ImageView
+            android:id="@+id/iconParticip"
+            android:src="@drawable/employe"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:tint="@color/grey"
+            />
+
+        <TextView
+            android:id="@+id/participants"
+            android:text=" 15 participants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textSize="11sp"
+
+            />
+
+         </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

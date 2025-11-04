@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CongesActivity"
+    tools:context=".CongesEmploye"
     android:background="#F5F5F5"
     >
 
@@ -153,7 +153,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:background="@drawable/bg_orange_icones"
-                        android:src="@drawable/enAttente"
+                        android:src="@drawable/en_attente"
                         android:padding="12dp"
                         android:layout_gravity="center_horizontal"
                         />

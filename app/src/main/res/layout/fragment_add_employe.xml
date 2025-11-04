@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="15dp"
-    android:fillViewport="true"
     android:background="#F5F5F5"
+    android:layout_gravity="center"
     >
 
     <LinearLayout
@@ -16,7 +16,6 @@
 
         <!-- Titre principal -->
         <TextView
-            android:id="@+id/titreAddEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nouvel employé"
@@ -29,7 +28,6 @@
 
         <!-- Sous-titre -->
         <TextView
-            android:id="@+id/remplissez"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Remplissez les informations de l'employé"
@@ -46,10 +44,10 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/nomCompletEditText"
+            android:id="@+id/nomEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="nom complet"
+            android:hint=" nom complet"
             android:background="@drawable/border"
             android:padding="5dp"
             android:layout_marginBottom="20dp" />
@@ -63,10 +61,10 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/emailEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="email@example.com"
+            android:hint=" email@example.com"
             android:inputType="textEmailAddress"
             android:layout_marginBottom="20dp"
             android:background="@drawable/border"
@@ -81,10 +79,10 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/telephoneEditText"
+            android:id="@+id/telephoneEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="xx xx xx xx xx"
+            android:hint=" xx xx xx xx xx"
             android:inputType="phone"
             android:layout_marginBottom="20dp"
             android:background="@drawable/border"
@@ -99,10 +97,10 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/posteEditText"
+            android:id="@+id/posteEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ex: Développeur"
+            android:hint=" ex: Développeur"
             android:layout_marginBottom="20dp"
             android:background="@drawable/border"
             android:padding="5dp"/>
@@ -116,12 +114,13 @@
             android:layout_marginBottom="5dp" />
 
         <Spinner
-            android:id="@+id/departementSpinner"
+            android:id="@+id/departementEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="5dp"
+            android:entries="@array/departements"/>
 
         <!-- Date d'embauche -->
         <TextView
@@ -132,10 +131,10 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/dateEmbaucheEditText"
+            android:id="@+id/dateEmbaucheEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="jj/mm/aaaa"
+            android:hint=" jj/mm/aaaa"
             android:inputType="date"
             android:layout_marginBottom="20dp"
             android:background="@drawable/border"
@@ -150,10 +149,10 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/soldeCongesEditText"
+            android:id="@+id/soldeCongesEmploye"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="30"
+            android:hint=" 30"
             android:inputType="number"
             android:layout_marginBottom="30dp"
             android:background="@drawable/border"
@@ -162,14 +161,18 @@
         <!-- Ligne de séparation -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0"
-            android:layout_marginBottom="20dp" />
+            android:layout_height="2dp"
+            android:background="@color/gris_clair"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            />
 
         <!-- Section Ajuster l'employé -->
         <Button
+            android:id="@+id/btnAddEmploye"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="Ajouter l'employé"
             android:layout_marginBottom="20dp"
             android:backgroundTint="@null"
@@ -177,9 +180,9 @@
             android:textColor="#FFFFFF"
             android:background="@drawable/border_button"
             app:backgroundTint="@null"
+            android:padding="0dp"
 
             />
-        <!-- Vous pouvez ajouter ici les contrôles pour ajuster l'employé -->
 
     </LinearLayout>
 </ScrollView>

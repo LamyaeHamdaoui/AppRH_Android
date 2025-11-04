@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
+            android:name=".PresenceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AttestationEmployeActivity"
+            android:exported="false" />
+        <activity
             android:name=".HelpSupportActivity"
             android:exported="false" />
         <activity
@@ -41,6 +47,9 @@
         <activity
             android:name=".reunionActivity"
             android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

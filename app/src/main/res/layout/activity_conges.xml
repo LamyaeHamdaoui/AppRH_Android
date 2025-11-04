@@ -100,7 +100,7 @@
                     <ImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:src="@drawable/enAttente"
+                        android:src="@drawable/en_attente"
                         android:background="@drawable/bg_orange_icones"
                         android:padding="6dp" />
 
@@ -202,60 +202,76 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/border_button"
                 android:backgroundTint="#DEDEDE"
+                android:gravity="center"
                 >
-                <Button
-                    android:layout_height="35dp"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/border_gris"
-                    android:text="En attente"
-                    app:backgroundTint="@null"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="@color/white"
-                    android:layout_margin="2dp"
-                    />
-                <Button
-                    android:layout_height="35dp"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Approuvés"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    />
-                <Button
-                    android:layout_height="35dp"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Refusés"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    />
+
+                        <Button
+                            android:id="@+id/btnCongeAttente"
+                            android:layout_height="30dp"
+                            android:layout_width="wrap_content"
+                            android:background="@drawable/border_gris"
+                            android:text="En attente "
+                            app:backgroundTint="@null"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_margin="3dp"
+                            android:padding="0dp"
+                            android:layout_weight="1"
+                            />
+
+
+
+                    <Button
+                        android:id="@+id/btnCongeApprouve"
+                        android:layout_height="30dp"
+                        android:layout_width="wrap_content"
+                        android:text="Approuvés"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:backgroundTint="#DEDEDE"
+                        android:layout_margin="2dp"
+                        android:layout_centerInParent="true"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+
+                        />
+
+
+                    <Button
+                        android:id="@+id/btnCongeRefuse"
+                        android:layout_height="30dp"
+                        android:layout_width="wrap_content"
+                        android:text="Refusés"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:backgroundTint="#DEDEDE"
+                        android:layout_margin="2dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_weight="1"
+                        android:padding="0dp"
+                        />
+
+
 
 
             </LinearLayout>
 
             <!-- **** En attente Container **** -->
-        <LinearLayout
-            android:id="@+id/viewCongeAttente"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            />
+            <LinearLayout
+                android:id="@+id/viewCongeAttente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                />
 
             <!-- **** Approuvés Container **** -->
             <LinearLayout
