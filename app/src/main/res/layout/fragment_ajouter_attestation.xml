@@ -39,7 +39,6 @@
                 android:layout_height="wrap_content"
                 android:text="Type d'attestation"
                 android:textSize="16sp"
-                android:textStyle="600"
                 android:textColor="#333"
                 android:layout_marginBottom="8dp" />
 
@@ -59,14 +58,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Sélectionnez un type"
-                    android:textColor="#999"
+                    android:textColor="@color/grey_light"
                     android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_down"
-                    android:tint="#666" />
 
             </LinearLayout>
 
@@ -76,7 +70,6 @@
                 android:layout_height="wrap_content"
                 android:text="Motif de la demande"
                 android:textSize="16sp"
-                android:textStyle="600"
                 android:textColor="#333"
                 android:layout_marginBottom="8dp" />
 
