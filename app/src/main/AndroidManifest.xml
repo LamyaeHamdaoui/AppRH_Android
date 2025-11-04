@@ -48,6 +48,9 @@
             android:name=".reunionActivity"
             android:exported="false" />
         <activity
+            android:name=".ProfileActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

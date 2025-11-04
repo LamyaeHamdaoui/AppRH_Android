@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         Button connecteBtn = findViewById(R.id.connecteBtn);
+        Button createAccBtn = findViewById(R.id.createAccBtn);
+        TextView forgottenPasswordBtn = findViewById(R.id.forgottenPasswordBtn);
 
 
         connecteBtn.setOnClickListener(new View.OnClickListener(){
@@ -32,5 +34,23 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
             }
         });
+
+        createAccBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this, CreateAccActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        forgottenPasswordBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this, ForgottenPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 }
