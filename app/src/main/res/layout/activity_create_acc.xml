@@ -115,12 +115,13 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Retapez le mot de passe"
+                android:hint="Confirmez le mot de passe"
                 android:background="@drawable/border"
                 android:padding="15dp"
                 android:layout_marginTop="15dp"/>
         </LinearLayout>
         <Button
+            android:id="@+id/valide"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Valider"
