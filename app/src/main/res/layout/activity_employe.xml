@@ -8,11 +8,10 @@
     <ScrollView
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        tools:ignore="MissingConstraints"
-        >
+        tools:ignore="MissingConstraints">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
             <!-- ******* header ****** -->
             <LinearLayout
@@ -245,8 +244,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="5dp"
+                android:focusable="true"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clickable="true">
 
                 <ImageView
                     android:id="@+id/employes"
