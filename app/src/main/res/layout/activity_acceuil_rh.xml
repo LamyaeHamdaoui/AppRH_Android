@@ -1,0 +1,1345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F5F5F5"
+    tools:context=".AcceuilRhActivity">
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <!--  hadi header section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/header_background"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:paddingBottom="76dp">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tableau de bord RH"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:ignore="Suspicious0dp" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+
+
+
+                <ImageView
+                    android:id="@+id/notifbl"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/bell"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/notifa"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginEnd="-4dp"
+                    android:background="@drawable/notification_border"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+</LinearLayout>
+            <TextView
+                android:id="@+id/id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="CHAHLAL Ikram"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Responsable RH"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+
+            android:layout_marginHorizontal="16dp"
+
+            android:layout_marginTop="-40dp"
+
+            android:background="@drawable/cotearrondi"
+
+            android:orientation="vertical"
+
+            android:padding="16dp"
+
+            app:cardCornerRadius="16dp"
+
+            app:cardElevation="8dp"
+
+            app:elevation="8dp">
+
+
+            <!-- hada l 1 first row -->
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal"
+
+                android:weightSum="2">
+
+
+                <!-- hadi dyal employee total -->
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="120dp"
+
+                    android:layout_margin="8dp"
+
+                    android:layout_weight="1"
+
+                    android:clickable="false"
+
+                    android:focusable="false"
+
+                    android:foreground="?android:attr/selectableItemBackground"
+
+                    app:cardCornerRadius="12dp"
+
+                    app:cardElevation="4dp">
+
+
+                    <LinearLayout
+
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="match_parent"
+
+                        android:background="#CEEFF4"
+
+                        android:gravity="center"
+
+                        android:orientation="vertical"
+
+                        android:padding="16dp">
+
+
+                        <ImageView
+
+                            android:layout_width="40dp"
+
+                            android:layout_height="40dp"
+
+                            android:layout_gravity="center"
+
+                            android:layout_marginTop="12dp"
+
+                            android:scaleType="centerInside"
+
+                            android:src="@drawable/bleuuser" />
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+
+                            android:gravity="center"
+                            android:text="45"
+                            android:textStyle="bold"
+
+
+                            android:textColor="@color/black"
+
+                            android:textSize="14sp" />
+
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+
+                            android:text="Employés total"
+                            android:gravity="center"
+
+
+                            android:textColor="@color/black"
+
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="120dp"
+
+                    android:layout_margin="8dp"
+
+                    android:layout_weight="1"
+
+                    android:clickable="false"
+
+                    android:focusable="false"
+
+                    android:foreground="?android:attr/selectableItemBackground"
+
+                    app:cardCornerRadius="12dp"
+
+                    app:cardElevation="4dp">
+
+
+                    <LinearLayout
+
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="match_parent"
+
+                        android:background="#E3EBD0"
+
+                        android:gravity="center"
+
+                        android:orientation="vertical"
+
+                        android:padding="16dp">
+
+
+                        <ImageView
+
+                            android:layout_width="40dp"
+
+                            android:layout_height="40dp"
+
+                            android:layout_gravity="center"
+
+                            android:layout_marginTop="12dp"
+
+                            android:scaleType="centerInside"
+
+                            android:src="@drawable/presencecheck" />
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+
+                            android:text="42"
+                            android:gravity="center"
+                            android:textStyle="bold"
+
+
+                            android:textColor="@color/black"
+
+                            android:textSize="15sp" />
+
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+
+                            android:text="Présents aujourd'hui"
+                            android:gravity="center"
+
+                            android:textColor="@color/black"
+
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal"
+
+                android:weightSum="2">
+
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="120dp"
+
+                    android:layout_margin="8dp"
+
+                    android:layout_weight="1"
+
+                    android:clickable="false"
+
+                    android:focusable="false"
+
+                    android:foreground="?android:attr/selectableItemBackground"
+
+                    app:cardCornerRadius="12dp"
+
+                    app:cardElevation="4dp">
+
+
+                    <LinearLayout
+
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="match_parent"
+
+                        android:background="#FAD7C4"
+
+                        android:gravity="center"
+
+                        android:orientation="vertical"
+
+                        android:padding="16dp">
+
+
+                        <ImageView
+
+                            android:layout_width="40dp"
+
+                            android:layout_height="40dp"
+
+                            android:layout_gravity="center"
+
+                            android:layout_marginTop="12dp"
+
+                            android:scaleType="centerInside"
+
+                            android:src="@drawable/calendrierorange" />
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+
+                            android:text="5"
+                            android:gravity="center"
+                            android:textStyle="bold"
+
+
+                            android:textColor="@color/black"
+
+                            android:textSize="15sp" />
+
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+
+                            android:text="Congés en attente"
+
+                            android:textColor="@color/black"
+
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+
+                    android:layout_width="0dp"
+
+                    android:layout_height="120dp"
+
+                    android:layout_margin="8dp"
+
+                    android:layout_weight="1"
+
+                    android:clickable="false"
+
+                    android:focusable="false"
+
+                    android:foreground="?android:attr/selectableItemBackground"
+
+                    app:cardCornerRadius="12dp"
+
+                    app:cardElevation="4dp">
+
+
+                    <LinearLayout
+
+
+                        android:layout_width="match_parent"
+
+                        android:layout_height="match_parent"
+
+                        android:background="#D6CFFF"
+
+                        android:gravity="center"
+
+                        android:orientation="vertical"
+
+                        android:padding="16dp">
+
+
+                        <ImageView
+
+                            android:layout_width="40dp"
+
+                            android:layout_height="40dp"
+
+                            android:layout_gravity="center"
+
+                            android:layout_marginTop="12dp"
+
+                            android:scaleType="centerInside"
+
+                            android:src="@drawable/docpurple" />
+
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+
+                            android:gravity="center"
+                            android:text="2"
+
+
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+
+                            android:textSize="15sp" />
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content"
+
+                            android:text="Attestations"
+                            android:gravity="center"
+
+                            android:textColor="@color/black"
+
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <!-- hada l 1 first row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="5dp">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Actions rapides"
+                android:layout_marginBottom="5dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- hadi dyal employee total -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/employsee"
+                        android:background="@drawable/bleuaction"
+                        />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Gestion employés"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:scaleType="centerInside"
+                        android:background="@drawable/calendrierborder"
+                        android:src="@drawable/calendrierblanc" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=" Valider congés"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                    <TextView
+                        android:id="@+id/congeb"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginEnd="-2dp"
+
+                        android:background="@drawable/notification_badge"                   android:gravity="center"
+                        android:text="5"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        android:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/congev"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginEnd="-2dp"
+
+                    android:background="@drawable/notification_badge"                   android:gravity="center"
+                    android:text="5"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:visibility="visible"/>
+            </FrameLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:scaleType="centerInside"
+                        android:background="@drawable/docborder"
+                        android:src="@drawable/document" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Attestation"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                    <TextView
+                        android:id="@+id/attesrh"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="-2dp"
+                        android:layout_marginEnd="-2dp"
+
+                        android:background="@drawable/notification_badge"                   android:gravity="center"
+                        android:text="2"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        android:visibility="visible"/>
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/remot"
+                        android:background="@drawable/remotborder"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Réunions"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/cartedevoir"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <!-- 1 er ligne-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/alerticon"
+                        android:tint="#FF6B6B"
+                        tools:ignore="UseAppTint" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/idPresence"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3"
+
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:text="absences non justifiées"
+                            android:textColor="#333333"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="28dp"
+                        android:background="@drawable/btnvoir"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+
+                        android:text="Voir"
+                        android:textColor="#A3232B"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+                <!-- 2 eme ligne -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Nécessitent votre attention"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:background="@drawable/cotearrondi"
+           android:padding="16dp"
+           android:layout_marginTop="16dp"
+           android:orientation="vertical">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:gravity="center_vertical">
+               <ImageView
+                   android:layout_width="24dp"
+                   android:layout_height="24dp"
+                   android:layout_marginEnd="8dp"
+                   android:src="@drawable/zigzag"
+                   />
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Activités récentes"
+               android:textSize="16sp"/>
+           </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="20dp"
+               android:layout_marginBottom="5dp"
+               android:background="@drawable/recentborder1"
+               android:orientation="vertical"
+               android:padding="8dp">
+               <!-- 1 er ligne-->
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:gravity="center_vertical"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="24dp"
+                       android:layout_height="24dp"
+                       android:layout_marginEnd="12dp"
+                       android:src="@drawable/orangecalendar"
+
+                       tools:ignore="UseAppTint" />
+
+                   <LinearLayout
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:gravity="center_vertical"
+                       android:orientation="horizontal">
+
+
+
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="4dp"
+                           android:text="Marie Dupont a demandé un congé"
+                           android:textColor="#333333"
+                           android:textSize="16sp" />
+
+                   </LinearLayout>
+
+
+
+               </LinearLayout>
+               <!-- 2 eme ligne -->
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="38dp"
+                   android:layout_marginTop="0dp"
+                   android:text="Il y'a 2h"
+                   android:textColor="#666666"
+                   android:textSize="14sp" />
+
+
+           </LinearLayout>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="5dp"
+               android:layout_marginBottom="5dp"
+               android:background="@drawable/recentborder1"
+               android:orientation="vertical"
+               android:padding="8dp">
+               <!-- 1 er ligne-->
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:gravity="center_vertical"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="24dp"
+                       android:layout_height="24dp"
+                       android:layout_marginEnd="12dp"
+                       android:src="@drawable/docpurple"
+
+                       tools:ignore="UseAppTint" />
+
+                   <LinearLayout
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:gravity="center_vertical"
+                       android:orientation="horizontal">
+
+
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="4dp"
+                           android:text="Pierre Martin demande une attestation de travail"
+                           android:textColor="#333333"
+                           android:textSize="16sp" />
+
+                   </LinearLayout>
+
+
+
+               </LinearLayout>
+               <!-- 2 eme ligne -->
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="38dp"
+                   android:layout_marginTop="0dp"
+                   android:text="Il y'a 3h"
+                   android:textColor="#666666"
+                   android:textSize="14sp" />
+
+
+           </LinearLayout>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="5dp"
+               android:layout_marginBottom="5dp"
+
+               android:background="@drawable/recentborder1"
+               android:orientation="vertical"
+               android:padding="8dp">
+               <!-- 1 er ligne-->
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:gravity="center_vertical"
+                   android:orientation="horizontal">
+
+                   <ImageView
+                       android:layout_width="24dp"
+                       android:layout_height="24dp"
+                       android:layout_marginEnd="12dp"
+                       android:src="@drawable/alerticon"
+
+                       tools:ignore="UseAppTint" />
+
+                   <LinearLayout
+                       android:layout_width="0dp"
+                       android:layout_height="wrap_content"
+                       android:layout_weight="1"
+                       android:gravity="center_vertical"
+                       android:orientation="horizontal">
+
+
+
+                       <TextView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_marginLeft="4dp"
+                           android:text="3 absences non justifiées aujourd'hui"
+                           android:textColor="#333333"
+                           android:textSize="16sp" />
+
+                   </LinearLayout>
+
+               </LinearLayout>
+               <!-- 2 eme ligne -->
+               <TextView
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="38dp"
+                   android:layout_marginTop="0dp"
+                   android:text="Il ya 5 h"
+                   android:textColor="#666666"
+                   android:textSize="14sp" />
+
+
+           </LinearLayout>
+
+       </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="0dp"
+
+            android:layout_marginTop="16dp">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:background="@color/white">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Taux de présence par département"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="16dp"/>
+                    <!-- nta3 devloppemnet-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Développement"
+                            tools:ignore="Suspicious0dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="95%"
+                            android:textSize="16sp"
+                            android:textColor="#2599FB"
+                             />
+                    </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="4dp"
+                            android:background="#E0E0E0"
+                            android:orientation="horizontal">
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="95"
+                                android:background="#2599FB"
+                                />
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="5"
+                                android:background="E0E0E0"
+                                />
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                   <!-- marketing-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Marketing"
+                                tools:ignore="Suspicious0dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="88%"
+                                android:textSize="16sp"
+                                android:textColor="#79280E"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="4dp"
+                            android:background="#E0E0E0"
+                            android:orientation="horizontal">
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="88"
+                                android:background="#79280E"
+                                />
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="12"
+                                android:background="E0E0E0"
+                                />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Ventes"
+                                tools:ignore="Suspicious0dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="70%"
+                                android:textSize="16sp"
+                                android:textColor="#FF7A00"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="4dp"
+                            android:background="#E0E0E0"
+                            android:orientation="horizontal">
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="70"
+                                android:background="#FF7A00"
+                                />
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="30"
+                                android:background="E0E0E0"
+                                />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="12dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Sport"
+                                tools:ignore="Suspicious0dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="45"
+                                android:textSize="16sp"
+                                android:textColor="#B4BAFF"
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="4dp"
+                            android:background="#E0E0E0"
+                            android:orientation="horizontal">
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="45"
+                                android:background="#B4BAFF"
+                                />
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="55"
+                                android:background="#E0E0E0"
+                                />
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+
+
+
+
+
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:elevation="8dp"
+            android:padding="5dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/accueil"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/home" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accueil"
+                    android:textSize="15dp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/employes"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/employe" />
+
+                <TextView
+                    android:id="@+id/textemployee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Employés"
+                    android:textSize="15sp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/conge"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/conge" />
+
+                <TextView
+                    android:id="@+id/textconge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Congés"
+                    android:textSize="15sp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/reunions"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/reunion" />
+
+                <TextView
+                    android:id="@+id/textreunion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Réunions"
+                    android:textSize="15sp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/profil"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:maxWidth="30dp"
+                    android:src="@drawable/profil"/>
+
+                <TextView
+                    android:id="@+id/textprofil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profil"
+                    android:textSize="15sp"
+                    android:textColor="@color/grey"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</ScrollView>
