@@ -534,7 +534,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="13dp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:layout_marginTop="2dp"
                     android:textColor="@color/grey"/>
@@ -546,9 +546,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_margin="5dp"
+                android:focusable="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:clickable="true">
+                android:clickable="true"
+                tools:ignore="MissingPrefix">
 
                 <ImageView
                     android:id="@+id/employes"
