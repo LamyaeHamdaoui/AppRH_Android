@@ -33,7 +33,7 @@
 
 
         <TextView
-            android:id="@+id/textnouvelle222"
+            android:id="@+id/titre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Attestation disponible"
@@ -45,18 +45,18 @@
             />
 
         <TextView
-            android:id="@+id/textclose222"
+            android:id="@+id/close"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="X"
-            app:layout_constraintStart_toEndOf="@+id/textnouvelle222"
+            app:layout_constraintStart_toEndOf="@+id/titre"
             app:layout_constraintTop_toTopOf="parent"
             android:textAlignment="textEnd"
             android:layout_marginLeft="80dp"
             />
 
         <TextView
-            android:id="@+id/text1111"
+            android:id="@+id/descriptionNotif"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
             android:layout_margin="10dp"
@@ -69,12 +69,12 @@
             />
 
         <TextView
-            android:id="@+id/text2222"
+            android:id="@+id/dateNotif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Il y a 3h"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text1111"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionNotif"
             android:textSize="12sp"
             android:layout_margin="10dp"
             android:textColor="@color/grey_light"
