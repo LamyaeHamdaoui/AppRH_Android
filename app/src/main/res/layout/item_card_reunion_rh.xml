@@ -59,6 +59,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/iconEdit"
                 android:layout_width="15dp"
                 android:layout_height="17dp"
                 android:maxWidth="30dp"
@@ -66,6 +67,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="90dp"/>
             <ImageView
+                android:id="@+id/iconDelete"
                 android:layout_width="15dp"
                 android:layout_height="17dp"
                 android:maxWidth="30dp"
