@@ -1,75 +1,95 @@
 package com.example.rhapp;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.rhapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
-    MyDataBase databaseHelper;
+    private ActivityMainBinding binding;
+    private MyDataBase databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
 
-        // INITIALISER le binding AVANT setContentView
+        // Initialisation du ViewBinding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Initialisation de la base de données
         databaseHelper = new MyDataBase(this);
 
-        binding.connecteBtn.setOnClickListener(new View.OnClickListener(){
+        // Gestion du clic sur le bouton de connexion
+        binding.connecteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                String email = binding.emailBox.getText().toString().trim();
-                String motDePasse = binding.motDePasseBox.getText().toString().trim();
-                if(email.isEmpty() || motDePasse.isEmpty()){
-                    Toast.makeText(MainActivity.this, "C'est obligatoire de remplir tous les champs", Toast.LENGTH_SHORT).show();
-                }else{
-                    Boolean checkCredentials = databaseHelper.checkEmailPassword(email, motDePasse);
-                    if(checkCredentials){
-                        Toast.makeText(MainActivity.this, "Se connecter avec succès", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), AcceuilRhActivity.class);
-                        startActivity(intent);
-                    }else {
-                        Toast.makeText(MainActivity.this, "Email ou mot de passe incorrect", Toast.LENGTH_SHORT).show();
-                    }
-                }
+            public void onClick(View v) {
+                seConnecter();
             }
         });
 
-        binding.createAccBtn.setOnClickListener(new View.OnClickListener(){
+        // Gestion du clic sur "Créer un nouveau compte"
+        binding.createAccBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, CreateAccActivity.class);
                 startActivity(intent);
             }
         });
 
-        binding.forgottenPasswordBtn.setOnClickListener(new View.OnClickListener(){
+        // Gestion du clic sur "Mot de passe oublié"
+        binding.forgottenPasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ForgottenPasswordActivity.class);
                 startActivity(intent);
             }
         });
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+    private void seConnecter() {
+        try {
+            // Récupération des valeurs des champs
+            String email = binding.emailBox.getText().toString().trim();
+            String motDePasse = binding.motDePasseBox.getText().toString().trim();
+
+            // Validation des champs
+            if (email.isEmpty() || motDePasse.isEmpty()) {
+                Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Vérification des identifiants dans la base de données
+            boolean identifiantsValides = databaseHelper.checkEmailPassword(email, motDePasse);
+
+            if (identifiantsValides) {
+                Toast.makeText(this, "Connexion réussie!", Toast.LENGTH_SHORT).show();
+
+                // Redirection vers l'activité d'accueil
+                Intent intent = new Intent(MainActivity.this, AcceuilRhActivity.class);
+                intent.putExtra("EMAIL_UTILISATEUR", email);
+                startActivity(intent);
+                finish(); // Fermer cette activité
+
+            } else {
+                Toast.makeText(this, "Email ou mot de passe incorrect", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (Exception e) {
+            Log.e("MAIN_ACTIVITY", "Erreur lors de la connexion: " + e.getMessage());
+            Toast.makeText(this, "Erreur lors de la connexion", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Fermer la connexion à la base de données si nécessaire
     }
 }
