@@ -1060,7 +1060,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="5"
-                                android:background="E0E0E0"
+                                android:background="#E0E0E0"
                                 />
                         </LinearLayout>
                     </LinearLayout>
@@ -1107,7 +1107,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="12"
-                                android:background="E0E0E0"
+                                android:background="#E0E0E0"
                                 />
                         </LinearLayout>
                     </LinearLayout>
@@ -1152,7 +1152,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="30"
-                                android:background="E0E0E0"
+                                android:background="#E0E0E0"
                                 />
                         </LinearLayout>
                     </LinearLayout>
