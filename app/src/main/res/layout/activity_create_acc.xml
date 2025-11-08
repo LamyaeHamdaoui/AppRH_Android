@@ -37,6 +37,7 @@
                 android:layout_marginEnd="5dp"
                 />
             <EditText
+                android:id="@+id/prenom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -58,7 +59,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold"/>
             <EditText
-                android:id="@+id/etHireDate"
+                android:id="@+id/birthDate"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="JJ/MM/AAAA"
@@ -98,6 +99,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <EditText
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Adresse email"
@@ -106,27 +108,53 @@
                 android:layout_marginTop="15dp"
                 />
             <EditText
+                android:id="@+id/motDePasse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mot de passe"
+                android:inputType="textPassword"
                 android:background="@drawable/border"
                 android:padding="15dp"
                 android:layout_marginTop="15dp"/>
             <EditText
+                android:id="@+id/confirmerMDP"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Confirmez le mot de passe"
+                android:inputType="textPassword"
                 android:background="@drawable/border"
                 android:padding="15dp"
                 android:layout_marginTop="15dp"/>
         </LinearLayout>
         <Button
-            android:id="@+id/valide"
+            android:id="@+id/valideCreateAcc"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Valider"
             android:layout_marginTop="30dp"
             android:background="@drawable/border_button"
             app:backgroundTint="@null"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vous avez déja un compte? "
+                android:textSize="15sp"/>
+            <TextView
+                android:id="@+id/connecterInterface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Se connecter"
+                android:textColor="@color/blue"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
