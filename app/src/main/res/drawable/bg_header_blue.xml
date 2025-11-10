@@ -11,9 +11,9 @@
 
     <!--radius des coins -->
     <corners
-        android:bottomLeftRadius="27dp"
-        android:bottomRightRadius="27dp"
-        android:topLeftRadius="27dp"
+        android:bottomLeftRadius="30dp"
+        android:bottomRightRadius="30dp"
+        android:topLeftRadius="30dp"
         android:topRightRadius="0dp"
         />
 
