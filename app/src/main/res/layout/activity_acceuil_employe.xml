@@ -214,7 +214,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/bg_rectangle_blue"
-                        android:src="@drawable/presence"
+                        android:src="@drawable/check24"
                         app:tint="@color/white"
                         android:padding="10dp"
                         android:layout_gravity="center"
@@ -325,7 +325,7 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="@drawable/docborder"
-                                android:src="@drawable/attestation"
+                                android:src="@drawable/doc24"
                                 app:tint="@color/white"
                                 android:padding="10dp"
                                 android:layout_gravity="center"/>
