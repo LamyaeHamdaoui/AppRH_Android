@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp"
+    app:cardBackgroundColor="@color/white"
+    android:background="@drawable/border_gris"
+    app:backgroundTint="@null"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/border_gris"
+        >
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:paddingRight="10dp"
+            >
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:padding="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/titrereunion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Réunion d'équipe hebdomadaire"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    android:id="@+id/tempsRestantReunion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dans -14 jours"
+                    android:textSize="12sp"
+                    android:textColor="@color/blue_hover"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@drawable/bg_departement_blue"
+                    android:padding="5dp"
+                    android:textStyle="bold"
+
+                    />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iconEdit"
+                android:layout_width="15dp"
+                android:layout_height="17dp"
+                android:maxWidth="30dp"
+                android:src="@drawable/edit"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="90dp"/>
+            <ImageView
+                android:id="@+id/iconDelete"
+                android:layout_width="15dp"
+                android:layout_height="17dp"
+                android:maxWidth="30dp"
+                android:src="@drawable/delete"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"/>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_marginLeft="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/conge"
+
+                    />
+
+                <TextView
+                    android:id="@+id/dateReunion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="21 october 2030"
+                    android:textColor="@color/grey_light"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/time"
+                    app:tint="@color/grey"
+                    />
+
+                <TextView
+                    android:id="@+id/timeReunion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="10:00"
+                    android:textColor="@color/grey_light"
+                    android:textSize="12sp"
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/localisation"
+                    app:tint="@color/grey"
+                    />
+
+                <TextView
+                    android:id="@+id/localReunion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Salle conférences"
+                    android:textColor="@color/grey_light"
+                    android:textSize="12sp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/employe" />
+
+                <TextView
+                    android:id="@+id/participants"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="10 particpitants"
+                    android:textColor="@color/grey_light"
+                    android:textSize="12sp"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/gris_clair" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:id="@+id/reunionDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="Point hebdomadaire sur l'avancement des projets"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="italic"
+                    />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/gris_clair" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                >
+
+
+                <TextView
+                    android:id="@+id/reunionDepartement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="Développement"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/border_vide"
+                    android:padding="5dp"
+                    android:textStyle="bold"
+                    />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+
+                <TextView
+                    android:id="@+id/reunionLeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="Par Lamyae Hamdaoui"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="5dp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

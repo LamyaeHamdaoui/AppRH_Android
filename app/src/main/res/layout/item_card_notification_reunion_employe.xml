@@ -33,7 +33,7 @@
 
 
         <TextView
-            android:id="@+id/textnouvelle2"
+            android:id="@+id/titre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nouvelle réunion"
@@ -45,18 +45,18 @@
             />
 
         <TextView
-            android:id="@+id/textclose2"
+            android:id="@+id/close"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="X"
-            app:layout_constraintStart_toEndOf="@+id/textnouvelle2"
+            app:layout_constraintStart_toEndOf="@+id/titre"
             app:layout_constraintTop_toTopOf="parent"
             android:textAlignment="textEnd"
             android:layout_marginLeft="80dp"
             />
 
         <TextView
-            android:id="@+id/text11"
+            android:id="@+id/descriptionNotif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -69,24 +69,33 @@
             />
 
         <TextView
-            android:id="@+id/text22"
+            android:id="@+id/dateNotif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Il y a 1h"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text11"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionNotif"
             android:textSize="12sp"
             android:layout_margin="10dp"
             android:textColor="@color/grey_light"
             />
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionNotif"
+            app:layout_constraintStart_toEndOf="@+id/dateNotif"
+            />
+
         <TextView
+            android:id="@+id/marquerLit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" marquer comme lit"
-            app:layout_constraintTop_toBottomOf="@+id/text11"
-            app:layout_constraintStart_toEndOf="@+id/text22"
-            android:layout_marginLeft="190dp"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionNotif"
+            app:layout_constraintStart_toEndOf="@+id/dateNotif"
+            android:layout_marginLeft="195dp"
             android:textColor="@color/blue"
             android:textStyle="bold"
             android:textSize="12sp"
