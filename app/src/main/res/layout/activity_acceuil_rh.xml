@@ -301,7 +301,7 @@
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:scaleType="centerInside"
-                                android:src="@drawable/attestation"
+                                android:src="@drawable/doc24"
                                 android:layout_gravity="center"
                                 app:tint="#800080"
                                 />
