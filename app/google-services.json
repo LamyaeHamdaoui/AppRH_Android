@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "113051998161",
+    "firebase_url": "https://rhapp-2819a-default-rtdb.firebaseio.com",
+    "project_id": "rhapp-2819a",
+    "storage_bucket": "rhapp-2819a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113051998161:android:0f5c15f1f074963f3cb2f0",
+        "android_client_info": {
+          "package_name": "com.example.rhapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDPB6y_sZaKsTD9lftrig6-IYEuFwe8hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113051998161:android:f09ce144e11581fe3cb2f0",
+        "android_client_info": {
+          "package_name": "com.example.testfairbase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDPB6y_sZaKsTD9lftrig6-IYEuFwe8hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
