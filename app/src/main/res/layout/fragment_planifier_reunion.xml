@@ -75,7 +75,7 @@
                     android:layout_marginBottom="5dp" />
 
                 <EditText
-                    android:id="@+id/date"
+                    android:id="@+id/dateReunion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint=" jj/mm/aaaa "
@@ -101,7 +101,7 @@
                     android:layout_marginBottom="5dp" />
 
                 <EditText
-                    android:id="@+id/dateDebutConge"
+                    android:id="@+id/heureReunion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint=" -- : --  "
@@ -121,7 +121,7 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/dateFinConge"
+            android:id="@+id/lieuReunion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" salle de conference A"
@@ -139,7 +139,7 @@
             android:layout_marginBottom="5dp" />
 
         <Spinner
-            android:id="@+id/typeConge"
+            android:id="@+id/departementReunion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -157,7 +157,7 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/MotifConge"
+            android:id="@+id/descriptionReunion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" Ordre du jour et points à discuter"
@@ -170,7 +170,7 @@
 
         <!-- button d envoyer -->
         <Button
-            android:id="@+id/btnEnvoyerDemande"
+            android:id="@+id/btnCreerReunion"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="Créer la réunion"
