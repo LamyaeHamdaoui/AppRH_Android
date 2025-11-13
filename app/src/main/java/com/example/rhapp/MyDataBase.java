@@ -207,6 +207,18 @@ public class MyDataBase extends SQLiteOpenHelper {
                 new String[]{email}
         );
     }
+    public boolean clearUserTable() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL("DELETE FROM " + TABLE_UTILISATEUR);
+            return true;
+        } catch (Exception e) {
+            Log.e("DATABASE", "Erreur vidage table: " + e.getMessage());
+            return false;
+        } finally {
+            db.close();
+        }
+    }
 
     // Méthode pour mettre à jour les informations utilisateur
     public Boolean updateUserData(String email, String nom, String prenom, String dateNaissance, String sexe) {
