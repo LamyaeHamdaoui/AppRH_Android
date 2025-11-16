@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "113051998161",
+    "firebase_url": "https://rhapp-2819a-default-rtdb.firebaseio.com",
     "project_id": "rhapp-2819a",
     "storage_bucket": "rhapp-2819a.firebasestorage.app"
   },
