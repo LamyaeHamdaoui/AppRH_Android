@@ -20,6 +20,10 @@ import com.example.rhapp.model.Reunion;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 public class reunionActivity extends AppCompatActivity {
 
     @Override
@@ -87,17 +91,18 @@ public class reunionActivity extends AppCompatActivity {
         });
 
         // ************************************* Afficher les cards view des reuinons a venir **************************
-        afficherReunions();
+
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
         db = FirebaseFirestore.getInstance();
+        afficherReunionsVenirs();
 
 
     }
 
-    // *************************************fonction  Afficher  des reuinons a venir **************************
+    // ************************************* fonction  Afficher  des reuinons a venir **************************
     private LinearLayout reunionPlanifieContainer;
     private FirebaseFirestore db;
-    private void afficherReunions() {
+    private void afficherReunionsVenirs() {
         db.collection("Reunions")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
@@ -121,18 +126,45 @@ public class reunionActivity extends AppCompatActivity {
                         TextView departementReunion= cardView.findViewById(R.id.localReunion);
                         TextView descriptionReunion = cardView.findViewById(R.id.reunionDescription);
 
+
+                        //************ convertir la date ********************
+                        try{
+                            String dateStr = reunion.getDate();
+                            dateReunion.setText(convertDate(dateStr));
+                        }catch (Exception e) {
+                            dateReunion.setText(reunion.getDate()); // fallback
+                        }
+
+                        // remplir les elements dans la card
                         titreReunion.setText(reunion.getTitre());
-                        dateReunion.setText(reunion.getDate());
+                        //dateReunion.setText(reunion.getDate());
                         timeReunion.setText(reunion.getHeure());
                         departementReunion.setText(reunion.getDepartement());
                         descriptionReunion.setText(reunion.getDescription());
 
                         //  On ajoute la carte dans le conteneur
                         reunionPlanifieContainer.addView(cardView);
+
+
                     }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+    // ******************* fonction pour convertir la date en date complet **********
+    private String convertDate(String date){
+        // 1. Définir le format source
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // 2. Parser vers LocalDate ( convertir la date entrer au date forme )
+        LocalDate dateForm = LocalDate.parse(date, inputFormatter);
+        // 3. Définir le format souhaité avec la locale française
+        DateTimeFormatter outputFormatter =
+                DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy", Locale.FRENCH);
+        // 4. Formatter en string et afficher
+        String formattedDate = dateForm.format(outputFormatter);
+
+        return formattedDate;
+
     }
 }
