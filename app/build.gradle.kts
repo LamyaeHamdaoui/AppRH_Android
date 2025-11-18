@@ -55,5 +55,6 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation ("com.google.firebase:firebase-firestore")
     implementation ("com.google.firebase:firebase-storage")
+    implementation ("com.google.firebase:firebase-messaging")
 
 }
