@@ -1,4 +1,4 @@
-package com.example.rhapp;
+package com.example.rhapp.model;
 
 public class User {
     private String nom;

@@ -35,4 +35,12 @@ public class Reunion {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+
+    private String participants;
+
+    public String getParticipants() { return participants; }
+    public void setParticipants(String participants) { this.participants = participants; }
+
+
 }
