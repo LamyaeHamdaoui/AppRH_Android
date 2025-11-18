@@ -12,7 +12,7 @@ public class Employe extends Utilisateur {
     public Employe () { }
     public Employe(String id, String nom, String prenom, String email, String motDePasse,
                    String role, String photo, String poste, String departement,
-                   String dateEmbauche, int soldeCongen, String telephone )  {
+                   String dateEmbauche, int soldeConge, String telephone )  {
         super(id, nom, prenom, email , motDePasse, role);
         this.photo = photo;
         this.poste = poste;
@@ -70,7 +70,7 @@ public class Employe extends Utilisateur {
     }
 
     public void setTelephone(String telephone) {
-        this.dateEmbauche = dateEmbauche;
+        this.telephone = telephone;
     }
 
 

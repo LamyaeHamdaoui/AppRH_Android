@@ -39,12 +39,28 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nom complet *"
+            android:text="Nom *"
             android:textStyle="bold"
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/nomComplet"
+            android:id="@+id/nom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" nom complet"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prénom *"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/prenom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" nom complet"
