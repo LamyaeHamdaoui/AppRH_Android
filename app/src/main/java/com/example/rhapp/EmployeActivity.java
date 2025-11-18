@@ -9,7 +9,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class employeActivity extends AppCompatActivity {
+public class EmployeActivity extends AppCompatActivity {
 
     @SuppressLint("MissingInflatedId")
     @Override
