@@ -39,12 +39,28 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nom complet *"
+            android:text="Nom *"
             android:textStyle="bold"
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/nomEmploye"
+            android:id="@+id/nom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" nom complet"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prénom *"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <EditText
+            android:id="@+id/prenom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" nom complet"
@@ -61,7 +77,7 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/emailEmploye"
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" email@example.com"
@@ -79,7 +95,7 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/telephoneEmploye"
+            android:id="@+id/telephone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" xx xx xx xx xx"
@@ -97,7 +113,7 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/posteEmploye"
+            android:id="@+id/poste"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" ex: Développeur"
@@ -114,7 +130,7 @@
             android:layout_marginBottom="5dp" />
 
         <Spinner
-            android:id="@+id/departementEmploye"
+            android:id="@+id/departement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -131,7 +147,7 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/dateEmbaucheEmploye"
+            android:id="@+id/dateEmbauche"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" jj/mm/aaaa"
@@ -149,7 +165,7 @@
             android:layout_marginBottom="5dp" />
 
         <EditText
-            android:id="@+id/soldeCongesEmploye"
+            android:id="@+id/soldeConge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint=" 30"
