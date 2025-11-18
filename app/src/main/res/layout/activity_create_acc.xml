@@ -59,7 +59,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold"/>
             <EditText
-                android:id="@+id/birthDate"
+                android:id="@+id/dateNaissance"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="JJ/MM/AAAA"
@@ -131,7 +131,7 @@
             android:id="@+id/valideCreateAcc"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Valider"
+            android:text="Suivant"
             android:layout_marginTop="30dp"
             android:background="@drawable/border_button"
             app:backgroundTint="@null"/>

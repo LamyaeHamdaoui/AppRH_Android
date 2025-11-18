@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -16,28 +17,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rhapp.model.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random; // Import nécessaire pour générer le code
 
 public class CreateAccActivity extends AppCompatActivity {
 
-    // Déclaration des variables
+    private static final String TAG = "CreateAccActivity";
+
+    // Déclaration des variables de l'interface
     private EditText nomEditText, prenomEditText, birthDateEditText;
     private EditText emailEditText, motDePasseEditText, confirmerMDPEditText;
     private RadioGroup radioGroup;
     private Button valideCreateAcc;
     private TextView connecterInterface;
 
-    // Firebase
+    // Firebase (utilisé seulement pour l'initialisation dans cette activité)
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
@@ -46,21 +46,19 @@ public class CreateAccActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_acc);
 
-        // Initialiser Firebase
+        // Initialiser Firebase (même si la création est reportée, l'initialisation est bonne)
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        // Initialiser les vues
         initializeViews();
-
-        // Configurer les écouteurs de clics
         setupClickListeners();
+
+        // Gestion du back button pour retourner à l'écran de connexion
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // Retour à MainActivity
+                // Retourne à MainActivity
                 Intent intent = new Intent(CreateAccActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -68,9 +66,10 @@ public class CreateAccActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
+        // IDs basés sur votre XML
         nomEditText = findViewById(R.id.nom);
         prenomEditText = findViewById(R.id.prenom);
-        birthDateEditText = findViewById(R.id.birthDate);
+        birthDateEditText = findViewById(R.id.dateNaissance);
         emailEditText = findViewById(R.id.email);
         motDePasseEditText = findViewById(R.id.motDePasse);
         confirmerMDPEditText = findViewById(R.id.confirmerMDP);
@@ -80,19 +79,18 @@ public class CreateAccActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        // Bouton de validation
+        // Bouton de validation (génère le code et redirige)
         valideCreateAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewAccount();
+                validateInputsAndRedirect();
             }
         });
 
-        // Lien pour se connecter
+        // Lien pour se connecter (retourne à MainActivity)
         connecterInterface.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Retour à l'écran de connexion
                 Intent intent = new Intent(CreateAccActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -100,109 +98,53 @@ public class CreateAccActivity extends AppCompatActivity {
         });
     }
 
-    private void createNewAccount() {
-        // Récupérer les valeurs
+    private void validateInputsAndRedirect() {
+        // Récupérer et valider toutes les valeurs
         String nom = nomEditText.getText().toString().trim();
         String prenom = prenomEditText.getText().toString().trim();
         String birthDate = birthDateEditText.getText().toString().trim();
         String email = emailEditText.getText().toString().trim();
         String password = motDePasseEditText.getText().toString().trim();
         String confirmPassword = confirmerMDPEditText.getText().toString().trim();
-
-        // Récupérer le sexe
         String sexe = getSelectedSexe();
 
-        // Validation des champs
         if (!validateInputs(nom, prenom, birthDate, email, password, confirmPassword, sexe)) {
             return;
         }
 
-        // Afficher un loading
-        valideCreateAcc.setText("Création en cours...");
-        valideCreateAcc.setEnabled(false);
+        // --- Logique de Génération de Code ---
 
-        // Créer un nouvel utilisateur avec Firebase Auth
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Création réussie
-                            FirebaseUser user = mAuth.getCurrentUser();
+        // 1. Générer le code à 4 chiffres
+        String verificationCode = generateVerificationCode();
+        Log.d(TAG, "Code de vérification généré: " + verificationCode);
+        Toast.makeText(this, "Code généré: " + verificationCode + " (Vérifiez le Logcat pour simuler l'envoi)", Toast.LENGTH_LONG).show();
 
-                            if (user != null) {
-                                // Sauvegarder les informations supplémentaires dans la base de données
-                                saveUserToDatabase(user.getUid(), nom, prenom, birthDate, sexe, email);
+        // 2. Préparer les données pour l'activité suivante
+        Intent intent = new Intent(CreateAccActivity.this, ValidationEmailActivity.class);
 
-                                // Envoyer l'email de vérification
-                                sendEmailVerification(user);
+        // IMPORTANT: Nous passons toutes les données (y compris le mot de passe)
+        // car l'enregistrement Firebase sera effectué dans ValidationEmailActivity.
+        intent.putExtra("EXTRA_NOM", nom);
+        intent.putExtra("EXTRA_PRENOM", prenom);
+        intent.putExtra("EXTRA_DATE_NAISSANCE", birthDate);
+        intent.putExtra("EXTRA_SEXE", sexe);
+        intent.putExtra("EXTRA_EMAIL", email);
+        intent.putExtra("EXTRA_PASSWORD", password);
+        intent.putExtra("EXTRA_VERIFICATION_CODE", verificationCode);
 
-                                Toast.makeText(CreateAccActivity.this,
-                                        "Compte créé avec succès!",
-                                        Toast.LENGTH_SHORT).show();
-
-                                // Rediriger vers l'écran principal
-                                redirectToHomeActivity();
-                            }
-                        } else {
-                            // Échec de création
-                            String errorMessage = task.getException().getMessage();
-                            if (errorMessage.contains("email address is already in use")) {
-                                Toast.makeText(CreateAccActivity.this,
-                                        "Cette adresse email est déjà utilisée",
-                                        Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(CreateAccActivity.this,
-                                        "Erreur: " + errorMessage,
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                        // Réactiver le bouton
-                        valideCreateAcc.setText("Valider");
-                        valideCreateAcc.setEnabled(true);
-                    }
-                });
+        // 3. Rediriger
+        startActivity(intent);
+        // Ne pas appeler finish() ici, pour permettre un retour si l'utilisateur annule la validation.
     }
 
-    private void saveUserToDatabase(String userId, String nom, String prenom, String birthDate,
-                                    String sexe, String email) {
-        // Obtenir la date actuelle
-        String createdAt = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                .format(new Date());
-
-        // Créer un objet utilisateur avec toutes les informations
-        User user = new User(nom, prenom, birthDate, sexe, email, createdAt);
-
-        // Sauvegarder dans la base de données
-        mDatabase.child("users").child(userId).setValue(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            System.out.println("Utilisateur sauvegardé dans la base de données");
-                        } else {
-                            System.out.println("Erreur sauvegarde: " + task.getException());
-                        }
-                    }
-                });
+    private String generateVerificationCode() {
+        Random random = new Random();
+        // Génère un nombre entre 1000 et 9999
+        int code = 1000 + random.nextInt(9000);
+        return String.valueOf(code);
     }
 
-    private void sendEmailVerification(FirebaseUser user) {
-        user.sendEmailVerification()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(CreateAccActivity.this,
-                                    "Email de vérification envoyé!",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
-
-
+    // Reste des méthodes (getSelectedSexe, validateInputs) inchangé
     private String getSelectedSexe() {
         int selectedId = radioGroup.getCheckedRadioButtonId();
         if (selectedId != -1) {
@@ -281,12 +223,5 @@ public class CreateAccActivity extends AppCompatActivity {
         }
 
         return true;
-    }
-
-    private void redirectToHomeActivity() {
-    Intent intent = new Intent(CreateAccActivity.this, AcceuilRhActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
     }
 }

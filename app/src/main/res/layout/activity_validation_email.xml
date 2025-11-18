@@ -36,6 +36,7 @@
             android:orientation="horizontal"
             android:layout_margin="20dp">
             <EditText
+                android:id="@+id/code1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -46,6 +47,7 @@
                 android:layout_margin="20dp"
                 />
             <EditText
+                android:id="@+id/code2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -56,6 +58,7 @@
                 android:layout_margin="20dp"
                 />
             <EditText
+                android:id="@+id/code3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -66,6 +69,7 @@
                 android:layout_margin="20dp"
                 />
             <EditText
+                android:id="@+id/code4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -80,7 +84,7 @@
             android:id="@+id/suivantValider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Suivant"
+            android:text="Valider"
             android:layout_marginTop="30dp"
             android:background="@drawable/border_button"
             app:backgroundTint="@null"/>

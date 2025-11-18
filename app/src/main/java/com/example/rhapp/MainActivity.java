@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,7 +31,9 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Déclaration des variables
+    private static final String TAG = "MainActivity";
+
+    // Déclaration des variables de l'interface
     private EditText emailBox, motDePasseBox;
     private Button connecteBtn, createAccBtn;
     private TextView forgottenPasswordBtn;
@@ -40,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Assurez-vous que R.layout.activity_main est le nom correct de votre fichier XML
         setContentView(R.layout.activity_main);
 
         // Initialiser Firebase
@@ -49,14 +55,18 @@ public class MainActivity extends AppCompatActivity {
         // Initialiser les vues
         initializeViews();
 
-        // Vérifier si l'utilisateur est déjà connecté
-        checkCurrentUser();
-
         // Configurer les écouteurs de clics
         setupClickListeners();
 
-        // Gestion moderne du back button
+        // Gestion du back button pour quitter l'application
         setupBackPressedHandler();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Vérifier si l'utilisateur est déjà connecté au début de l'activité
+        checkCurrentUser();
     }
 
     private void initializeViews() {
@@ -70,13 +80,14 @@ public class MainActivity extends AppCompatActivity {
     private void checkCurrentUser() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            // L'utilisateur est déjà connecté, rediriger vers l'activité principale
+            Log.d(TAG, "Utilisateur déjà connecté: " + currentUser.getEmail());
+            // L'utilisateur est déjà connecté, on le redirige directement
             redirectToHomeActivity();
         }
     }
 
     private void setupClickListeners() {
-        // Bouton de connexion
+        // 1. Bouton de connexion
         connecteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,19 +95,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Bouton de création de compte
+        // 2. Bouton de création de compte (vers CreateAccActivity)
         createAccBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewAccount();
+                // Rediriger vers l'activité de création de compte
+                Intent intent = new Intent(MainActivity.this, CreateAccActivity.class);
+                startActivity(intent);
             }
         });
 
-        // Mot de passe oublié
+        // 3. Mot de passe oublié (vers ForgottenPasswordActivity)
         forgottenPasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resetPassword();
+                // Rediriger vers l'activité de mot de passe oublié
+                Intent intent = new Intent(MainActivity.this, ForgottenPasswordActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -105,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // Fermer l'application
+                // Fermer l'application entièrement
                 finishAffinity();
             }
         });
@@ -120,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Afficher un loading
+        // Afficher un état de chargement
         connecteBtn.setText("Connexion...");
         connecteBtn.setEnabled(false);
 
@@ -132,107 +147,39 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Connexion réussie
                             FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                // Vérifier si l'email est vérifié (optionnel)
-                                if (user.isEmailVerified()) {
-                                    Toast.makeText(MainActivity.this, "Connexion réussie!",
-                                            Toast.LENGTH_SHORT).show();
-                                    redirectToHomeActivity();
-                                } else {
-                                    // Si vous voulez forcer la vérification d'email
-                                    Toast.makeText(MainActivity.this,
-                                            "Veuillez vérifier votre email",
-                                            Toast.LENGTH_SHORT).show();
-                                    mAuth.signOut();
-                                }
+
+                            // Optionnel: Vérifier si l'email est vérifié
+                            if (user != null && user.isEmailVerified()) {
+                                Toast.makeText(MainActivity.this, "Connexion réussie!",
+                                        Toast.LENGTH_SHORT).show();
+                                redirectToHomeActivity();
+                            } else {
+                                // Si la vérification est requise, déconnecter l'utilisateur
+                                Toast.makeText(MainActivity.this,
+                                        "Veuillez vérifier votre email et vous reconnecter.",
+                                        Toast.LENGTH_LONG).show();
+                                mAuth.signOut();
                             }
                         } else {
-                            // Échec de connexion
-                            String errorMessage = task.getException().getMessage();
-                            if (errorMessage.contains("invalid credential") || errorMessage.contains("wrong password")) {
-                                Toast.makeText(MainActivity.this,
-                                        "Email ou mot de passe incorrect",
-                                        Toast.LENGTH_LONG).show();
-                            } else if (errorMessage.contains("user not found")) {
-                                Toast.makeText(MainActivity.this,
-                                        "Aucun compte trouvé avec cet email",
-                                        Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(MainActivity.this,
-                                        "Erreur: " + errorMessage,
-                                        Toast.LENGTH_LONG).show();
+                            // Échec de connexion : Utilisation des exceptions spécifiques
+                            String displayMessage = "Erreur de connexion.";
+                            Exception exception = task.getException();
+
+                            if (exception instanceof FirebaseAuthInvalidUserException) {
+                                displayMessage = "Aucun compte trouvé avec cet email.";
+                            } else if (exception instanceof FirebaseAuthInvalidCredentialsException) {
+                                displayMessage = "Email ou mot de passe incorrect.";
+                            } else if (exception != null) {
+                                displayMessage = "Erreur: " + exception.getMessage();
+                                Log.e(TAG, "Erreur de connexion Firebase: ", exception); // Log détaillé
                             }
+
+                            Toast.makeText(MainActivity.this, displayMessage, Toast.LENGTH_LONG).show();
                         }
 
                         // Réactiver le bouton
                         connecteBtn.setText("Se connecter");
                         connecteBtn.setEnabled(true);
-                    }
-                });
-    }
-
-    private void createNewAccount() {
-        // Rediriger vers l'activité de création de compte
-        Intent intent = new Intent(MainActivity.this, CreateAccActivity.class);
-        startActivity(intent);
-    }
-
-    private void saveUserToDatabase(String userId, String email) {
-        String createdAt = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                .format(new Date());
-
-        // Créer un objet utilisateur avec email et date de création
-        User user = new User();
-        user.setEmail(email);
-        user.setCreatedAt(createdAt);
-        user.setNom("");
-        user.setPrenom("");
-        user.setBirthDate("");
-        user.setSexe("");
-
-        // Sauvegarder dans la base de données
-        mDatabase.child("users").child(userId).setValue(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            System.out.println("Utilisateur sauvegardé dans la base de données");
-                        } else {
-                            System.out.println("Erreur sauvegarde: " + task.getException());
-                        }
-                    }
-                });
-    }
-
-    private void resetPassword() {
-        String email = emailBox.getText().toString().trim();
-
-        if (TextUtils.isEmpty(email)) {
-            emailBox.setError("Entrez votre email");
-            emailBox.requestFocus();
-            return;
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailBox.setError("Email invalide");
-            emailBox.requestFocus();
-            return;
-        }
-
-        // Envoyer l'email de réinitialisation
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(MainActivity.this,
-                                    "Email de réinitialisation envoyé!",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(MainActivity.this,
-                                    "Erreur: " + task.getException().getMessage(),
-                                    Toast.LENGTH_LONG).show();
-                        }
                     }
                 });
     }
@@ -269,15 +216,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void redirectToHomeActivity() {
         Intent intent = new Intent(MainActivity.this, AcceuilRhActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        // FLAG_ACTIVITY_CLEAR_TASK s'assure qu'on ne puisse pas revenir à l'écran de connexion
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Vérifier à nouveau si l'utilisateur est connecté
-        checkCurrentUser();
-    }
+    // NOTE: saveUserToDatabase a été retirée de MainActivity, car elle est uniquement utilisée
+    // dans CreateAccActivity pour stocker les détails après l'enregistrement.
 }
