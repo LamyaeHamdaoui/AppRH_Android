@@ -21,10 +21,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 
 public class reunionActivity extends AppCompatActivity {
+
+    private LinearLayout reunionPlanifieContainer, reunionPasseContainer;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +38,10 @@ public class reunionActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reunion);
 
-        // ******************************* Passer d'une fenetre a l'autre ************************************
+        reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
+        reunionPasseContainer = findViewById(R.id.reunionPasseContainer);
 
+        // ******************************* Passer d'une fenetre a l'autre ************************************
         LinearLayout accueil = findViewById(R.id.accueil);
         LinearLayout employes = findViewById(R.id.employes);
         LinearLayout conge = findViewById(R.id.conge);
@@ -99,59 +107,103 @@ public class reunionActivity extends AppCompatActivity {
 
     }
 
-    // ************************************* fonction  Afficher  des reuinons a venir **************************
-    private LinearLayout reunionPlanifieContainer;
-    private FirebaseFirestore db;
+    // ************************************* fonction  Afficher  des reuinons  **************************
+
     private void afficherReunionsVenirs() {
         db.collection("Reunions")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (querySnapshot.isEmpty()) {
-                        Toast.makeText(this, "Aucune réunion trouvée", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(reunionActivity.this, "Aucune réunion trouvée", Toast.LENGTH_SHORT).show();
                         return;
                     }
+
 
                     // Pour chaque réunion dans Firestore
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         Reunion reunion = doc.toObject(Reunion.class);
 
-                        //  On "gonfle" la carte depuis le XML
-                        View cardView = LayoutInflater.from(this)
-                                .inflate(R.layout.item_card_reunion_rh,reunionPlanifieContainer, false);
+                        // concerant les reunions venirs
+                        String dateStr = reunion.getDate();
+                        String timeStr = reunion.getHeure();
+                        int etatDate = compareDate(dateStr,timeStr);
+                        //si la date est a venir on affiche cette card
 
-                        // On remplit les données
-                        TextView titreReunion = cardView.findViewById(R.id.titreReunion);
-                        TextView dateReunion = cardView.findViewById(R.id.dateReunion);
-                        TextView timeReunion = cardView.findViewById(R.id.timeReunion);
-                        TextView departementReunion= cardView.findViewById(R.id.localReunion);
-                        TextView descriptionReunion = cardView.findViewById(R.id.reunionDescription);
+                        if(etatDate==1) {
+
+                            //  On "gonfle" la carte depuis le XML
+                            View cardView = LayoutInflater.from(this)
+                                    .inflate(R.layout.item_card_reunion_rh, reunionPlanifieContainer, false);
+
+                            // On remplit les données
+                            TextView titreReunion = cardView.findViewById(R.id.titreReunion);
+                            TextView dateReunion = cardView.findViewById(R.id.dateReunion);
+                            TextView timeReunion = cardView.findViewById(R.id.timeReunion);
+                            TextView departementReunion = cardView.findViewById(R.id.localReunion);
+                            TextView descriptionReunion = cardView.findViewById(R.id.reunionDescription);
+                            TextView tempsRestantReunion = cardView.findViewById(R.id.tempsRestantReunion);
+
+                            //************ convertir la date ********************
+                            try {
+                                dateReunion.setText(convertDate(dateStr));
+                            } catch (Exception e) {
+                                dateReunion.setText(reunion.getDate()); // fallback
+                            }
 
 
-                        //************ convertir la date ********************
-                        try{
-                            String dateStr = reunion.getDate();
-                            dateReunion.setText(convertDate(dateStr));
-                        }catch (Exception e) {
-                            dateReunion.setText(reunion.getDate()); // fallback
+                            // remplir les elements dans la card
+                            titreReunion.setText(reunion.getTitre());
+                            //dateReunion.setText(formattedDate);
+                            //dateReunion.setText(reunion.getDate());
+                            timeReunion.setText(reunion.getHeure());
+                            departementReunion.setText(reunion.getDepartement());
+                            descriptionReunion.setText(reunion.getDescription());
+                            tempsRestantReunion.setText(NbrJourRestant(dateStr));
+
+
+                            //  On ajoute la carte dans le conteneur
+                            reunionPlanifieContainer.addView(cardView);
+
+                        } else if (etatDate==-1) {
+
+                            //  On "gonfle" la carte depuis le XML
+                            View cardView = LayoutInflater.from(this)
+                                    .inflate(R.layout.item_card_reunionpasse,reunionPasseContainer, false);
+
+                            // On remplit les données
+                            TextView titreReunion = cardView.findViewById(R.id.titreReunion);
+                            TextView dateReunion = cardView.findViewById(R.id.dateReunion);
+                            //TextView timeReunion = cardView.findViewById(R.id.timeReunion);
+                            TextView departementReunion = cardView.findViewById(R.id.localReunion);
+                            TextView participantsReunion = cardView.findViewById(R.id.participants);
+
+                            //************ convertir la date ********************
+                            try {
+                                dateReunion.setText(convertDate(dateStr)+" , "+reunion.getHeure());
+                            } catch (Exception e) {
+                                dateReunion.setText(reunion.getDate()+" , "+reunion.getHeure()); // fallback
+                            }
+
+
+                            // remplir les elements dans la card
+                            titreReunion.setText(reunion.getTitre());
+                            //dateReunion.setText(formattedDate);
+                            //dateReunion.setText(reunion.getDate());
+                            // timeReunion.setText(reunion.getHeure());
+                            departementReunion.setText(reunion.getDepartement());
+                            participantsReunion.setText(reunion.getDescription());
+
+                            //  On ajoute la carte dans le conteneur
+                            reunionPasseContainer.addView(cardView);
+
                         }
-
-                        // remplir les elements dans la card
-                        titreReunion.setText(reunion.getTitre());
-                        //dateReunion.setText(reunion.getDate());
-                        timeReunion.setText(reunion.getHeure());
-                        departementReunion.setText(reunion.getDepartement());
-                        descriptionReunion.setText(reunion.getDescription());
-
-                        //  On ajoute la carte dans le conteneur
-                        reunionPlanifieContainer.addView(cardView);
-
-
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(reunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
     // ******************* fonction pour convertir la date en date complet **********
     private String convertDate(String date){
         // 1. Définir le format source
@@ -167,4 +219,58 @@ public class reunionActivity extends AppCompatActivity {
         return formattedDate;
 
     }
+
+
+   // ******* fonct pour comparer une date avec date d aujourd'hui ( pour determiner les passes avec a venir ) *******
+    private int compareDate(String date, String time) {
+
+        // Conversion de la date en LocalDate
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");// Format correspondant dans le XML
+        LocalDate dateForm = LocalDate.parse(date, formatter);// Conversion en LocalDate
+
+        // Conversion de l'heure en LocalTime
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime timeForm = LocalTime.parse(time, timeFormatter);
+
+        // Date actuelle
+        LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
+
+
+        // Combinaison en LocalDateTime
+        LocalDateTime xmlDateTime = LocalDateTime.of(dateForm, timeForm);
+
+        int result;
+        if (xmlDateTime.isEqual(now)) {
+            result = 0; //maintenant
+        } else if (xmlDateTime.isBefore(now)) {
+            result = -1; //passe
+        } else {
+            result = 1; //venir
+        }
+        return result;
+    }
+
+
+    // ******* fonct pour calculer la difference entre une date et la date d aujourd'hui  *******
+    private String NbrJourRestant(String date){
+        //****** Determiner la date restant **********
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");// Format correspondant dans le XML
+        LocalDate dateForm = LocalDate.parse(date, formatter);// Conversion en LocalDate
+
+        long JourResrant = ChronoUnit.DAYS.between(today, dateForm);//calcul la difference entre les dates
+        String rest ;
+
+        if(JourResrant==0){
+            rest = "Aujourd'hui ";
+        } else if (JourResrant==1) {
+            rest = "Demain ";
+        }
+        else {
+            rest = "Dans -"+JourResrant+ " Jour ";
+        }
+        return rest ;
+    }
+
 }
