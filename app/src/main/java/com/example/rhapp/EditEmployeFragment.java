@@ -22,7 +22,7 @@ public class EditEmployeFragment extends Fragment {
     private Button btnAnnuler, btnEnregistrer;
 
     private FirebaseFirestore db;
-    private String employeId; // <--- ID du document Firestore
+    private String employeId; // ID du document Firestore
 
     public EditEmployeFragment() { }
 
@@ -44,8 +44,7 @@ public class EditEmployeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_employe, container, false);
 
         // Récupération des vues
