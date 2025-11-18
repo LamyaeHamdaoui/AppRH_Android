@@ -12,9 +12,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.rhapp.model.Reunion;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,7 +54,7 @@ public class reunionActivity extends AppCompatActivity {
         employes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(reunionActivity.this, employeActivity.class));
+                startActivity(new Intent(reunionActivity.this, EmployeActivity.class));
 
             }
         });
