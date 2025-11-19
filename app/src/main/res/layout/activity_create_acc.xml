@@ -84,15 +84,48 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <RadioButton
+                    android:id="@+id/radioMasculin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:text="Masculin"/>
                 <RadioButton
+                    android:id="@+id/radioFeminin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Féminin"/>
+            </RadioGroup>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rôle:"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+            <RadioGroup
+                android:id="@+id/radioGroupRole"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/radioAdmin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Admin"/>
+                <RadioButton
+                    android:id="@+id/radioEmploye"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Employé"/>
             </RadioGroup>
         </LinearLayout>
         <LinearLayout
@@ -131,7 +164,7 @@
             android:id="@+id/valideCreateAcc"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Suivant"
+            android:text="Valider"
             android:layout_marginTop="30dp"
             android:background="@drawable/border_button"
             app:backgroundTint="@null"/>
