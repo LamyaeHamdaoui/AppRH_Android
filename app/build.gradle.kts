@@ -55,5 +55,10 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     // FIREBASE UI
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
+    implementation ("com.google.firebase:firebase-firestore")
+    implementation ("com.google.firebase:firebase-storage")
+    implementation ("com.google.firebase:firebase-messaging")
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-database")
 
 }
