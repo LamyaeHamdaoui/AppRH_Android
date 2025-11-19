@@ -1,30 +1,31 @@
 package com.example.rhapp.model;
 
+import com.google.firebase.Timestamp;
+
+
 public class Employe  {
     private String id;
     private String nom;
     private String prenom;
     private String email;
-    private String motDePasse;
     private String role;
     private String photo;
     private String poste;
     private String departement;
-    private String dateEmbauche;
+    private Timestamp dateEmbauche;
     private int soldeConge;
     private String  telephone;
 
 
 
     public Employe () { }
-    public Employe(String id, String nom, String prenom, String email, String motDePasse,
+    public Employe(String id, String nom, String prenom, String email,
                    String role, String photo, String poste, String departement,
-                   String dateEmbauche, int soldeConge, String telephone )  {
+                   Timestamp dateEmbauche, int soldeConge, String telephone )  {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
-        this.motDePasse = motDePasse;
         this.role = role;
         this.photo = photo;
         this.poste = poste;
@@ -52,10 +53,6 @@ public class Employe  {
     public void setEmail(String email){
         this.email = email; }
 
-
-    public String getMotDePasse(){ return motDePasse;}
-    public void setMotDePasse (String motDePasse){
-        this.motDePasse = motDePasse; }
 
     public String getRole(){ return role;}
     public void setRole(String role){
@@ -90,11 +87,11 @@ public class Employe  {
         this.departement = departement;
     }
 
-    public String getDateEmbauche() {
+    public Timestamp getDateEmbauche() {
         return dateEmbauche;
     }
 
-    public void setDateEmbauche(String dateEmbauche) {
+    public void setDateEmbauche(Timestamp dateEmbauche) {
         this.dateEmbauche = dateEmbauche;
     }
 

@@ -1,132 +1,173 @@
 package com.example.rhapp;
 
+
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.Timestamp;
 
 import com.example.rhapp.model.Employe;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class EmployeActivity extends AppCompatActivity {
 
-    private LinearLayout itemsEmployeeCardsContainer;
-    private LinearLayout noEmployeeContainer;
+    private LinearLayout itemsEmployeeCardsContainer, noEmployeeContainer;
     private EditText rechercherEmploye;
-
+    private Spinner departement;
+    private Button btnAddEmploye;
+    private FrameLayout fragmentContainer;
+    private ScrollView mainContent;
     private FirebaseFirestore db;
-    private List<Employe> employesList = new ArrayList<>();
+    private TextView actif;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employe);
 
-        // Récupération des vues
+        // --- Initialisation des vues ---
         itemsEmployeeCardsContainer = findViewById(R.id.itemsEmployeeCardsContainer);
         noEmployeeContainer = findViewById(R.id.noEmployeeContainer);
         rechercherEmploye = findViewById(R.id.rechercherEmploye);
+        departement = findViewById(R.id.departement);
+        btnAddEmploye = findViewById(R.id.btnAddEmploye);
+        actif = findViewById(R.id.employesActifs);
+        fragmentContainer = findViewById(R.id.fragment_container);
+        mainContent = findViewById(R.id.main_content);
 
         db = FirebaseFirestore.getInstance();
 
-        // Charger les employés depuis Firebase
+        // --- Charger les employés ---
         chargerEmployes();
 
-        // Filtrer les employés en tapant dans l'EditText
-        rechercherEmploye.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+        // --- Bouton Ajouter Employé ---
+        btnAddEmploye.setOnClickListener(v -> ouvrirFragmentAddEmploye());
 
+        // --- Gestion moderne du bouton back ---
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                filtrerEmployes(editable.toString());
+            public void handleOnBackPressed() {
+                if (fragmentContainer.getVisibility() == View.VISIBLE) {
+                    getSupportFragmentManager().popBackStack();
+                    fragmentContainer.setVisibility(View.GONE);
+                    mainContent.setVisibility(View.VISIBLE);
+                } else {
+                    setEnabled(false); // pour appeler le back par défaut
+                    onBackPressed();
+                }
             }
         });
     }
 
+    // --- Ouvrir AddEmployeFragment ---
+    private void ouvrirFragmentAddEmploye() {
+        mainContent.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
+
+        AddEmployeFragment addFragment = new AddEmployeFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, addFragment)
+                .addToBackStack("add_employe")
+                .commit();
+    }
+
+    // --- Ouvrir EditEmployeFragment ---
+    private void ouvrirFragmentEditEmploye(String employeId) {
+        mainContent.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
+
+        EditEmployeFragment editFragment = EditEmployeFragment.newInstance(employeId);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, editFragment)
+                .addToBackStack("edit_employe")
+                .commit();
+    }
+
+    // --- Charger les employés depuis Firestore ---
     private void chargerEmployes() {
+        itemsEmployeeCardsContainer.removeAllViews();
+
         db.collection("users").get()
-                .addOnSuccessListener(querySnapshot -> {
-                    employesList.clear();
-                    itemsEmployeeCardsContainer.removeAllViews();
-
-                    if (!querySnapshot.isEmpty()) {
-                        noEmployeeContainer.setVisibility(View.GONE);
-
-                        for (DocumentSnapshot doc : querySnapshot) {
-                            Employe employe = doc.toObject(Employe.class);
-                            if (employe != null) {
-                                employesList.add(employe);
-                                ajouterCarteEmploye(employe);
-                            }
-                        }
-                    } else {
+                .addOnSuccessListener((QuerySnapshot queryDocumentSnapshots) -> {
+                    if (queryDocumentSnapshots.isEmpty()) {
                         noEmployeeContainer.setVisibility(View.VISIBLE);
+                        actif.setText("0 employé actif");
+                        return;
                     }
 
+                    int nombreEmployesActifs = queryDocumentSnapshots.size();
+                    actif.setText(nombreEmployesActifs + " employés actifs");
+                    noEmployeeContainer.setVisibility(View.GONE);
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Employe emp = document.toObject(Employe.class);
+                        emp.setId(document.getId());
+
+                        View card = getLayoutInflater().inflate(R.layout.item_employee_card, null);
+                        setCardInfo(card, emp);
+                        itemsEmployeeCardsContainer.addView(card);
+                    }
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(EmployeActivity.this, "Erreur chargement employés", Toast.LENGTH_SHORT).show()
-                );
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erreur chargement employés", Toast.LENGTH_SHORT).show();
+                    Log.e("Firestore", "Erreur: ", e);
+                });
     }
 
-    private void filtrerEmployes(String texteRecherche) {
-        itemsEmployeeCardsContainer.removeAllViews();
-        boolean trouve = false;
+    // --- Remplir une carte employé ---
+    private void setCardInfo(View card, Employe emp) {
+        TextView np = card.findViewById(R.id.np);
+        TextView nomComplet = card.findViewById(R.id.nomComplet);
+        TextView poste = card.findViewById(R.id.poste);
+        TextView departementTv = card.findViewById(R.id.departement);
+        TextView email = card.findViewById(R.id.email);
+        TextView telephone = card.findViewById(R.id.telephone);
+        TextView dateEmbauche = card.findViewById(R.id.dateEmbauche);
+        TextView soldeConge = card.findViewById(R.id.soldeConge);
 
-        for (Employe e : employesList) {
-            String nomComplet = (e.getPrenom() + " " + e.getNom()).toLowerCase();
-            if (nomComplet.contains(texteRecherche.toLowerCase())) {
-                ajouterCarteEmploye(e);
-                trouve = true;
-            }
+        np.setText(emp.getPrenom().substring(0, 1) + emp.getNom().substring(0, 1));
+        nomComplet.setText(emp.getNomComplet());
+        poste.setText(emp.getPoste());
+        departementTv.setText(emp.getDepartement());
+        email.setText(emp.getEmail());
+        telephone.setText(emp.getTelephone());
+        Timestamp ts = emp.getDateEmbauche();
+        if (ts != null) {
+            String dateStr = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(ts.toDate());
+            dateEmbauche.setText("Embauché le " + dateStr);
+        } else {
+            dateEmbauche.setText("Date inconnue");
         }
+        soldeConge.setText(emp.getSoldeConge() + " jours");
 
-        noEmployeeContainer.setVisibility(trouve ? View.GONE : View.VISIBLE);
-    }
+        // --- Bouton Edit ---
+        card.findViewById(R.id.editEmploye).setOnClickListener(v -> ouvrirFragmentEditEmploye(emp.getId()));
 
-    private void ajouterCarteEmploye(Employe e) {
-        View carte = LayoutInflater.from(this).inflate(R.layout.item_employee_card, itemsEmployeeCardsContainer, false);
-
-        TextView nomComplet = carte.findViewById(R.id.nomComplet);
-        TextView poste = carte.findViewById(R.id.poste);
-        TextView departement = carte.findViewById(R.id.departement);
-        TextView email = carte.findViewById(R.id.email);
-        TextView telephone = carte.findViewById(R.id.telephone);
-        TextView dateEmbauche = carte.findViewById(R.id.dateEmbauche);
-        TextView soldeConge = carte.findViewById(R.id.soldeConge);
-        TextView np = carte.findViewById(R.id.np);
-
-        nomComplet.setText(e.getNomComplet());
-        poste.setText(e.getPoste());
-        departement.setText(e.getDepartement());
-        email.setText(e.getEmail());
-        telephone.setText(e.getTelephone());
-        dateEmbauche.setText("embauché le " + e.getDateEmbauche());
-        soldeConge.setText(e.getSoldeConge() + " jours");
-
-        // Initiales
-        String initials = "";
-        if (e.getPrenom().length() > 0) initials += e.getPrenom().charAt(0);
-        if (e.getNom().length() > 0) initials += e.getNom().charAt(0);
-        np.setText(initials.toUpperCase());
-
-        // Ajouter la carte dans le conteneur
-        itemsEmployeeCardsContainer.addView(carte);
+        // --- Bouton Delete ---
+        card.findViewById(R.id.deleteEmploye).setOnClickListener(v -> {
+            db.collection("users").document(emp.getId())
+                    .delete()
+                    .addOnSuccessListener(unused -> {
+                        Toast.makeText(this, "Employé supprimé", Toast.LENGTH_SHORT).show();
+                        chargerEmployes();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Erreur suppression", Toast.LENGTH_SHORT).show());
+        });
     }
 }
