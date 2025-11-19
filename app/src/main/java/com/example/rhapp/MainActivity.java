@@ -101,14 +101,28 @@ public class MainActivity extends AppCompatActivity {
 
                         FirebaseUser user = mAuth.getCurrentUser();
 
-                        // MODIFICATION: Suppression de la vérification d'email ici aussi.
-                        // On considère la connexion réussie dès que l'authentification est OK.
                         if (user != null) {
-                            Toast.makeText(MainActivity.this, "Connexion réussie", Toast.LENGTH_SHORT).show();
+
+                            // 🔒 Vérification OBLIGATOIRE de l'email
+                            if (!user.isEmailVerified()) {
+
+                                FirebaseAuth.getInstance().signOut();
+
+                                Toast.makeText(MainActivity.this,
+                                        "Veuillez vérifier votre email avant de vous connecter.",
+                                        Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                            // ✔ Email vérifié → OK
+                            Toast.makeText(MainActivity.this,
+                                    "Connexion réussie", Toast.LENGTH_SHORT).show();
+
                             redirectToHomeActivity();
+
                         } else {
-                            // Cas très rare où l'authentification réussit mais user est null
-                            Toast.makeText(MainActivity.this, "Erreur utilisateur. Réessayez.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,
+                                    "Erreur utilisateur. Réessayez.", Toast.LENGTH_LONG).show();
                             mAuth.signOut();
                         }
 
@@ -129,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
     private boolean validateInputs(String email, String password) {
 

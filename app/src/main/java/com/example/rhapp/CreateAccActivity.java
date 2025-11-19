@@ -129,6 +129,30 @@ public class CreateAccActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            /// ///////////////////////
+                            if (user != null) {
+                                user.sendEmailVerification()
+                                        .addOnCompleteListener(task1 -> {
+                                            if (task1.isSuccessful()) {
+
+                                                Toast.makeText(CreateAccActivity.this,
+                                                        "Email de vérification envoyé ! Veuillez vérifier votre boîte.",
+                                                        Toast.LENGTH_LONG).show();
+
+                                                // Sauvegarde dans la DB
+                                                saveUserToDatabase(user.getUid(), nom, prenom, birthDate, sexe, role, email);
+
+                                                // Déconnexion obligatoire
+                                                FirebaseAuth.getInstance().signOut();
+
+                                                // Redirection vers la page de connexion
+                                                redirectToMainActivity();
+                                            }
+                                        });
+                            }
+
+                            /// ///////////////////
                             if (user != null) {
                                 // 2. Sauvegarder les informations supplémentaires, incluant le RÔLE
                                 saveUserToDatabase(user.getUid(), nom, prenom, birthDate, sexe, role, email);
