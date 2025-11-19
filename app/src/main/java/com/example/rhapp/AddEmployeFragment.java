@@ -1,9 +1,6 @@
 package com.example.rhapp;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,73 +9,79 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.rhapp.model.Employe;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the  factory method to
- * create an instance of this fragment.
- */
 public class AddEmployeFragment extends Fragment {
+
+    private EditText nom, prenom, email, telephone, poste, soldeConge;
+    private Spinner departement;
+    private Button btnAjouter;
+
+    private FirebaseFirestore db;
+
+    public AddEmployeFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_add_employe, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_add_employe, container, false);
+        nom = v.findViewById(R.id.nom);
+        prenom = v.findViewById(R.id.prenom); // Assure-toi que ton EditText pour prénom existe
+        email = v.findViewById(R.id.email);
+        telephone = v.findViewById(R.id.telephone);
+        poste = v.findViewById(R.id.poste);
+        departement = v.findViewById(R.id.departement);
+        soldeConge = v.findViewById(R.id.soldeConge);
+        btnAjouter = v.findViewById(R.id.btnAddEmploye);
 
-        EditText nom = view.findViewById(R.id.nom);
-        EditText prenom = view.findViewById(R.id.prenom);
-        EditText email = view.findViewById(R.id.email);
-        EditText telephone = view.findViewById(R.id.telephone);
-        EditText poste = view.findViewById(R.id.poste);
-        Spinner departement = view.findViewById(R.id.departement);
-        EditText dateEmbauche = view.findViewById(R.id.dateEmbauche);
-        EditText soldeConge = view.findViewById(R.id.soldeConge);
-        Button btnAdd = view.findViewById(R.id.btnAddEmploye);
+        db = FirebaseFirestore.getInstance();
 
-        btnAdd.setOnClickListener(v -> {
+        btnAjouter.setOnClickListener(view -> ajouterEmploye());
 
-            String nomTxt = nom.getText().toString().trim();
-            String prenomTxt = prenom.getText().toString().trim();
-            String mail = email.getText().toString().trim();
-            String tel = telephone.getText().toString().trim();
-            String p = poste.getText().toString().trim();
-            String dep = departement.getSelectedItem().toString();
-            String date = dateEmbauche.getText().toString().trim();
-            int solde = Integer.parseInt(soldeConge.getText().toString().trim());
-
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            Map<String, Object> user = new HashMap<>();
-            user.put("nom", nomTxt);
-            user.put("prenom", prenomTxt);
-            user.put("email", mail);
-            user.put("telephone", tel);
-            user.put("poste", p);
-            user.put("departement", dep);
-            user.put("dateEmbauche", date);
-            user.put("soldeConge", solde);
-            user.put("role", "employe");
-            user.put("photo", "");
-            user.put("createdAt", new Date());
-
-            db.collection("users")
-                    .add(user)
-                    .addOnSuccessListener(doc -> {
-                        Toast.makeText(getContext(), "Employé ajouté dans Firestore", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Erreur: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        });
-
-        return view;
+        return v;
     }
 
+    private void ajouterEmploye() {
+        // 1️⃣ Créer un document Firestore avec ID automatique
+        DocumentReference docRef = db.collection("users").document();
+        String employeId = docRef.getId(); //
 
+        // 2️⃣ Créer l'objet Employe
+        Employe employe = new Employe(
+                employeId,
+                nom.getText().toString(),
+                prenom.getText().toString(),
+                email.getText().toString(),
+                "", // motDePasse vide pour l'instant
+                "employe", // role
+                "", // photo
+                poste.getText().toString(),
+                departement.getSelectedItem().toString(),
+                "", // dateEmbauche
+                Integer.parseInt(soldeConge.getText().toString()),
+                telephone.getText().toString()
+        );
+
+        // 3️⃣ Ajouter dans Firestore
+        docRef.set(employe)
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(getContext(), "Employé ajouté !", Toast.LENGTH_SHORT).show();
+
+                   /*// --- Ouvrir EditEmployeFragment pour modification immédiate si besoin ---
+                    EditEmployeFragment editFragment = EditEmployeFragment.newInstance(employeId);
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_container, editFragment)
+                            .addToBackStack(null)
+                            .commit(); */
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(getContext(), "Erreur ajout employé", Toast.LENGTH_SHORT).show()
+                );
+    }
 }
