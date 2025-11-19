@@ -50,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         acceuil_interface.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(ProfileActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, AcceuilRhActivity.class);
                 startActivity(intent);
             }
         });
