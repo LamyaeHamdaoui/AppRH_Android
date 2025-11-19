@@ -530,6 +530,7 @@
             android:padding="5dp">
 
             <LinearLayout
+                android:id="@+id/footerAccueil"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -538,7 +539,7 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/accueil"
+
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/home" />
@@ -555,7 +556,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/employes_interface"
+                android:id="@+id/footerEmployes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -584,7 +585,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/conges_interafce"
+                android:id="@+id/footerConges"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -611,7 +612,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/reunions_interface"
+                android:id="@+id/footerReunions"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -638,6 +639,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/footerProfil"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -646,7 +648,6 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/profil"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:maxWidth="30dp"
