@@ -10,6 +10,7 @@
     app:cardBackgroundColor="@color/white"
     android:background="@drawable/border_gris"
     app:backgroundTint="@null"
+    android:id="@+id/main"
     >
 
     <LinearLayout
@@ -32,6 +33,7 @@
             android:layout_margin="5dp"
             >
             <TextView
+                android:id="@+id/np"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="EO"
@@ -43,6 +45,7 @@
                 android:visibility="visible"
                />
             <ImageView
+                android:id="@+id/photo"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/bg_circle_blue"
@@ -56,6 +59,7 @@
             android:padding="10dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/nomComplet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ELAAMMARI Oumeyma"
@@ -64,6 +68,7 @@
 
                 />
             <TextView
+                android:id="@+id/poste"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Développeur"
@@ -72,6 +77,7 @@
                 android:layout_marginTop="3dp"
                 />
             <TextView
+                android:id="@+id/departement"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Développement"
@@ -96,15 +102,19 @@
 
             >
             <ImageView
+                android:id="@+id/editEmploye"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@drawable/edit"
                 android:layout_marginRight="15dp"
+                android:clickable="true"
                 />
             <ImageView
+                android:id="@+id/deleteEmploye"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@drawable/delete"
+                android:clickable="true"
                 />
 
             </LinearLayout>
@@ -131,6 +141,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -151,6 +162,7 @@
                     android:src="@drawable/phone" />
 
                 <TextView
+                    android:id="@+id/telephone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -181,6 +193,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/dateEmbauche"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="25dp"
@@ -190,6 +203,7 @@
 
                     />
                 <TextView
+                    android:id="@+id/soldeConge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
