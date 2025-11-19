@@ -4,6 +4,7 @@ public class User {
     public String nom;
     public String prenom;
     public String birthDate;
+    public String role;
     public String sexe;
     public String email;
     public String createdAt;
@@ -12,11 +13,12 @@ public class User {
     public User() {
     }
 
-    public User(String nom, String prenom, String birthDate, String sexe, String email, String createdAt) {
+    public User(String nom, String prenom, String birthDate, String sexe,String role, String email, String createdAt) {
         this.nom = nom;
         this.prenom = prenom;
         this.birthDate = birthDate;
         this.sexe = sexe;
+        this.role = role;
         this.email = email;
         this.createdAt = createdAt;
     }
