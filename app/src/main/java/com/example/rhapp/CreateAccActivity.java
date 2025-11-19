@@ -109,8 +109,9 @@ public class CreateAccActivity extends AppCompatActivity {
             return;
         }
 
-        // --- Validation locale réussie, on passe à la création Firebase ---
-        createFirebaseAccount(nom, prenom, birthDate, sexe, role, email, password);
+        // --- Validation locale réussie, on passe à la vérification de l'email dans la DB ---
+        validateEmployeeEmailAndCreateAccount(nom, prenom, birthDate, sexe, role, email, password);
+
     }
 
     /**
@@ -175,6 +176,27 @@ public class CreateAccActivity extends AppCompatActivity {
                             // Réactiver le bouton
                             valideCreateAcc.setText("Suivant");
                             valideCreateAcc.setEnabled(true);
+                        }
+                    }
+                });
+    }
+
+
+    private void validateEmployeeEmailAndCreateAccount(String nom, String prenom, String birthDate,
+                                                       String sexe, String role, String email, String password) {
+        mDatabase.child("employees").orderByChild("email").equalTo(email)
+                .get().addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(this, "Erreur lors de la vérification de l'employé", Toast.LENGTH_LONG).show();
+                    } else {
+                        if (task.getResult().exists()) {
+                            // L'email existe dans la base des employés → on peut créer le compte
+                            createFirebaseAccount(nom, prenom, birthDate, sexe, role, email, password);
+                        } else {
+                            // L'email n'existe pas → on bloque la création
+                            emailEditText.setError("Cet email n'est pas associé à un employé.");
+                            emailEditText.requestFocus();
+                            Toast.makeText(this, "Vous ne pouvez pas créer de compte avec cet email.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
