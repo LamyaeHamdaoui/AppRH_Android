@@ -1,15 +1,14 @@
 package com.example.rhapp;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -20,8 +19,10 @@ public class EditEmployeFragment extends Fragment {
     private EditText nom, prenom, email, telephone, poste, soldeConge;
     private Spinner departement;
     private Button btnAnnuler, btnEnregistrer;
-
+    private RadioButton radioEmploye , radioRh;
+    private String role = "employe";
     private FirebaseFirestore db;
+
     private String employeId; // ID du document Firestore
 
     public EditEmployeFragment() { }
@@ -55,7 +56,8 @@ public class EditEmployeFragment extends Fragment {
         poste = v.findViewById(R.id.poste);
         departement = v.findViewById(R.id.departement);
         soldeConge = v.findViewById(R.id.soldeConge);
-
+        radioEmploye = v.findViewById(R.id.radioEmploye);
+        radioRh = v.findViewById(R.id.radioRh);
         btnAnnuler = v.findViewById(R.id.btnAnnulerEditEmploye);
         btnEnregistrer = v.findViewById(R.id.btnenregistrerEditEmploye);
 
@@ -66,7 +68,11 @@ public class EditEmployeFragment extends Fragment {
 
         return v;
     }
-
+    private void retourEcranPrincipal() {
+        if (getActivity() != null) {
+            getActivity().onBackPressed();
+        }
+    }
     private void chargerEmploye() {
         db.collection("users").document(employeId).get()
                 .addOnSuccessListener(document -> {
@@ -77,7 +83,15 @@ public class EditEmployeFragment extends Fragment {
                         telephone.setText(document.getString("telephone"));
                         poste.setText(document.getString("poste"));
                         soldeConge.setText(String.valueOf(document.getLong("soldeConge")));
-
+                        String roleRecupere = document.getString("role");
+                        if (roleRecupere != null) {
+                            role = roleRecupere;
+                            if ("rh".equals(roleRecupere)) {
+                                radioRh.setChecked(true);
+                            } else {
+                                radioEmploye.setChecked(true);
+                            }
+                        }
                         // Département = Spinner
                         String dep = document.getString("departement");
                         setSpinnerValue(departement, dep);
@@ -88,7 +102,7 @@ public class EditEmployeFragment extends Fragment {
     }
 
     private void enregistrerModifications() {
-
+        role = radioEmploye.isChecked() ? "employe" : "rh";
         DocumentReference docRef = db.collection("users").document(employeId);
 
         docRef.update(
@@ -96,12 +110,14 @@ public class EditEmployeFragment extends Fragment {
                 "prenom", prenom.getText().toString(),
                 "email", email.getText().toString(),
                 "telephone", telephone.getText().toString(),
+                "role",role,
                 "poste", poste.getText().toString(),
                 "departement", departement.getSelectedItem().toString(),
                 "soldeConge", Integer.parseInt(soldeConge.getText().toString())
-        ).addOnSuccessListener(unused ->
-                Toast.makeText(getContext(), "Modifications enregistrées", Toast.LENGTH_SHORT).show()
-        ).addOnFailureListener(e ->
+        ).addOnSuccessListener(unused -> {
+            Toast.makeText(getContext(), "Modifications enregistrées", Toast.LENGTH_SHORT).show();
+            retourEcranPrincipal(); // AJOUT : Retour après modification ⭐⭐
+        }).addOnFailureListener(e ->
                 Toast.makeText(getContext(), "Erreur lors de l'enregistrement", Toast.LENGTH_SHORT).show()
         );
     }
