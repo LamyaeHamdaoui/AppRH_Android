@@ -37,7 +37,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/employeActif"
+                    android:id="@+id/employesActifs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0 employés actifs"
