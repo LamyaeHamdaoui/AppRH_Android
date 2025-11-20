@@ -33,7 +33,7 @@ public class ModifierReunionActivity extends AppCompatActivity {
         Spinner departementReunion = findViewById(R.id.departementReunion);
         EditText lieuReunion = findViewById(R.id.lieuReunion);
         EditText descriptionReunion = findViewById(R.id.descriptionReunion);
-        Button btnCreerReunion = findViewById(R.id.btnCreerReunion);
+        Button btnModifierReunion = findViewById(R.id.btnModifierReunion);
 
 
 
@@ -63,7 +63,7 @@ public class ModifierReunionActivity extends AppCompatActivity {
 
         //***************************** Enregistrer le reunion *****************
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        btnCreerReunion.setOnClickListener(new View.OnClickListener() {
+        btnModifierReunion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String titre = titreReunion.getText().toString().trim();

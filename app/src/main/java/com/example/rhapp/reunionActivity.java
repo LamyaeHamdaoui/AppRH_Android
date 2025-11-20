@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rhapp.model.Reunion;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -102,7 +104,10 @@ public class reunionActivity extends AppCompatActivity {
 
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
         db = FirebaseFirestore.getInstance();
-        afficherReunionsVenirs();
+        AfficherReunions();
+        nbrReunionVenir = findViewById(R.id.nbrReunionVenir);
+        nbrReunionPassees = findViewById(R.id.nbrReunionPassees);
+        statistique();
 
 
     }
@@ -110,12 +115,12 @@ public class reunionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        afficherReunionsVenirs(); // recharge toutes les réunions
+        AfficherReunions(); // recharge toutes les réunions
     }
 
     // ************************************* fonction  Afficher  des reuinons  **************************
 
-    private void afficherReunionsVenirs() {
+    private void AfficherReunions() {
         // Vider les conteneurs avant de reconstruire les cards
         reunionPlanifieContainer.removeAllViews();
         reunionPasseContainer.removeAllViews();
@@ -124,6 +129,9 @@ public class reunionActivity extends AppCompatActivity {
         db.collection("Reunions")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
+                    // documentReference.getId() est l'ID généré par Firestore
+
+
                     if (querySnapshot.isEmpty()) {
                         Toast.makeText(reunionActivity.this, "Aucune réunion trouvée", Toast.LENGTH_SHORT).show();
                         return;
@@ -134,6 +142,7 @@ public class reunionActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         Reunion reunion = doc.toObject(Reunion.class);
                         reunion.setId(doc.getId());
+
 
                         // concerant les reunions venirs
                         String dateStr = reunion.getDate();
@@ -196,13 +205,24 @@ public class reunionActivity extends AppCompatActivity {
                             });
 
                             //************* delete un reunion **************
-                            delete.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    AfficherBoiteDialogue();
-
-                                }
+                            delete.setOnClickListener(v -> {
+                                new AlertDialog.Builder(reunionActivity.this)
+                                        .setTitle("Supprimer Réunion")
+                                        .setMessage("Êtes-vous sûr de vouloir supprimer cette réunion ?")
+                                        .setPositiveButton("Oui", (dialog, which) -> {
+                                            db.collection("Reunions")
+                                                    .document(reunion.getId())
+                                                    .delete()
+                                                    .addOnSuccessListener(aVoid -> reunionPlanifieContainer.removeView(cardView))
+                                                    .addOnFailureListener(e ->
+                                                            Toast.makeText(reunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                                    );
+                                        })
+                                        .setNegativeButton("Non", null)
+                                        .show();
                             });
+
+
 
 
 
@@ -338,6 +358,55 @@ public class reunionActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+    }
+
+
+    //**************************** fct pour remplir les statistique*********************
+    private TextView nbrReunionVenir;
+    private TextView nbrReunionPassees;
+
+    private void statistique() {
+
+        nbrReunionVenir = findViewById(R.id.nbrReunionVenir);
+        nbrReunionPassees = findViewById(R.id.nbrReunionPassees);
+
+
+        db.collection("Reunions")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+
+                    int nbrVenirs = 0;
+                    int nbrPassees = 0;
+
+                    if (querySnapshot.isEmpty()) {
+                        nbrReunionVenir.setText("0");
+                        return;
+                    }
+
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        Reunion reunion = doc.toObject(Reunion.class);
+                        String dateStr = reunion.getDate();
+                        String timeStr = reunion.getHeure();
+
+
+                        // concerant les reunions venirs
+                        int etatDate = compareDate(dateStr,timeStr);
+
+                        //si la date est a venir on affiche cette card
+                        if(etatDate==1 || etatDate==0) {
+                            nbrVenirs++;
+                        }
+                        else {
+                            nbrPassees++;
+                        }
+
+                        nbrReunionVenir.setText(String.valueOf(nbrVenirs));
+                        nbrReunionPassees.setText(String.valueOf(nbrPassees));
+
+                    }
+
+
+                });
     }
 
 }
