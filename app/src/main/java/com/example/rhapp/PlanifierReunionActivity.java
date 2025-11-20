@@ -46,14 +46,14 @@ public class PlanifierReunionActivity extends AppCompatActivity {
                 String titre = titreReunion.getText().toString().trim();
                 String date = dateReunion.getText().toString().trim();
                 String heure = heureReunion.getText().toString().trim();
+                String lieu =lieuReunion.getText().toString().trim();
                 String departement= departementReunion.getSelectedItem().toString();
                 String description = descriptionReunion.getText().toString().trim();
 
-
                 //  Créer un objet de type Reunion (avec les champs saisies)
-                Reunion reunion = new Reunion(titre, date, heure, departement, description);
+                Reunion reunion = new Reunion(titre, date, heure,lieu , departement, description);
 
-                // 3 Envoyer directement cet objet à Firebase
+                //  Envoyer directement cet objet à Firebase
                 db.collection("Reunions")
                         .add(reunion)
                         .addOnSuccessListener(documentReference -> {
@@ -63,6 +63,7 @@ public class PlanifierReunionActivity extends AppCompatActivity {
                             titreReunion.setText("");
                             dateReunion.setText("");
                             heureReunion.setText("");
+                            lieuReunion.setText("");
                             departementReunion.setSelection(0);
                             descriptionReunion.setText("");
                         })
@@ -70,9 +71,13 @@ public class PlanifierReunionActivity extends AppCompatActivity {
                             Toast.makeText(PlanifierReunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
             }
+
+
+
         });
 
-        };
 
     }
 
+
+}

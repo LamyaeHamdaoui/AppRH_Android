@@ -1,16 +1,19 @@
 package com.example.rhapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rhapp.model.Reunion;
@@ -104,9 +107,20 @@ public class reunionActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        afficherReunionsVenirs(); // recharge toutes les réunions
+    }
+
     // ************************************* fonction  Afficher  des reuinons  **************************
 
     private void afficherReunionsVenirs() {
+        // Vider les conteneurs avant de reconstruire les cards
+        reunionPlanifieContainer.removeAllViews();
+        reunionPasseContainer.removeAllViews();
+
+
         db.collection("Reunions")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
@@ -119,13 +133,14 @@ public class reunionActivity extends AppCompatActivity {
                     // Pour chaque réunion dans Firestore
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         Reunion reunion = doc.toObject(Reunion.class);
+                        reunion.setId(doc.getId());
 
                         // concerant les reunions venirs
                         String dateStr = reunion.getDate();
                         String timeStr = reunion.getHeure();
                         int etatDate = compareDate(dateStr,timeStr);
-                        //si la date est a venir on affiche cette card
 
+                        //si la date est a venir on affiche cette card
                         if(etatDate==1) {
 
                             //  On "gonfle" la carte depuis le XML
@@ -136,9 +151,13 @@ public class reunionActivity extends AppCompatActivity {
                             TextView titreReunion = cardView.findViewById(R.id.titreReunion);
                             TextView dateReunion = cardView.findViewById(R.id.dateReunion);
                             TextView timeReunion = cardView.findViewById(R.id.timeReunion);
-                            TextView departementReunion = cardView.findViewById(R.id.localReunion);
+                            TextView lieuReunion = cardView.findViewById(R.id.localReunion);
+                            TextView departementReunion = cardView.findViewById(R.id.departementReunion);
                             TextView descriptionReunion = cardView.findViewById(R.id.reunionDescription);
                             TextView tempsRestantReunion = cardView.findViewById(R.id.tempsRestantReunion);
+                            ImageView edit =  cardView.findViewById(R.id.iconEdit);
+                            ImageView delete=  cardView.findViewById(R.id.iconDelete);
+
 
                             //************ convertir la date ********************
                             try {
@@ -147,15 +166,44 @@ public class reunionActivity extends AppCompatActivity {
                                 dateReunion.setText(reunion.getDate()); // fallback
                             }
 
-
-                            // remplir les elements dans la card
+                            // *********** remplir les elements dans la card ***********
                             titreReunion.setText(reunion.getTitre());
-                            //dateReunion.setText(formattedDate);
-                            //dateReunion.setText(reunion.getDate());
                             timeReunion.setText(reunion.getHeure());
+                            lieuReunion.setText(reunion.getLieu());
                             departementReunion.setText(reunion.getDepartement());
                             descriptionReunion.setText(reunion.getDescription());
                             tempsRestantReunion.setText(NbrJourRestant(dateStr));
+
+                            //************* editer un reunion **************
+                            edit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(reunionActivity.this, ModifierReunionActivity.class);
+                                    intent.putExtra("reunionId",reunion.getId());
+                                    intent.putExtra("titre",reunion.getTitre());
+                                    intent.putExtra("date",reunion.getDate());
+                                    intent.putExtra("time",reunion.getHeure());
+                                    intent.putExtra("lieu",reunion.getLieu());
+                                    intent.putExtra("departement", departementReunion.getText().toString());
+                                    intent.putExtra("description",reunion.getDescription());
+                                    startActivity(intent);
+
+
+
+
+
+                                }
+                            });
+
+                            //************* delete un reunion **************
+                            delete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AfficherBoiteDialogue();
+
+                                }
+                            });
+
 
 
                             //  On ajoute la carte dans le conteneur
@@ -171,7 +219,8 @@ public class reunionActivity extends AppCompatActivity {
                             TextView titreReunion = cardView.findViewById(R.id.titreReunion);
                             TextView dateReunion = cardView.findViewById(R.id.dateReunion);
                             //TextView timeReunion = cardView.findViewById(R.id.timeReunion);
-                            TextView departementReunion = cardView.findViewById(R.id.localReunion);
+                            TextView lieuReunion = cardView.findViewById(R.id.lieuReunion);
+                            //TextView departementReunion = cardView.findViewById(R.id.departementReunion);
                             TextView participantsReunion = cardView.findViewById(R.id.participants);
 
                             //************ convertir la date ********************
@@ -187,7 +236,7 @@ public class reunionActivity extends AppCompatActivity {
                             //dateReunion.setText(formattedDate);
                             //dateReunion.setText(reunion.getDate());
                             // timeReunion.setText(reunion.getHeure());
-                            departementReunion.setText(reunion.getDepartement());
+                            lieuReunion.setText(reunion.getLieu());
                             participantsReunion.setText(reunion.getDescription());
 
                             //  On ajoute la carte dans le conteneur
@@ -219,34 +268,34 @@ public class reunionActivity extends AppCompatActivity {
 
 
    // ******* fonct pour comparer une date avec date d aujourd'hui ( pour determiner les passes avec a venir ) *******
-    private int compareDate(String date, String time) {
+   private int compareDate(String date, String time) {
 
-        // Conversion de la date en LocalDate
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");// Format correspondant dans le XML
-        LocalDate dateForm = LocalDate.parse(date, formatter);// Conversion en LocalDate
+       // Conversion de la date en LocalDate
+       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");// Format correspondant dans le XML
+       LocalDate dateForm = LocalDate.parse(date, formatter);// Conversion en LocalDate
 
-        // Conversion de l'heure en LocalTime
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime timeForm = LocalTime.parse(time, timeFormatter);
+       // Conversion de l'heure en LocalTime
+       DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+       LocalTime timeForm = LocalTime.parse(time, timeFormatter);
 
-        // Date actuelle
-        LocalDate today = LocalDate.now();
-        LocalDateTime now = LocalDateTime.now();
+       // Date actuelle
+       LocalDate today = LocalDate.now();
+       LocalDateTime now = LocalDateTime.now();
 
 
-        // Combinaison en LocalDateTime
-        LocalDateTime xmlDateTime = LocalDateTime.of(dateForm, timeForm);
+       // Combinaison en LocalDateTime
+       LocalDateTime xmlDateTime = LocalDateTime.of(dateForm, timeForm);
 
-        int result;
-        if (xmlDateTime.isEqual(now)) {
-            result = 0; //maintenant
-        } else if (xmlDateTime.isBefore(now)) {
-            result = -1; //passe
-        } else {
-            result = 1; //venir
-        }
-        return result;
-    }
+       int result;
+       if (xmlDateTime.isEqual(now)) {
+           result = 0; //maintenant
+       } else if (xmlDateTime.isBefore(now)) {
+           result = -1; //passe
+       } else {
+           result = 1; //venir
+       }
+       return result;
+   }
 
 
     // ******* fonct pour calculer la difference entre une date et la date d aujourd'hui  *******
@@ -268,6 +317,27 @@ public class reunionActivity extends AppCompatActivity {
             rest = "Dans -"+JourResrant+ " Jour ";
         }
         return rest ;
+    }
+
+    private void AfficherBoiteDialogue(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Supprimer un Reunion");
+        builder.setMessage("Voulez-vous supprimer ce reunion ?");
+        builder.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Action quand on clique sur Oui
+            }
+        });
+        builder.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss(); // ferme la boîte de dialogue
+            }
+        });
+
+        // Afficher la boîte de dialogue
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
 }
