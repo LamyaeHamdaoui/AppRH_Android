@@ -9,6 +9,7 @@
     >
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -31,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Planifiez une nouvelle réunion pour votre équipe"
-            android:textColor="@color/grey"
+
             android:gravity="center"
             android:layout_marginBottom="30dp"
             />
@@ -50,7 +51,7 @@
             android:hint="Ex:Réunion d'équipe "
             android:inputType="text"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/border"
+
             android:padding="5dp"/>
 
 
@@ -81,7 +82,7 @@
                     android:hint=" jj/mm/aaaa "
                     android:inputType="date"
                     android:layout_marginBottom="20dp"
-                    android:background="@drawable/border"
+
                     android:padding="5dp"/>
             </LinearLayout>
 
@@ -107,7 +108,6 @@
                     android:hint=" -- : --  "
                     android:inputType="time"
                     android:layout_marginBottom="20dp"
-                    android:background="@drawable/border"
                     android:padding="5dp"/>
             </LinearLayout>
         </LinearLayout>
@@ -127,7 +127,7 @@
             android:hint=" salle de conference A"
             android:inputType="text"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/border"
+
             android:padding="5dp"/>
 
         <!-- Departement-->
@@ -143,9 +143,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/border"
-            android:padding="5dp"
             android:entries="@array/departements"
+            android:padding="5dp"
+
             />
 
         <!-- Description  -->
@@ -164,7 +164,7 @@
             android:textSize="15dp"
             android:inputType="textLongMessage"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/border"
+
             android:padding="5dp"/>
 
 
@@ -178,7 +178,7 @@
             android:backgroundTint="@null"
             android:textSize="15dp"
             android:textColor="#FFFFFF"
-            android:background="@drawable/border_button"
+
             app:backgroundTint="@null"
             android:padding="0dp"
             />
