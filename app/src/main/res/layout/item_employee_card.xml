@@ -4,13 +4,15 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
-    android:layout_margin="5dp"
+    android:layout_marginVertical="35dp"
+    android:layout_marginHorizontal="15dp"
     app:cardCornerRadius="15dp"
-    app:cardElevation="5dp"
+    app:cardElevation="10dp"
     app:cardBackgroundColor="@color/white"
     android:background="@drawable/border_gris"
     app:backgroundTint="@null"
     android:id="@+id/main"
+
     >
 
     <LinearLayout
@@ -19,107 +21,110 @@
         android:orientation="vertical"
         android:background="@drawable/border_gris"
         >
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:paddingRight="10dp"
-        >
-        <FrameLayout
-            android:layout_height="60dp"
-            android:layout_width="60dp"
-            android:layout_margin="5dp"
-            >
-            <TextView
-                android:id="@+id/np"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="EO"
-                android:textColor="@color/white"
-                android:background="@drawable/bg_circle_blue"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="30sp"
-                android:visibility="visible"
-               />
-            <ImageView
-                android:id="@+id/photo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/bg_circle_blue"
-                android:visibility="gone"
-                android:clipToOutline="true"
-                />
-        </FrameLayout>
         <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:padding="10dp"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/nomComplet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ELAAMMARI Oumeyma"
-                android:textSize="14sp"
-                android:textColor="@color/black"
-
-                />
-            <TextView
-                android:id="@+id/poste"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Développeur"
-                android:textSize="10sp"
-                android:textColor="@color/grey"
-                android:layout_marginTop="3dp"
-                />
-            <TextView
-                android:id="@+id/departement"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Développement"
-                android:textSize="10sp"
-                android:textColor="@color/blue_hover"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="3dp"
-                android:background="@drawable/bg_departement_blue"
-                android:padding="5dp"
-
-                />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
             android:orientation="horizontal"
-
+            android:paddingLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:paddingRight="10dp"
             >
-            <ImageView
-                android:id="@+id/editEmploye"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/edit"
-                android:layout_marginRight="15dp"
-                android:clickable="true"
-                />
-            <ImageView
-                android:id="@+id/deleteEmploye"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/delete"
-                android:clickable="true"
-                />
+            <FrameLayout
+                android:layout_height="60dp"
+                android:layout_width="60dp"
+                android:layout_margin="5dp"
+
+                >
+                <TextView
+                    android:id="@+id/np"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="EO"
+                    android:textColor="@color/white"
+                    android:background="@drawable/bg_circle_blue"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="30sp"
+                    android:visibility="visible"
+                    />
+                <ImageView
+                    android:id="@+id/photo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_circle_blue"
+                    android:visibility="gone"
+                    android:clipToOutline="true"
+                    />
+            </FrameLayout>
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:padding="10dp"
+                android:orientation="vertical"
+                android:layout_weight="2"
+                >
+                <TextView
+                    android:id="@+id/nomComplet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ELAAMMARI Oumeyma"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+
+                    />
+                <TextView
+                    android:id="@+id/poste"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Développeur"
+                    android:textSize="10sp"
+                    android:textColor="@color/grey"
+                    android:layout_marginTop="3dp"
+                    />
+                <TextView
+                    android:id="@+id/departement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Développement"
+                    android:textSize="10sp"
+                    android:textColor="@color/blue_hover"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="3dp"
+                    android:background="@drawable/bg_departement_blue"
+                    android:padding="5dp"
+
+                    />
+
 
             </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+
+                >
+                <ImageView
+                    android:id="@+id/editEmploye"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/edit"
+                    android:layout_marginRight="15dp"
+                    android:clickable="true"
+                    />
+                <ImageView
+                    android:id="@+id/deleteEmploye"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/delete"
+                    android:clickable="true"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
