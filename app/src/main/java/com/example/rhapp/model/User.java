@@ -12,6 +12,14 @@ public class User {
     // Constructeur par défaut requis pour Firebase
     public User() {
     }
+    public User(String nom, String prenom, String birthDate, String sexe, String email, String createdAt) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.birthDate = birthDate;
+        this.sexe = sexe;
+        this.email = email;
+        this.createdAt = createdAt;
+    }
 
     public User(String nom, String prenom, String birthDate, String sexe,String role, String email, String createdAt) {
         this.nom = nom;
