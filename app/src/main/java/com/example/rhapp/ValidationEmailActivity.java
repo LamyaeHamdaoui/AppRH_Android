@@ -6,27 +6,36 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.*;
 
 import com.example.rhapp.model.User;
 import com.google.firebase.auth.*;
-import com.google.firebase.database.*;
+// Remplacement des imports de Realtime Database par Firestore
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.Timestamp;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class ValidationEmailActivity extends AppCompatActivity {
+
+    private static final String TAG = "ValidationActivity";
 
     private EditText code1, code2, code3, code4;
     private Button suivantBtn;
 
     private String expectedCode;
-    private String userNom, userPrenom, userBirthDate, userSexe, userRole, userEmail, userPassword;
+    private String userNom, userPrenom, userSexe, userRole, userEmail, userPassword;
+    private Date userBirthDate; // java.util.Date
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    // Remplacement de Realtime Database par Firestore
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +43,23 @@ public class ValidationEmailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_verification_code);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        // Initialisation de Firestore
+        db = FirebaseFirestore.getInstance();
 
         retrieveData();
 
         if (!isDataValid()) {
-            Toast.makeText(this, "Erreur : données manquantes.", Toast.LENGTH_LONG).show();
-            finish();
+            Toast.makeText(this, "Erreur : données manquantes. Retour à la connexion.", Toast.LENGTH_LONG).show();
+            // Délai de redirection pour que le Toast soit visible
+            new android.os.Handler().postDelayed(this::finish, 3000);
             return;
         }
 
         initializeViews();
         setupCodeInputSystem();
 
+        // Affichage du code pour les tests, à retirer en production!
+        Log.d(TAG, "Code attendu: " + expectedCode);
         Toast.makeText(this, "Code : " + expectedCode, Toast.LENGTH_LONG).show();
 
         suivantBtn.setOnClickListener(v -> validateCode());
@@ -56,7 +69,10 @@ public class ValidationEmailActivity extends AppCompatActivity {
         Intent i = getIntent();
         userNom = i.getStringExtra("NOM");
         userPrenom = i.getStringExtra("PRENOM");
-        userBirthDate = i.getStringExtra("NAISS");
+
+        // CORRECTION : Assignation directe à la variable de classe (membre)
+        userBirthDate = (Date) i.getSerializableExtra("NAISS");
+
         userSexe = i.getStringExtra("SEXE");
         userRole = i.getStringExtra("ROLE");
         userEmail = i.getStringExtra("EMAIL");
@@ -102,6 +118,7 @@ public class ValidationEmailActivity extends AppCompatActivity {
                         fields[index].getText().length() == 0 &&
                         index > 0) {
 
+                    // Efface le champ précédent et déplace le focus
                     fields[index - 1].setText("");
                     fields[index - 1].requestFocus();
                     return true;
@@ -140,30 +157,51 @@ public class ValidationEmailActivity extends AppCompatActivity {
 
                     if (task.isSuccessful()) {
                         FirebaseUser fbUser = mAuth.getCurrentUser();
-                        if (fbUser != null) saveUserToDatabase(fbUser.getUid());
+                        if (fbUser != null) {
+                            saveUserToDatabase(fbUser.getUid());
+                        } else {
+                            // Cas étrange où Auth réussit mais getCurrentUser est null
+                            handleAuthError("Création de compte réussie mais utilisateur introuvable.");
+                        }
                     }
                     else {
-                        suivantBtn.setEnabled(true);
-                        suivantBtn.setText("Suivant");
-
-                        Exception e = task.getException();
-                        String message = "Erreur";
-
-                        if (e instanceof FirebaseAuthUserCollisionException) {
-                            message = "Cet email est déjà utilisé.";
-                        } else if (e != null) {
-                            message = e.getMessage();
-                        }
-
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                        handleAuthError(task.getException());
                     }
                 });
     }
 
+    private void handleAuthError(Exception e) {
+        suivantBtn.setEnabled(true);
+        suivantBtn.setText("Suivant");
+
+        String message = "Erreur de création du compte.";
+
+        if (e instanceof FirebaseAuthUserCollisionException) {
+            message = "Cet email est déjà utilisé. Veuillez vous connecter.";
+        } else if (e != null) {
+            message = e.getMessage();
+            Log.e(TAG, "Erreur Auth: ", e);
+        }
+
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void handleAuthError(String msg) {
+        suivantBtn.setEnabled(true);
+        suivantBtn.setText("Suivant");
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        Log.e(TAG, "Erreur Auth: " + msg);
+    }
+
+
+    /**
+     * Sauvegarde les informations utilisateur dans la collection Firestore "Users".
+     */
     private void saveUserToDatabase(String uid) {
 
-        String createdAt = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                .format(new Date());
+        // CORRECTION 1 : Création du Timestamp Firebase
+        Date now = new Date();
+        Timestamp createdAt = new Timestamp(now);
 
         User user = new User(
                 userNom,
@@ -172,20 +210,25 @@ public class ValidationEmailActivity extends AppCompatActivity {
                 userSexe,
                 userRole,
                 userEmail,
-                createdAt
+                createdAt // Passage du Timestamp
         );
 
-        mDatabase.child(uid).setValue(user)
+        // CORRECTION 2 : Utilisation de Firestore (db) et de la collection "Users"
+        db.collection("Users").document(uid).set(user)
                 .addOnCompleteListener(task -> {
 
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Compte créé avec succès", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(this, "Erreur lors de la sauvegarde", Toast.LENGTH_LONG).show();
+                        // Si l'écriture DB échoue, on doit idéalement supprimer l'utilisateur Auth
+                        Log.e(TAG, "Erreur lors de la sauvegarde Firestore: ", task.getException());
+                        Toast.makeText(this, "Erreur lors de la sauvegarde des données utilisateur. Réessayez.", Toast.LENGTH_LONG).show();
                     }
 
+                    // Déconnexion de l'utilisateur après l'inscription
                     mAuth.signOut();
 
+                    // Redirection vers l'activité principale de connexion
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
