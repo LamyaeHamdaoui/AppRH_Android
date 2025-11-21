@@ -138,7 +138,7 @@
                 android:orientation="vertical"
                 android:layout_margin="10dp"
                 android:padding="5dp"
-                android:background="@drawable/border_gris"
+
                 />
 
             <!--- ******* no employé trouvé container *******  -->
