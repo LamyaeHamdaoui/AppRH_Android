@@ -1,13 +1,18 @@
 package com.example.rhapp;
 
 
+
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -16,6 +21,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.Timestamp;
 
@@ -33,6 +39,8 @@ public class EmployeActivity extends AppCompatActivity {
     private Button btnAddEmploye;
     private FrameLayout fragmentContainer;
     private ScrollView mainContent;
+    private RelativeLayout relative;
+    private LinearLayout footer;
     private FirebaseFirestore db;
     private TextView actif;
 
@@ -50,6 +58,8 @@ public class EmployeActivity extends AppCompatActivity {
         actif = findViewById(R.id.employesActifs);
         fragmentContainer = findViewById(R.id.fragment_container);
         mainContent = findViewById(R.id.main_content);
+        relative= findViewById(R.id.relative);
+        footer= findViewById(R.id.footer);
 
         db = FirebaseFirestore.getInstance();
 
@@ -78,18 +88,22 @@ public class EmployeActivity extends AppCompatActivity {
     // --- Ouvrir AddEmployeFragment ---
     private void ouvrirFragmentAddEmploye() {
         mainContent.setVisibility(View.GONE);
+        relative.setVisibility(View.GONE);
+        footer.setVisibility(View.GONE);
+
         fragmentContainer.setVisibility(View.VISIBLE);
 
         AddEmployeFragment addFragment = new AddEmployeFragment();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, addFragment)
                 .addToBackStack("add_employe")
-                .commit();
-    }
+                .commit(); }
 
     // --- Ouvrir EditEmployeFragment ---
     private void ouvrirFragmentEditEmploye(String employeId) {
         mainContent.setVisibility(View.GONE);
+        relative.setVisibility(View.GONE);
+        footer.setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
 
         EditEmployeFragment editFragment = EditEmployeFragment.newInstance(employeId);
@@ -103,17 +117,16 @@ public class EmployeActivity extends AppCompatActivity {
     private void chargerEmployes() {
         itemsEmployeeCardsContainer.removeAllViews();
 
-        db.collection("users").get()
+        db.collection("employees").get()
                 .addOnSuccessListener((QuerySnapshot queryDocumentSnapshots) -> {
                     if (queryDocumentSnapshots.isEmpty()) {
-                        noEmployeeContainer.setVisibility(View.VISIBLE);
                         actif.setText("0 employé actif");
                         return;
                     }
 
                     int nombreEmployesActifs = queryDocumentSnapshots.size();
                     actif.setText(nombreEmployesActifs + " employés actifs");
-                    noEmployeeContainer.setVisibility(View.GONE);
+
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Employe emp = document.toObject(Employe.class);
@@ -159,15 +172,55 @@ public class EmployeActivity extends AppCompatActivity {
         // --- Bouton Edit ---
         card.findViewById(R.id.editEmploye).setOnClickListener(v -> ouvrirFragmentEditEmploye(emp.getId()));
 
+
         // --- Bouton Delete ---
         card.findViewById(R.id.deleteEmploye).setOnClickListener(v -> {
-            db.collection("users").document(emp.getId())
-                    .delete()
-                    .addOnSuccessListener(unused -> {
-                        Toast.makeText(this, "Employé supprimé", Toast.LENGTH_SHORT).show();
-                        chargerEmployes();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Erreur suppression", Toast.LENGTH_SHORT).show());
+            // Créer un TextView personnalisé pour le titre
+            TextView customTitle = new TextView(this);
+            customTitle.setText("Confirmer la suppression");
+            customTitle.setPadding(50, 40, 50, 40); // padding autour du texte
+            customTitle.setGravity(Gravity.CENTER); // centrer le titre
+            customTitle.setTextColor(Color.BLACK); // couleur du texte du titre
+            customTitle.setTextSize(20f); // taille du titre
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCustomTitle(customTitle);
+            builder.setMessage("Voulez-vous vraiment supprimer cet employé ?");
+
+            // Message en noir
+            builder.setMessage("Voulez-vous vraiment supprimer cet employé ?");
+
+            builder.setPositiveButton("Oui", (dialog, which) -> {
+                db.collection("employees").document(emp.getId())
+                        .delete()
+                        .addOnSuccessListener(unused -> {
+                            Toast.makeText(this, "Employé supprimé", Toast.LENGTH_SHORT).show();
+                            chargerEmployes();
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(this, "Erreur suppression", Toast.LENGTH_SHORT).show());
+            });
+            builder.setNegativeButton("Non", (dialog, which) -> dialog.dismiss());
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            // --- Personnalisation du background et du message ---
+            if(dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE)); // arrière-plan blanc
+            }
+
+            // Message en noir
+            TextView messageText = dialog.findViewById(android.R.id.message);
+            if(messageText != null) {
+                messageText.setTextColor(Color.BLACK);
+            }
+
+            // Boutons : optionnel
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLUE);
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED);
         });
+
+
+
     }
 }

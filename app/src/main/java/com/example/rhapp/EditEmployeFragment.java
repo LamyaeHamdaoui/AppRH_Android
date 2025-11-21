@@ -74,7 +74,7 @@ public class EditEmployeFragment extends Fragment {
         }
     }
     private void chargerEmploye() {
-        db.collection("users").document(employeId).get()
+        db.collection("employees").document(employeId).get()
                 .addOnSuccessListener(document -> {
                     if (document.exists()) {
                         nom.setText(document.getString("nom"));
@@ -103,7 +103,7 @@ public class EditEmployeFragment extends Fragment {
 
     private void enregistrerModifications() {
         role = radioEmploye.isChecked() ? "employe" : "rh";
-        DocumentReference docRef = db.collection("users").document(employeId);
+        DocumentReference docRef = db.collection("employees").document(employeId);
 
         docRef.update(
                 "nom", nom.getText().toString(),
