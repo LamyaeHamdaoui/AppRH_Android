@@ -5,9 +5,12 @@ package com.example.rhapp;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -63,8 +66,15 @@ public class EmployeActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        // --- Charger les employés ---
+        // --- Configuration de la recherche ---
+        configurerRecherche();
+
+// --- Configuration du filtre par département ---
+        configurerFiltreDepartement();
+
+// --- Charger les employés ---
         chargerEmployes();
+
 
         // --- Bouton Ajouter Employé ---
         btnAddEmploye.setOnClickListener(v -> ouvrirFragmentAddEmploye());
@@ -223,4 +233,102 @@ public class EmployeActivity extends AppCompatActivity {
 
 
     }
+
+    // --- Configuration de la recherche par texte ---
+    private void configurerRecherche() {
+        rechercherEmploye.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrerEmployes();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    // --- Configuration du filtre par département ---
+    private void configurerFiltreDepartement() {
+        departement.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                filtrerEmployes();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    // --- Filtrer les employés selon les critères ---
+    private void filtrerEmployes() {
+        String rechercheTexte = rechercherEmploye.getText().toString().toLowerCase().trim();
+        String departementSelectionne = departement.getSelectedItem().toString();
+
+        db.collection("employees").get()
+                .addOnSuccessListener((QuerySnapshot queryDocumentSnapshots) -> {
+                    itemsEmployeeCardsContainer.removeAllViews();
+
+                    if (queryDocumentSnapshots.isEmpty()) {
+                        actif.setText("0 employé actif");
+                        noEmployeeContainer.setVisibility(View.VISIBLE);
+                        return;
+                    }
+
+                    int totalEmployes = queryDocumentSnapshots.size(); // Total des employés dans la base
+                    int employesFiltres = 0;
+
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Employe emp = document.toObject(Employe.class);
+                        emp.setId(document.getId());
+
+                        // Vérifier si l'employé correspond aux critères de recherche
+                        if (correspondRecherche(emp, rechercheTexte, departementSelectionne)) {
+                            View card = getLayoutInflater().inflate(R.layout.item_employee_card, null);
+                            setCardInfo(card, emp);
+                            itemsEmployeeCardsContainer.addView(card);
+                            employesFiltres++;
+                        }
+                    }
+
+                    // Afficher le nombre TOTAL d'employés
+                    actif.setText(totalEmployes + " employé(s) actif(s)");
+
+                    if (employesFiltres == 0) {
+                        noEmployeeContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        noEmployeeContainer.setVisibility(View.GONE);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erreur chargement employés", Toast.LENGTH_SHORT).show();
+                    Log.e("Firestore", "Erreur: ", e);
+                });
+    }
+
+    // --- Vérifier si un employé correspond aux critères de recherche ---
+    private boolean correspondRecherche(Employe emp, String rechercheTexte, String departementSelectionne) {
+        boolean correspondTexte = true;
+        boolean correspondDepartement = true;
+
+        // Filtre par texte (nom, prénom, email, poste)
+        if (!rechercheTexte.isEmpty()) {
+            correspondTexte = emp.getNom().toLowerCase().contains(rechercheTexte) ||
+                    emp.getPrenom().toLowerCase().contains(rechercheTexte) ||
+                    emp.getNomComplet().toLowerCase().contains(rechercheTexte) ||
+                    emp.getEmail().toLowerCase().contains(rechercheTexte) ||
+                    emp.getPoste().toLowerCase().contains(rechercheTexte);
+        }
+
+        // Filtre par département (sauf si "Tous les départements" est sélectionné)
+        if (!departementSelectionne.equals("Tous les départements")) {
+            correspondDepartement = emp.getDepartement().equals(departementSelectionne);
+        }
+
+        return correspondTexte && correspondDepartement;
+    }
+
 }
