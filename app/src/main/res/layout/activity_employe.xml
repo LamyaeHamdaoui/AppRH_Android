@@ -51,7 +51,7 @@
                     android:id="@+id/employesActifs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0 employés actifs"
+                    android:text=""
                     android:textSize="13sp"
                     android:textColor="@color/white"
                     android:gravity="center"
@@ -181,8 +181,10 @@
         </LinearLayout>
     </ScrollView>
     <RelativeLayout
+        android:id="@+id/relative"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         >
         <RelativeLayout
             android:layout_width="wrap_content"
