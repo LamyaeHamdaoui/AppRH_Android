@@ -40,6 +40,7 @@ public class EmployeActivity extends AppCompatActivity {
     private FrameLayout fragmentContainer;
     private ScrollView mainContent;
     private RelativeLayout relative;
+    private LinearLayout footer;
     private FirebaseFirestore db;
     private TextView actif;
 
@@ -58,6 +59,7 @@ public class EmployeActivity extends AppCompatActivity {
         fragmentContainer = findViewById(R.id.fragment_container);
         mainContent = findViewById(R.id.main_content);
         relative= findViewById(R.id.relative);
+        footer= findViewById(R.id.footer);
 
         db = FirebaseFirestore.getInstance();
 
@@ -87,6 +89,8 @@ public class EmployeActivity extends AppCompatActivity {
     private void ouvrirFragmentAddEmploye() {
         mainContent.setVisibility(View.GONE);
         relative.setVisibility(View.GONE);
+        footer.setVisibility(View.GONE);
+
         fragmentContainer.setVisibility(View.VISIBLE);
 
         AddEmployeFragment addFragment = new AddEmployeFragment();
@@ -99,6 +103,7 @@ public class EmployeActivity extends AppCompatActivity {
     private void ouvrirFragmentEditEmploye(String employeId) {
         mainContent.setVisibility(View.GONE);
         relative.setVisibility(View.GONE);
+        footer.setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
 
         EditEmployeFragment editFragment = EditEmployeFragment.newInstance(employeId);
