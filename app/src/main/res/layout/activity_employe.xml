@@ -45,7 +45,7 @@
                 android:orientation="vertical"
                 android:background="@drawable/bg_header_blue"
                 android:padding="20dp"
-                android:layout_margin="8dp">
+                android:layout_margin="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -218,6 +218,7 @@
         <!-- (Icônes + texte identiques, structure allégée) -->
 
         <LinearLayout
+            android:id="@+id/Acceuil"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -226,13 +227,11 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/accueil"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/home" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -243,7 +242,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/employes_interface"
+            android:id="@+id/employes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -255,13 +254,11 @@
             tools:ignore="MissingPrefix">
 
             <ImageView
-                android:id="@+id/employes"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/employe" />
 
             <TextView
-                android:id="@+id/textemployee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -272,7 +269,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/conges_interafce"
+            android:id="@+id/conges"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -282,13 +279,12 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/conge"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/conge" />
 
             <TextView
-                android:id="@+id/textconge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -299,7 +295,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/reunions_interface"
+            android:id="@+id/reunions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -309,7 +305,6 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/reunions"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/reunion" />
@@ -326,7 +321,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/profile_interface"
+            android:id="@+id/profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
