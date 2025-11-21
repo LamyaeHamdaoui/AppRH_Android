@@ -96,7 +96,7 @@ public class AddEmployeFragment extends Fragment {
 
         role = radioEmploye.isChecked() ? "employe" : "rh";
 
-        DocumentReference docRef = db.collection("users").document();
+        DocumentReference docRef = db.collection("employees").document();
         String employeId = docRef.getId();
 
         Employe employe = new Employe(
@@ -111,6 +111,7 @@ public class AddEmployeFragment extends Fragment {
                 timestampEmbauche, // Timestamp ici
                 Integer.parseInt(soldeConge.getText().toString()),
                 telephone.getText().toString()
+                ,null,false
         );
 
         docRef.set(employe)

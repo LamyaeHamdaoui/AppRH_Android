@@ -223,7 +223,7 @@
 
 
                 <TextView
-                    android:id="@+id/reunionDepartement"
+                    android:id="@+id/departementReunion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
