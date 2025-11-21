@@ -7,7 +7,7 @@ public class Employe  {
     private String id;
     private String nom;
     private String prenom;
-    private String email;
+    private String emailPro;
     private String role;
     private String photo;
     private String poste;
@@ -15,17 +15,19 @@ public class Employe  {
     private Timestamp dateEmbauche;
     private int soldeConge;
     private String  telephone;
+    private boolean compteCree;
+    private String userId;
 
 
 
     public Employe () { }
     public Employe(String id, String nom, String prenom, String email,
                    String role, String photo, String poste, String departement,
-                   Timestamp dateEmbauche, int soldeConge, String telephone )  {
+                   Timestamp dateEmbauche, int soldeConge, String telephone, String userId,boolean compteCree )  {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
-        this.email = email;
+        this.emailPro = email;
         this.role = role;
         this.photo = photo;
         this.poste = poste;
@@ -33,6 +35,8 @@ public class Employe  {
         this.dateEmbauche = dateEmbauche;
         this.soldeConge = soldeConge;
         this.telephone=telephone;
+        this.userId=userId;
+        this.compteCree=compteCree;
 
     }
 
@@ -49,9 +53,9 @@ public class Employe  {
     public void setPrenom (String prenom){
         this.prenom = prenom; }
 
-    public String getEmail(){ return email;}
+    public String getEmail(){ return emailPro;}
     public void setEmail(String email){
-        this.email = email; }
+        this.emailPro = email; }
 
 
     public String getRole(){ return role;}
@@ -110,6 +114,28 @@ public class Employe  {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+
+    public boolean getCompteCree() {
+        return compteCree;
+    }
+
+    public void setCompteCree(boolean compteCree) {
+        this.compteCree = compteCree;
+    }
+
+
+
+
+
 
 
 }

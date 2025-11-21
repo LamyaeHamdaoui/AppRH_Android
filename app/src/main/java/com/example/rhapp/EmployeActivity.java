@@ -103,7 +103,7 @@ public class EmployeActivity extends AppCompatActivity {
     private void chargerEmployes() {
         itemsEmployeeCardsContainer.removeAllViews();
 
-        db.collection("users").get()
+        db.collection("employees").get()
                 .addOnSuccessListener((QuerySnapshot queryDocumentSnapshots) -> {
                     if (queryDocumentSnapshots.isEmpty()) {
                         noEmployeeContainer.setVisibility(View.VISIBLE);
@@ -161,7 +161,7 @@ public class EmployeActivity extends AppCompatActivity {
 
         // --- Bouton Delete ---
         card.findViewById(R.id.deleteEmploye).setOnClickListener(v -> {
-            db.collection("users").document(emp.getId())
+            db.collection("employees").document(emp.getId())
                     .delete()
                     .addOnSuccessListener(unused -> {
                         Toast.makeText(this, "Employé supprimé", Toast.LENGTH_SHORT).show();
