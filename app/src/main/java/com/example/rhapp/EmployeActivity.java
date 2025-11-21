@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -69,7 +70,7 @@ public class EmployeActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-
+        styliserSpinnerRecherche();
 
         // --- Configuration de la recherche ---
         configurerRecherche();
@@ -369,6 +370,15 @@ public class EmployeActivity extends AppCompatActivity {
         }
 
         return correspondTexte && correspondDepartement;
+    }
+
+    private void styliserSpinnerRecherche() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.departements_recherche,
+                R.layout.spinner_dropdown_item  // Utilise notre layout personnalisé
+        );
+        departement.setAdapter(adapter);
     }
 
 }
