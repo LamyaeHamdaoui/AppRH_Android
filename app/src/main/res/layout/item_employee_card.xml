@@ -30,8 +30,8 @@
             android:paddingRight="10dp"
             >
             <FrameLayout
-                android:layout_height="60dp"
-                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:layout_width="50dp"
                 android:layout_margin="5dp"
 
                 >
@@ -44,7 +44,7 @@
                     android:background="@drawable/bg_circle_blue"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textSize="30sp"
+                    android:textSize="25sp"
                     android:visibility="visible"
                     />
                 <ImageView
