@@ -1,7 +1,8 @@
 package com.example.rhapp;
 
 
-
+import androidx.activity.EdgeToEdge;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,6 +69,8 @@ public class EmployeActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+
+
         // --- Configuration de la recherche ---
         configurerRecherche();
 
@@ -74,6 +79,41 @@ public class EmployeActivity extends AppCompatActivity {
 
 // --- Charger les employés ---
         chargerEmployes();
+
+        EdgeToEdge.enable(this);
+        LinearLayout reunions = findViewById(R.id.reunions);
+        LinearLayout conges = findViewById(R.id.conges);
+        LinearLayout Acceuil = findViewById(R.id.Acceuil);
+        LinearLayout profile = findViewById(R.id.profile);
+
+
+        reunions.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(EmployeActivity.this, reunionActivity.class);
+                startActivity(intent);
+            }});
+        conges.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(EmployeActivity.this, CongesActivity.class);
+                startActivity(intent);
+            }
+        });
+        Acceuil.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(EmployeActivity.this, AcceuilRhActivity.class);
+                startActivity(intent);
+            }
+        });
+        profile.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(EmployeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         // --- Bouton Ajouter Employé ---
