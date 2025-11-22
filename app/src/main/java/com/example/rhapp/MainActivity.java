@@ -206,17 +206,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         switch (role.toLowerCase()) { // Utilisation de toLowerCase pour une meilleure robustesse
-            case "admin":
+            case "employe":
                 destinationActivity = AcceuilEmployeActivity.class;
                 break;
             case "rh":
-
                 destinationActivity = AcceuilRhActivity.class;
                 break;
             // Ajoutez d'autres cas si vous avez plus de rôles (ex: "Employe", etc.)
             default:
                 // Redirection par défaut (si le rôle n'est pas reconnu)
-                destinationActivity = AcceuilRhActivity.class;
+                destinationActivity = AcceuilEmployeActivity.class;
                 Toast.makeText(MainActivity.this, "Rôle utilisateur par défaut appliqué.", Toast.LENGTH_SHORT).show();
                 break;
         }
