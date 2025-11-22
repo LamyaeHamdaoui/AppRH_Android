@@ -113,15 +113,17 @@ public class MainActivity extends AppCompatActivity {
                         if (user != null) {
 
                             // 1. Vérification OBLIGATOIRE de l'email
-                            if (!user.isEmailVerified()) {
-
+                            // NOTE: Dans le flux précédent, la vérification d'email a été remplacée
+                            // par la vérification OTP dans ValidationEmailActivity.
+                            // Si vous utilisez cette ancienne logique, vous devez l'adapter.
+                            /* if (!user.isEmailVerified()) {
                                 FirebaseAuth.getInstance().signOut();
-
                                 Toast.makeText(MainActivity.this,
                                         "Veuillez vérifier votre email avant de vous connecter.",
                                         Toast.LENGTH_LONG).show();
                                 return;
                             }
+                            */
 
                             // 2. Email vérifié, on récupère le rôle et on redirige
                             Toast.makeText(MainActivity.this,
@@ -205,18 +207,18 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        switch (role.toLowerCase()) { // Utilisation de toLowerCase pour une meilleure robustesse
+        // --- CORRECTION DE LA LOGIQUE DE REDIRECTION BASÉE SUR LE RÔLE ---
+        switch (role.toLowerCase()) {
             case "employe":
                 destinationActivity = AcceuilEmployeActivity.class;
                 break;
             case "rh":
                 destinationActivity = AcceuilRhActivity.class;
                 break;
-            // Ajoutez d'autres cas si vous avez plus de rôles (ex: "Employe", etc.)
             default:
-                // Redirection par défaut (si le rôle n'est pas reconnu)
+                // Redirection par défaut (si le rôle est inconnu ou manquant)
                 destinationActivity = AcceuilEmployeActivity.class;
-                Toast.makeText(MainActivity.this, "Rôle utilisateur par défaut appliqué.", Toast.LENGTH_SHORT).show();
+                Log.w(TAG, "Rôle non reconnu: " + role + ". Redirection par défaut vers AcceuilEmployeActivity.");
                 break;
         }
 
