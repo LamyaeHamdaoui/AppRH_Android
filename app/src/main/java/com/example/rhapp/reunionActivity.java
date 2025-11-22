@@ -31,7 +31,7 @@ import java.util.Locale;
 
 public class reunionActivity extends AppCompatActivity {
 
-    private LinearLayout reunionPlanifieContainer, reunionPasseContainer;
+    private LinearLayout reunionPlanifieContainer, reunionPasseContainer,noReunionContainer;
     private FirebaseFirestore db;
 
     @Override
@@ -133,7 +133,7 @@ public class reunionActivity extends AppCompatActivity {
 
 
                     if (querySnapshot.isEmpty()) {
-                        Toast.makeText(reunionActivity.this, "Aucune réunion trouvée", Toast.LENGTH_SHORT).show();
+                        noReunionContainer.setVisibility(View.VISIBLE);
                         return;
                     }
 
@@ -398,6 +398,15 @@ public class reunionActivity extends AppCompatActivity {
                         }
                         else {
                             nbrPassees++;
+                        }
+
+
+                        //les cardes devient invisibles si nbr == 0
+                        if(nbrVenirs==0){
+                            reunionPlanifieContainer.setVisibility(View.GONE);
+                        }
+                        if(nbrPassees==0){
+                            reunionPasseContainer.setVisibility(View.GONE);
                         }
 
                         nbrReunionVenir.setText(String.valueOf(nbrVenirs));
