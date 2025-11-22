@@ -42,7 +42,7 @@ public class CreateAccActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     // Constantes
-    private static final String DEFAULT_ROLE = "employee";
+    private static final String DEFAULT_ROLE = "employe";
     private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
     private static final String USERS_COLLECTION = "Users";
 
