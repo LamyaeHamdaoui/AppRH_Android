@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#f5f5f5">
+    android:background="#f5f5f5"
+    >
 
 
         <!-- Section demande d'attestation -->
@@ -14,7 +15,8 @@
             android:background="@drawable/border_vide"
             android:padding="20dp"
             android:layout_margin="5dp"
-            android:elevation="1dp">
+            android:elevation="1dp"
+            android:layout_gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -42,27 +44,14 @@
                 android:textColor="#333"
                 android:layout_marginBottom="8dp" />
 
-            <LinearLayout
+            <Spinner
+                android:id="@+id/TypeAttestation"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/border"
-                android:paddingHorizontal="15dp"
-                android:gravity="center_vertical"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:orientation="horizontal"
-                android:clickable="true"
-                android:focusable="true">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sélectionnez un type"
-                    android:textColor="@color/grey_light"
-                    android:textSize="16sp" />
-
-
-            </LinearLayout>
+                android:background="@drawable/border"
+                android:padding="4dp"
+                android:entries="@array/type_attestation"/>
 
             <!-- Motif de la demande -->
             <TextView
@@ -74,6 +63,7 @@
                 android:layout_marginBottom="8dp" />
 
             <EditText
+                android:id="@+id/motifEditText"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:background="@drawable/border"
@@ -82,12 +72,14 @@
                 android:gravity="top"
                 android:textColorHint="#999"
                 android:textSize="16sp"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                />
 
             <!-- Bouton Demander -->
             <Button
+                android:id="@+id/btnEnvoyerDemande"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:text="Envoyer la demande"
                 android:textColor="@color/white"
                 android:textSize="16sp"
@@ -95,7 +87,8 @@
                 app:backgroundTint="@null"
                 android:background="@drawable/border_button"
                 android:layout_marginTop="20dp"
-                android:enabled="false" />
+                android:enabled="false"
+                android:padding="0dp"/>
 
         </LinearLayout>
 </ScrollView>

@@ -1,61 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:App="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="15dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
     android:backgroundTint="@color/white"
-    android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
+        android:padding="15dp"
         android:background="@drawable/approuve_border">
+
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Nissrine EL MNIAI"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <TextView
+                android:id="@+id/nomComplet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_gravity="end"
+                android:text="Nissrine EL MNIAI"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:src="@drawable/approuve"
-                android:padding="5dp"
-                />
+                android:padding="4dp" />
         </LinearLayout>
+
+        <!-- Métier -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Developpement"
             android:textSize="15sp" />
+
+        <!-- Type de congé -->
         <TextView
             android:id="@+id/TypeConge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Attestation de travail"
             android:textSize="15sp"
-            android:layout_marginTop="5dp"
-            />
-        <!-- Dates -->
+            android:layout_marginTop="5dp" />
+
+        <!-- Date -->
         <TextView
             android:id="@+id/DateDemandee"
             android:layout_width="wrap_content"
@@ -63,22 +66,28 @@
             android:text="Approuvée le 18 Octobre 2025"
             android:textColor="@color/green"
             android:textSize="14sp"
-            android:layout_marginTop="10dp"
-            />
+            android:layout_marginTop="10dp" />
+
+        <!-- Separator -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="20dp"
             android:background="@color/green" />
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:text="Télécharger PDF"
-                android:textColor="@color/grey"
-                android:background="@drawable/green_border"
-                app:backgroundTint="@null"
-                android:textStyle="bold"
-                android:padding="12dp"/>
+
+        <!-- Button -->
+        <Button
+            android:id="@+id/btnTelecharger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Télécharger PDF"
+            android:textColor="@color/grey"
+            android:background="@drawable/green_border"
+            app:backgroundTint="@null"
+            android:textStyle="bold"
+            android:padding="10dp" />
+
     </LinearLayout>
+
 </com.google.android.material.card.MaterialCardView>
