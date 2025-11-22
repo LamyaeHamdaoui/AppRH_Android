@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -35,6 +36,15 @@ public class PlanifierReunionActivity extends AppCompatActivity {
         EditText lieuReunion = findViewById(R.id.lieuReunion);
         EditText descriptionReunion = findViewById(R.id.descriptionReunion);
         Button btnCreerReunion = findViewById(R.id.btnCreerReunion);
+        TextView close = findViewById(R.id.close);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
+            }
+        });
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
