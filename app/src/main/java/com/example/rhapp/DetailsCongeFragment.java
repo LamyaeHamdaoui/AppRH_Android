@@ -1,64 +1,147 @@
 package com.example.rhapp;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DetailsCongeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.example.rhapp.model.Conge;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class DetailsCongeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FirebaseFirestore db;
+    private Conge conge;
+    private String congeId;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private TextView sousDetails, typeConge, datesConge, motifConge, soldeCongesEmploye;
+    private EditText raisonRefus;
 
     public DetailsCongeFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailsCongeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DetailsCongeFragment newInstance(String param1, String param2) {
+    public static DetailsCongeFragment newInstance(String congeId) {
         DetailsCongeFragment fragment = new DetailsCongeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString("congeId", congeId);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_details_conge, container, false);
+        View view = inflater.inflate(R.layout.fragment_details_conge, container, false);
+
+        db = FirebaseFirestore.getInstance();
+
+        if (getArguments() != null) {
+            congeId = getArguments().getString("congeId");
+            loadCongeDetails();
+        }
+
+        initializeViews(view);
+        setupClickListeners(view);
+
+        return view;
+    }
+
+    private void initializeViews(View view) {
+        sousDetails = view.findViewById(R.id.sousDetails);
+        typeConge = view.findViewById(R.id.typeConge);
+        datesConge = view.findViewById(R.id.datesConge);
+        motifConge = view.findViewById(R.id.MotifConge);
+        soldeCongesEmploye = view.findViewById(R.id.soldeCongesEmploye);
+        raisonRefus = view.findViewById(R.id.raisonrefusConge);
+    }
+
+    private void setupClickListeners(View view) {
+        view.findViewById(R.id.btnApprouver).setOnClickListener(v -> approuverConge());
+        view.findViewById(R.id.btnRefuser).setOnClickListener(v -> refuserConge());
+    }
+
+    private void loadCongeDetails() {
+        if (congeId == null) {
+            Toast.makeText(getContext(), "Erreur: ID du congé non défini", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        db.collection("conges").document(congeId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult().exists()) {
+                        DocumentSnapshot document = task.getResult();
+                        conge = document.toObject(Conge.class);
+                        if (conge != null) {
+                            // Définir l'ID du congé
+                            conge.setId(document.getId());
+                            updateUIWithCongeDetails();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Erreur lors du chargement des détails", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void updateUIWithCongeDetails() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM. yyyy", Locale.FRENCH);
+
+        String details = conge.getUserName() + " - " + conge.getUserDepartment();
+        sousDetails.setText(details);
+
+        typeConge.setText(conge.getTypeConge());
+
+        String dates = dateFormat.format(conge.getDateDebut()) + " - " + dateFormat.format(conge.getDateFin());
+        datesConge.setText(dates);
+
+        motifConge.setText(conge.getMotif());
+        soldeCongesEmploye.setText("25 jours"); // À calculer selon l'historique
+    }
+
+    private void approuverConge() {
+        updateCongeStatus("Approuvé", "");
+    }
+
+    private void refuserConge() {
+        String raison = raisonRefus.getText().toString().trim();
+        if (raison.isEmpty()) {
+            raison = "Raison non spécifiée";
+        }
+        updateCongeStatus("Refusé", raison);
+    }
+
+    private void updateCongeStatus(String nouveauStatut, String raison) {
+        if (congeId == null) {
+            Toast.makeText(getContext(), "Erreur: ID du congé non défini", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DocumentReference docRef = db.collection("conges").document(congeId);
+
+        docRef.update("statut", nouveauStatut)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String message = "Demande " + nouveauStatut.toLowerCase() + " avec succès";
+                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+
+                        if (getActivity() != null) {
+                            getActivity().onBackPressed();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Erreur lors de la mise à jour: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
