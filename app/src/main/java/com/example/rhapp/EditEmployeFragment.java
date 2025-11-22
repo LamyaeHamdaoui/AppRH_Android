@@ -3,6 +3,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -60,12 +61,11 @@ public class EditEmployeFragment extends Fragment {
         radioRh = v.findViewById(R.id.radioRh);
         btnAnnuler = v.findViewById(R.id.btnAnnulerEditEmploye);
         btnEnregistrer = v.findViewById(R.id.btnenregistrerEditEmploye);
-
         chargerEmploye();
 
         btnEnregistrer.setOnClickListener(view -> enregistrerModifications());
         btnAnnuler.setOnClickListener(view -> requireActivity().onBackPressed());
-
+        styliserSpinner();
         return v;
     }
     private void retourEcranPrincipal() {
@@ -74,7 +74,7 @@ public class EditEmployeFragment extends Fragment {
         }
     }
     private void chargerEmploye() {
-        db.collection("users").document(employeId).get()
+        db.collection("employees").document(employeId).get()
                 .addOnSuccessListener(document -> {
                     if (document.exists()) {
                         nom.setText(document.getString("nom"));
@@ -103,7 +103,7 @@ public class EditEmployeFragment extends Fragment {
 
     private void enregistrerModifications() {
         role = radioEmploye.isChecked() ? "employe" : "rh";
-        DocumentReference docRef = db.collection("users").document(employeId);
+        DocumentReference docRef = db.collection("employees").document(employeId);
 
         docRef.update(
                 "nom", nom.getText().toString(),
@@ -129,5 +129,14 @@ public class EditEmployeFragment extends Fragment {
                 break;
             }
         }
+    }
+
+    private void styliserSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getContext(),
+                R.array.departements,
+                R.layout.spinner_dropdown_item  // Utilise notre layout personnalisé
+        );
+        departement.setAdapter(adapter);
     }
 }

@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".CreateAccActivity"
     android:background="#F5F5F5">
+
+    <!-- ProgressBar - Ajoutez-la au début du ConstraintLayout -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +33,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginTop="40dp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,6 +59,7 @@
                 android:padding="15dp"
                 android:layout_marginStart="5dp"/>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,6 +82,7 @@
                 android:padding="15dp"
                 android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,6 +113,7 @@
                     android:text="Féminin"/>
             </RadioGroup>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -130,6 +146,7 @@
                 android:padding="15dp"
                 android:layout_marginTop="15dp"/>
         </LinearLayout>
+
         <Button
             android:id="@+id/valideCreateAcc"
             android:layout_width="match_parent"
@@ -138,6 +155,7 @@
             android:layout_marginTop="30dp"
             android:background="@drawable/border_button"
             app:backgroundTint="@null"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
