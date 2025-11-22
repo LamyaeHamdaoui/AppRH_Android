@@ -208,7 +208,7 @@ public class ProfileActivity extends AppCompatActivity {
                         String email = employeeSnapshot.getString("email");
                         String poste = employeeSnapshot.getString("poste");
                         String departement = employeeSnapshot.getString("departement");
-                        String role = employeeSnapshot.getString("role"); // Extraction du rôle
+                        String role = employeeSnapshot.getString("role");
                         Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
 
                         displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp);
@@ -366,17 +366,7 @@ public class ProfileActivity extends AppCompatActivity {
      * Si le rôle est 'rh', va à AcceuilRhActivity, sinon à AcceuilEmployeActivity.
      */
     private void navigateToHome() {
-        if (userRole != null && !userRole.isEmpty()) {
-            if (userRole.equalsIgnoreCase("rh")) {
-                startActivity(new Intent(ProfileActivity.this, AcceuilRhActivity.class));
-            } else if (userRole.equalsIgnoreCase("employe")) {
-                startActivity(new Intent(ProfileActivity.this, AcceuilEmployeActivity.class));
-            } else {
-                Toast.makeText(this, "Rôle utilisateur non reconnu (" + userRole + ").", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, "Rôle non encore défini. Veuillez attendre le chargement des données.", Toast.LENGTH_LONG).show();
-        }
+        startActivity(new Intent(ProfileActivity.this, AcceuilRhActivity.class));
     }
 
     private void navigateToEmployees() {
@@ -405,17 +395,7 @@ public class ProfileActivity extends AppCompatActivity {
      * Ce bloc remplace la logique de notification qui était dupliquée dans navigateToHome().
      */
     private void navigateToNotifications() {
-        if (userRole != null && !userRole.isEmpty()) {
-            if (userRole.equalsIgnoreCase("rh")) {
-                startActivity(new Intent(ProfileActivity.this, NotificationsRhActivity.class));
-            } else if (userRole.equalsIgnoreCase("employe")) {
-                startActivity(new Intent(ProfileActivity.this, NotificationsEmployesActivity.class));
-            } else {
-                Toast.makeText(this, "Rôle utilisateur non reconnu (" + userRole + ").", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, "Rôle non encore défini. Veuillez attendre le chargement des données.", Toast.LENGTH_LONG).show();
-        }
+        startActivity(new Intent(ProfileActivity.this, NotificationsRhActivity.class));
     }
 
     private void navigateToSecurity() {
