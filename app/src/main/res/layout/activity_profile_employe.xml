@@ -588,6 +588,7 @@
 
             <!-- ACCUEIL -->
             <LinearLayout
+                android:id="@+id/footerAccueil"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -611,8 +612,9 @@
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
-            <!-- EMPLOYES -->
+
             <LinearLayout
+                android:id="@+id/footerPresence"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -621,13 +623,13 @@
                 android:layout_margin="5dp">
 
                 <ImageView
-                    android:id="@+id/employes"
+                    android:id="@+id/iconPresence"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/presence"/>
 
                 <TextView
-                    android:id="@+id/textemployee"
+                    android:id="@+id/textPresence"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Présence"
@@ -638,6 +640,7 @@
 
             <!-- CONGES -->
             <LinearLayout
+                android:id="@+id/footerConges"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -663,6 +666,7 @@
 
             <!-- REUNIONS -->
             <LinearLayout
+                android:id="@+id/footerReunions"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -688,6 +692,7 @@
 
             <!-- PROFIL -->
             <LinearLayout
+                android:id="@+id/footerProfil"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
