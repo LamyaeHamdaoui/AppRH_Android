@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     android:fitsSystemWindows="true"
-    tools:context=".ProfileActivity">
+    tools:context=".ProfileEmployeActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -549,186 +549,171 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="top|end">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/bell" />
+
+        <TextView
+            android:layout_width="25dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="top|end">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="right"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/bell" />
-
-            <TextView
-                android:layout_width="25dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="17dp"
-                android:background="@drawable/notification_border"
-                android:backgroundTint="@color/red"
-                android:text="0"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="17dp"
+            android:background="@drawable/notification_border"
+            android:backgroundTint="@color/red"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:background="@color/white"
-            android:elevation="8dp"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:background="@color/white"
+            android:elevation="5dp"
+            android:padding="5dp"
+            android:layout_gravity="bottom">
 
+            <!-- ACCUEIL -->
             <LinearLayout
                 android:id="@+id/footerAccueil"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:layout_margin="5dp">
 
                 <ImageView
-                    android:id="@+id/iconAccueil"
+                    android:id="@+id/accueil"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/home" />
+                    android:src="@drawable/home"/>
 
                 <TextView
-                    android:id="@+id/textAccueil"
+                    android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
                     android:text="Accueil"
-                    android:textColor="@color/grey"
                     android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/grey"/>
             </LinearLayout>
+
 
             <LinearLayout
-                android:id="@+id/footerEmployes"
+                android:id="@+id/footerPresence"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
                 android:orientation="vertical"
-                tools:ignore="MissingPrefix">
+                android:gravity="center"
+                android:layout_margin="5dp">
 
                 <ImageView
-                    android:id="@+id/iconEmployes"
+                    android:id="@+id/iconPresence"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/employe" />
+                    android:src="@drawable/presence"/>
 
                 <TextView
-                    android:id="@+id/textEmployes"
+                    android:id="@+id/textPresence"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Employés"
-                    android:textColor="@color/grey"
+                    android:text="Présence"
                     android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/grey"/>
             </LinearLayout>
 
+            <!-- CONGES -->
             <LinearLayout
                 android:id="@+id/footerConges"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:clickable="true"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:layout_margin="5dp">
 
                 <ImageView
-                    android:id="@+id/iconConges"
+                    android:id="@+id/conge"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/conge" />
+                    android:src="@drawable/conge"/>
 
                 <TextView
-                    android:id="@+id/textConges"
+                    android:id="@+id/textconge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
                     android:text="Congés"
-                    android:textColor="@color/grey"
                     android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/grey"/>
             </LinearLayout>
 
+            <!-- REUNIONS -->
             <LinearLayout
                 android:id="@+id/footerReunions"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:clickable="true"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:layout_margin="5dp">
 
                 <ImageView
-                    android:id="@+id/iconReunions"
+                    android:id="@+id/reunions"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/reunion" />
+                    android:src="@drawable/reunion"/>
 
                 <TextView
-                    android:id="@+id/textReunions"
+                    android:id="@+id/textreunion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
                     android:text="Réunions"
-                    android:textColor="@color/grey"
                     android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/grey"/>
             </LinearLayout>
 
+            <!-- PROFIL -->
             <LinearLayout
                 android:id="@+id/footerProfil"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:layout_margin="5dp">
 
                 <ImageView
-                    android:id="@+id/iconProfile"
+                    android:id="@+id/profil"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:maxWidth="30dp"
-                    android:src="@drawable/profil" />
+                    android:src="@drawable/profil"/>
 
                 <TextView
-                    android:id="@+id/textProfile"
+                    android:id="@+id/textprofil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
                     android:text="Profil"
-                    android:textColor="@color/grey"
                     android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
