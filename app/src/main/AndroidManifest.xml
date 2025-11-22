@@ -64,10 +64,19 @@
             android:name=".reunionActivity"
             android:exported="false" />
         <activity
+            android:name=".ReunionEmployeActivity"
+            android:exported="false" />
+        <activity
             android:name=".PlanifierReunionActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".NotificationsRhActivity"
+            android:exported="true" />
+        <activity
+            android:name=".NotificationsEmployesActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
