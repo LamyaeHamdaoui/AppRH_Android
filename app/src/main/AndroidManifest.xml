@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
+            android:name=".ProfileEmployeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ModifierReunionActivity"
             android:exported="false" />
         <activity
