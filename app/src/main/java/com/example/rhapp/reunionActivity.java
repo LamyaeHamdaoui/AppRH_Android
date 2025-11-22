@@ -17,8 +17,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rhapp.model.Reunion;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -104,10 +102,7 @@ public class reunionActivity extends AppCompatActivity {
 
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
         db = FirebaseFirestore.getInstance();
-        AfficherReunions();
-        nbrReunionVenir = findViewById(R.id.nbrReunionVenir);
-        nbrReunionPassees = findViewById(R.id.nbrReunionPassees);
-        statistique();
+        afficherReunionsVenirs();
 
 
     }
@@ -115,12 +110,12 @@ public class reunionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        AfficherReunions(); // recharge toutes les réunions
+        afficherReunionsVenirs(); // recharge toutes les réunions
     }
 
     // ************************************* fonction  Afficher  des reuinons  **************************
 
-    private void AfficherReunions() {
+    private void afficherReunionsVenirs() {
         // Vider les conteneurs avant de reconstruire les cards
         reunionPlanifieContainer.removeAllViews();
         reunionPasseContainer.removeAllViews();
@@ -129,9 +124,6 @@ public class reunionActivity extends AppCompatActivity {
         db.collection("Reunions")
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    // documentReference.getId() est l'ID généré par Firestore
-
-
                     if (querySnapshot.isEmpty()) {
                         noReunionContainer.setVisibility(View.VISIBLE);
                         return;
@@ -142,7 +134,6 @@ public class reunionActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         Reunion reunion = doc.toObject(Reunion.class);
                         reunion.setId(doc.getId());
-
 
                         // concerant les reunions venirs
                         String dateStr = reunion.getDate();
@@ -205,24 +196,13 @@ public class reunionActivity extends AppCompatActivity {
                             });
 
                             //************* delete un reunion **************
-                            delete.setOnClickListener(v -> {
-                                new AlertDialog.Builder(reunionActivity.this)
-                                        .setTitle("Supprimer Réunion")
-                                        .setMessage("Êtes-vous sûr de vouloir supprimer cette réunion ?")
-                                        .setPositiveButton("Oui", (dialog, which) -> {
-                                            db.collection("Reunions")
-                                                    .document(reunion.getId())
-                                                    .delete()
-                                                    .addOnSuccessListener(aVoid -> reunionPlanifieContainer.removeView(cardView))
-                                                    .addOnFailureListener(e ->
-                                                            Toast.makeText(reunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                                                    );
-                                        })
-                                        .setNegativeButton("Non", null)
-                                        .show();
+                            delete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    AfficherBoiteDialogue();
+
+                                }
                             });
-
-
 
 
 
@@ -360,6 +340,7 @@ public class reunionActivity extends AppCompatActivity {
 
     }
 
+<<<<<<< HEAD
 
     //**************************** fct pour remplir les statistique*********************
     private TextView nbrReunionVenir;
@@ -418,4 +399,6 @@ public class reunionActivity extends AppCompatActivity {
                 });
     }
 
+=======
+>>>>>>> 89334ab936d6613d08b07cf4834b8483f31438a5
 }

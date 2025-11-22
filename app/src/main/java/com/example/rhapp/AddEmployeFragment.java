@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -60,7 +61,7 @@ public class AddEmployeFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         btnAjouter.setOnClickListener(view -> ajouterEmploye());
 
-
+        styliserSpinner();
         return v;
     }
 
@@ -96,7 +97,7 @@ public class AddEmployeFragment extends Fragment {
 
         role = radioEmploye.isChecked() ? "employe" : "rh";
 
-        DocumentReference docRef = db.collection("users").document();
+        DocumentReference docRef = db.collection("employees").document();
         String employeId = docRef.getId();
 
         Employe employe = new Employe(
@@ -111,6 +112,7 @@ public class AddEmployeFragment extends Fragment {
                 timestampEmbauche, // Timestamp ici
                 Integer.parseInt(soldeConge.getText().toString()),
                 telephone.getText().toString()
+                ,null,false
         );
 
         docRef.set(employe)
@@ -119,6 +121,15 @@ public class AddEmployeFragment extends Fragment {
                     retourEcranPrincipal();
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Erreur ajout employé", Toast.LENGTH_SHORT).show());
+    }
+
+    private void styliserSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getContext(),
+                R.array.departements,
+                R.layout.spinner_dropdown_item  // Utilise notre layout personnalisé
+        );
+        departement.setAdapter(adapter);
     }
 
 }

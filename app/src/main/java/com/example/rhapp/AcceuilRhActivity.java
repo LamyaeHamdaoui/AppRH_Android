@@ -31,8 +31,7 @@ public class AcceuilRhActivity extends AppCompatActivity {
             public void onClick(View v){
                 Intent intent = new Intent(AcceuilRhActivity.this, reunionActivity.class);
                 startActivity(intent);
-            }
-        });
+            }});
         conges_interface.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){

@@ -47,7 +47,7 @@
             android:id="@+id/nom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint=" nom complet"
+            android:hint="Nom"
             android:background="@drawable/border"
             android:padding="5dp"
             android:layout_marginBottom="20dp" />
@@ -63,7 +63,7 @@
             android:id="@+id/prenom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint=" nom complet"
+            android:hint="Prenom"
             android:background="@drawable/border"
             android:padding="5dp"
             android:layout_marginBottom="20dp" />
@@ -171,7 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:background="@drawable/border"
-            android:padding="5dp"
+            android:padding="4dp"
             android:entries="@array/departements"/>
 
         <!-- Date d'embauche -->
