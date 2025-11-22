@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:App="http://schemas.android.com/tools"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
@@ -11,48 +11,43 @@
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp"
-        android:background="@drawable/border_gris">
+        android:padding="16dp"
+        android:background="@drawable/border_redlight">
+
+        <!-- Header : Type + Statut -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
             <TextView
                 android:id="@+id/TypeAttestation"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Attestation de travail"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                android:layout_marginTop="5dp"
-                />
-            <Space
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                android:layout_width="0dp"
-                />
+                android:textSize="16sp" />
 
-            <!-- Statut aligné à droite -->
             <TextView
                 android:id="@+id/StatutConge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="En attente"
+                android:text="Refusée"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:textColor="@color/orange"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:background="@drawable/border_orange"
-                android:layout_marginRight="10dp"
-                />
+                android:textColor="@color/red"
+                android:padding="10dp"
+                android:paddingVertical="3dp"
+                android:background="@drawable/border_red" />
         </LinearLayout>
+
         <!-- Dates -->
         <TextView
             android:id="@+id/DatesDemandee"
@@ -63,28 +58,16 @@
             android:textSize="12sp"
             android:layout_marginTop="10dp" />
 
-        <!-- Motif -->
+        <!-- Motif de refus -->
         <TextView
             android:id="@+id/MotifAttestation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Demande de crédit bancaire"
-            android:textColor="@color/grey"
+            android:text="Motif de refus: Non spécifié"
+            android:textColor="@color/red"
             android:textSize="12sp"
             android:layout_marginTop="10dp"
-            android:textStyle="italic"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/gris_clair" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="En cours de traitement avec le service RH"
-            android:textColor="@color/orange"
-            android:layout_marginTop="10dp"
-            android:textSize="12sp"/>
+            android:textStyle="italic" />
 
     </LinearLayout>
 
