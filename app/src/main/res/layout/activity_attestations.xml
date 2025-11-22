@@ -71,6 +71,7 @@
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/tvTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5"
@@ -102,6 +103,7 @@
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/tvAttente"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
@@ -133,6 +135,7 @@
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/tvApprouve"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
@@ -164,6 +167,7 @@
                         android:padding="6dp" />
 
                     <TextView
+                        android:id="@+id/tvRefuse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
@@ -228,6 +232,13 @@
                     android:padding="0dp"
                     app:backgroundTint="@null"/>
             </LinearLayout>
+            <!-- Après la BARRE DES FILTRES, ajoutez : -->
+            <LinearLayout
+                android:id="@+id/containerAttestations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp" />
 
         </LinearLayout>
     </ScrollView>
