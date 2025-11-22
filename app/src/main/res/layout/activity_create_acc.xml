@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:hint="JJ/MM/AAAA"
-                android:inputType="date"
+                android:inputType="text"
                 android:background="@drawable/border"
                 android:padding="15dp"
                 android:textSize="16sp" />

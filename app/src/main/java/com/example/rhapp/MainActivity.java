@@ -173,9 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
                         } else {
                             // Cas où l'utilisateur existe dans Auth mais pas dans Firestore (rare)
-                            Toast.makeText(MainActivity.this,
-                                    "Données utilisateur introuvables. Contactez l'administrateur.",
-                                    Toast.LENGTH_LONG).show();
                             mAuth.signOut();
                             connecteBtn.setEnabled(true);
                         }
