@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class AcceuilRhActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private LinearLayout reunionsInterface, congesInterface, employesInterface, profileInterface;
+    private LinearLayout reunionsInterface, congesInterface, employesInterface, profileInterface,attestation;
     private Button logoutButton; // Assurez-vous d'ajouter un bouton de déconnexion dans activity_acceuil_rh.xml
 
     @Override
@@ -52,6 +52,8 @@ public class AcceuilRhActivity extends AppCompatActivity {
         congesInterface = findViewById(R.id.conges_interface); // J'ai corrigé l'ID ici si c'était 'conges_interafce'
         employesInterface = findViewById(R.id.employes_interface);
         profileInterface = findViewById(R.id.profile_interface);
+        attestation = findViewById(R.id.attestation);
+
 
         // Initialisation du bouton de déconnexion (Ajouter l'ID dans votre XML)
         // Si vous n'avez pas de bouton spécifique, vous pouvez le lier à un autre élément.
@@ -65,6 +67,11 @@ public class AcceuilRhActivity extends AppCompatActivity {
                 // Remplacer reunionActivity.class par la classe réelle
                startActivity(new Intent(AcceuilRhActivity.this, reunionActivity.class));
                 //Toast.makeText(this, "Accès Réunions", Toast.LENGTH_SHORT).show();
+            });
+        }
+        if(attestation != null){
+            attestation.setOnClickListener(v -> {
+                startActivity(new Intent(AcceuilRhActivity.this, AttestationsActivity.class));
             });
         }
 
@@ -91,6 +98,8 @@ public class AcceuilRhActivity extends AppCompatActivity {
                // Toast.makeText(this, "Accès Profile", Toast.LENGTH_SHORT).show();
             });
         }
+
+
 
         // if (logoutButton != null) {
         //     logoutButton.setOnClickListener(v -> logoutUser());

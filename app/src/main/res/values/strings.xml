@@ -14,7 +14,17 @@
         <item>Support</item>
         <item>RH</item>
     </string-array>
+    <string-array name="type_attestation">
+        <item>Sélectionner Un type de l\'attestation</item>
+        <item>Attestation de travail</item>
+        <item>Atestion de salaire</item>
+        <item>Attestation de présence</item>
+        <item>Certificat d\'emploi</item>
+    </string-array>
+
+
     <string-array name="departements">
+        <item>Sélectionner un département</item>
         <item>Développement</item>
         <item>Marketing</item>
         <item>Ventes</item>
