@@ -7,7 +7,7 @@ public class Employe  {
     private String id;
     private String nom;
     private String prenom;
-    private String emailPro;
+    private String email;
     private String role;
     private String photo;
     private String poste;
@@ -27,7 +27,7 @@ public class Employe  {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
-        this.emailPro = email;
+        this.email = email;
         this.role = role;
         this.photo = photo;
         this.poste = poste;
@@ -53,9 +53,9 @@ public class Employe  {
     public void setPrenom (String prenom){
         this.prenom = prenom; }
 
-    public String getEmail(){ return emailPro;}
+    public String getEmail(){ return email;}
     public void setEmail(String email){
-        this.emailPro = email; }
+        this.email = email; }
 
 
     public String getRole(){ return role;}
@@ -131,7 +131,6 @@ public class Employe  {
     public void setCompteCree(boolean compteCree) {
         this.compteCree = compteCree;
     }
-
 
 
 

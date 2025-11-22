@@ -18,7 +18,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/logo_app"
+                    android:src="@drawable/logo_remove_background"
                     android:scaleType="centerCrop"
                     android:layout_marginTop="40dp"
                     />
