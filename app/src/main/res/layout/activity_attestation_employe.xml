@@ -1,142 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AttestationEmployeActivity"
-    android:background="#F5F5F5">
+    android:background="#F5F5F5"
+    tools:context=".AttestationEmployeActivity">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_anchorGravity="center"
-        android:id="@+id/scrollView2"
-        app:layout_anchor="@+id/scrollView2">
+        android:paddingBottom="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- ***** header ****** -->
+            <!-- HEADER -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:background="@drawable/bg_header_blue"
+                android:padding="20dp"
                 android:layout_margin="10dp"
-                android:padding="20dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Attestations"
                     android:textSize="30sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"/>
 
                 <TextView
                     android:id="@+id/soldeCongeHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Demandez vos attestations professionnelles"
-                    android:textSize="15sp"
                     android:textColor="@color/white"
-                    android:layout_marginTop="10dp" />
+                    android:textSize="15sp"
+                    android:layout_marginTop="10dp"/>
             </LinearLayout>
 
-            <!--- ****** Sous header ****** -->
+            <!-- SOUS-HEADER -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="15dp"
                 android:background="@drawable/border_blue"
-                android:layout_margin="10dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-
-
-                >
+                android:orientation="vertical"
+                android:layout_margin="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/grey_light"
                             android:text="Nouvelle attestation"
+                            android:textColor="@color/grey_light"
                             android:textSize="20sp"
                             />
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/grey_light"
                             android:text="Demandez un document officiel"
+                            android:textColor="@color/grey_light"
                             android:textSize="14sp"
-                            android:layout_marginTop="3dp"
-                            />
-
-
-
+                            android:layout_marginTop="5dp"/>
                     </LinearLayout>
+
                     <Space
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"/>
+
                     <ImageView
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:src="@drawable/ic_pdf"
-                        app:tint="@color/white"
                         android:background="@drawable/bg_rectangle_blue"
+                        app:tint="@color/white"
                         android:padding="15dp"
-                        android:layout_gravity="center_vertical"
-                        />
+                        android:layout_gravity="center_vertical"/>
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btnNouvelleDemandeConge"
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:text="+  Faire une demande"
                     android:background="@drawable/border_button"
-                    android:layout_marginTop="10dp"
                     app:backgroundTint="@null"
-                    />
-
+                    android:layout_marginTop="10dp"
+                    android:padding="0dp"/>
             </LinearLayout>
 
-            <!-- *** barre attente refuse approuve *** -->
+            <!-- BARRE STATUS -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp"
-                >
+                android:layout_margin="10dp">
+
+                <!-- EN ATTENTE -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="15dp"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp"
                     android:layout_weight="1"
+                    android:padding="5dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
-                    android:layout_margin="10dp"
+                    android:layout_margin="8dp">
 
-                    >
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -144,44 +133,40 @@
                         android:src="@drawable/en_attente"
                         android:padding="12dp"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
                         />
+
                     <TextView
                         android:id="@+id/congeAttente"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
                         android:textStyle="bold"
-                        android:layout_marginTop="10dp"
-                        android:textSize="25sp"
-                        android:layout_gravity="center_horizontal"
                         android:textColor="@color/black"
-                        />
+                        android:textSize="25sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="En attente"
-                        android:layout_marginTop="5dp"
-                        android:layout_gravity="center_horizontal"
                         android:textColor="@color/grey"
                         android:textSize="15sp"
-                        />
-
-
-
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
+
+                <!-- APPROUVÉS -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="15dp"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp"
                     android:layout_weight="1"
+                    android:padding="5dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
-                    android:layout_margin="10dp"
-                    >
+                    android:layout_margin="8dp">
+
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -189,45 +174,39 @@
                         android:src="@drawable/approuve"
                         android:padding="12dp"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"/>
 
-                        />
                     <TextView
                         android:id="@+id/congeApprouve"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
                         android:textStyle="bold"
-                        android:layout_marginTop="10dp"
-                        android:textSize="25sp"
-                        android:layout_gravity="center_horizontal"
                         android:textColor="@color/black"
-                        />
+                        android:textSize="25sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Approuvés"
-                        android:layout_marginTop="5dp"
-                        android:layout_gravity="center_horizontal"
                         android:textColor="@color/grey"
                         android:textSize="15sp"
-                        />
-
-
-
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
+
+                <!-- TOTAL -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="15dp"
-                    android:paddingRight="20dp"
-                    android:paddingLeft="20dp"
                     android:layout_weight="1"
+                    android:padding="5dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
-                    android:layout_margin="10dp"
-                    >
+                    android:layout_margin="8dp">
+
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -236,74 +215,64 @@
                         app:tint="#2196F3"
                         android:padding="12dp"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
                         />
 
                     <TextView
                         android:id="@+id/congePris"
-                        android:layout_width="10dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dp"
                         android:text="1"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="25sp"
-                        />
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="     Total     "
-                        android:layout_marginTop="5dp"
-                        android:layout_gravity="center_horizontal"
+                        android:text="Total"
                         android:textColor="@color/grey"
                         android:textSize="15sp"
-                        />
-
-
-
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
-
-
-
-
-
-
             </LinearLayout>
 
+            <!-- HISTORIQUE -->
             <LinearLayout
                 android:id="@+id/historiqueContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:padding="15dp"
                 android:background="@drawable/border_gris"
-                android:layout_margin="10dp"
-                >
+                android:orientation="vertical"
+                android:layout_margin="10dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mes demandes"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    />
+                    android:textColor="@color/black"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
+    <!-- NOTIFICATIONS -->
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_gravity="top|end">
 
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/bell"
-            android:layout_gravity="right"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:layout_width="25dp"
@@ -313,125 +282,136 @@
             android:background="@drawable/notification_border"
             android:backgroundTint="@color/red"
             android:text="0"
-            android:textSize="15sp"
-            android:textStyle="bold"
             android:textColor="@color/white"
-            android:textAlignment="center"
-            />
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textAlignment="center"/>
     </RelativeLayout>
+
+    <!-- FOOTER -->
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:orientation="horizontal"
         android:background="@color/white"
-        android:elevation="8dp"
-        android:padding="5dp">
+        android:elevation="5dp"
+        android:padding="5dp"
+        android:layout_gravity="bottom">
+
+        <!-- ACCUEIL -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:orientation="vertical"
             android:gravity="center"
-            android:orientation="vertical">
+            android:layout_margin="5dp">
 
             <ImageView
                 android:id="@+id/accueil"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/home" />
+                android:src="@drawable/home"/>
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
-                android:textSize="15sp"
+                android:textSize="13sp"
+                android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
 
+        <!-- EMPLOYES -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:orientation="vertical"
             android:gravity="center"
-            android:orientation="vertical">
+            android:layout_margin="5dp">
 
             <ImageView
                 android:id="@+id/employes"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/presence" />
+                android:src="@drawable/presence"/>
 
             <TextView
                 android:id="@+id/textemployee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Présence"
-                android:textSize="15sp"
+                android:textSize="13sp"
+                android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
 
+        <!-- CONGES -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:orientation="vertical"
             android:gravity="center"
-            android:orientation="vertical">
+            android:layout_margin="5dp">
 
             <ImageView
                 android:id="@+id/conge"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/conge" />
+                android:src="@drawable/conge"/>
 
             <TextView
                 android:id="@+id/textconge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Congés"
-                android:textSize="15sp"
+                android:textSize="13sp"
+                android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
 
+        <!-- REUNIONS -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:orientation="vertical"
             android:gravity="center"
-            android:orientation="vertical">
+            android:layout_margin="5dp">
 
             <ImageView
                 android:id="@+id/reunions"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/reunion" />
+                android:src="@drawable/reunion"/>
 
             <TextView
                 android:id="@+id/textreunion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Réunions"
-                android:textSize="15sp"
+                android:textSize="13sp"
+                android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
+
+        <!-- PROFIL -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:orientation="vertical"
             android:gravity="center"
-            android:orientation="vertical">
+            android:layout_margin="5dp">
 
             <ImageView
                 android:id="@+id/profil"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:maxWidth="30dp"
                 android:src="@drawable/profil"/>
 
             <TextView
@@ -439,7 +419,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil"
-                android:textSize="15sp"
+                android:textSize="13sp"
+                android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
     </LinearLayout>

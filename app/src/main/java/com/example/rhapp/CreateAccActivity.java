@@ -1,65 +1,67 @@
 package com.example.rhapp;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull; // Import manquant ajouté
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View; // Import manquant ajouté
 import android.widget.*;
 
-// Imports Firebase ajoutés
 import com.example.rhapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot; // Import nécessaire
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.Timestamp;
 
-import java.text.SimpleDateFormat; // Import manquant ajouté
-import java.util.Date; // Import manquant ajouté
-import java.util.Locale; // Import manquant ajouté
-import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.text.ParseException;
 
 public class CreateAccActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateAccActivity";
 
+    // Références aux vues
     private EditText nomEditText, prenomEditText, birthDateEditText;
     private EditText emailEditText, motDePasseEditText, confirmerMDPEditText;
-    private RadioGroup radioGroupSexe, radioGroupRole;
+    private RadioGroup radioGroupSexe;
     private Button valideCreateAcc;
     private TextView connecterInterface;
+    private ProgressBar progressBar;
 
-    // Champs Firebase ajoutés
+    // Firebase
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private FirebaseFirestore db;
+
+    // Constantes
+    // Suppression de DEFAULT_ROLE car le rôle sera récupéré de Firestore
+    // private static final String DEFAULT_ROLE = "employe";
+    private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
+    private static final String USERS_COLLECTION = "Users";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_acc);
 
-        // Initialisation Firebase
-        mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        initializeFirebase();
         initializeViews();
         setupClickListeners();
+        setupBackPressed();
+    }
 
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                startActivity(new Intent(CreateAccActivity.this, MainActivity.class));
-                finish();
-            }
-        });
+    private void initializeFirebase() {
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     private void initializeViews() {
@@ -69,180 +71,122 @@ public class CreateAccActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email);
         motDePasseEditText = findViewById(R.id.motDePasse);
         confirmerMDPEditText = findViewById(R.id.confirmerMDP);
-
         radioGroupSexe = findViewById(R.id.radioGroup);
-        radioGroupRole = findViewById(R.id.radioGroupRole);
-
         valideCreateAcc = findViewById(R.id.valideCreateAcc);
         connecterInterface = findViewById(R.id.connecterInterface);
+        progressBar = findViewById(R.id.progressBar);
+
+        // Masquer la progressBar initialement
+        if (progressBar != null) {
+            progressBar.setVisibility(android.view.View.GONE);
+        }
     }
 
     private void setupClickListeners() {
-        // Le bouton de validation appelle maintenant directement la fonction de création de compte
-        valideCreateAcc.setOnClickListener(v -> validateInputsAndCreateAccount());
-        connecterInterface.setOnClickListener(v -> {
-            startActivity(new Intent(CreateAccActivity.this, MainActivity.class));
-            finish();
+        valideCreateAcc.setOnClickListener(v -> validateInputsAndCheckExistence());
+        connecterInterface.setOnClickListener(v -> navigateToMainActivity());
+    }
+
+    private void setupBackPressed() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateToMainActivity();
+            }
         });
     }
 
-    /**
-     * Valide les entrées et, si tout est correct, crée le compte Firebase.
-     */
-    private void validateInputsAndCreateAccount() {
+    private void validateInputsAndCheckExistence() {
+        // Récupération des valeurs
+        final String nom = nomEditText.getText().toString().trim();
+        final String prenom = prenomEditText.getText().toString().trim();
+        final String birthDateString = birthDateEditText.getText().toString().trim();
+        final String email = emailEditText.getText().toString().trim().toLowerCase();
+        final String password = motDePasseEditText.getText().toString().trim();
+        final String confirmPassword = confirmerMDPEditText.getText().toString().trim();
+        final String sexe = getSelectedSexe();
 
-        String nom = nomEditText.getText().toString().trim();
-        String prenom = prenomEditText.getText().toString().trim();
-        String birthDate = birthDateEditText.getText().toString().trim();
-        String email = emailEditText.getText().toString().trim();
-        String password = motDePasseEditText.getText().toString().trim();
-        String confirmPassword = confirmerMDPEditText.getText().toString().trim();
-
-        String sexe = getSelected(radioGroupSexe);
-        String role = getSelected(radioGroupRole);
-
-        Log.d(TAG, "Tentative de création de compte: Email=" + email + ", Rôle=" + role);
-
-        // Validation
-        if (!validate(nom, prenom, birthDate, sexe, role, email, password, confirmPassword)) {
-            Log.e(TAG, "Validation locale échouée. Arrêt de la création.");
+        // Validation des champs
+        if (!validateFields(nom, prenom, birthDateString, sexe, email, password, confirmPassword)) {
             return;
         }
 
-        // --- Validation locale réussie, on passe à la création Firebase ---
-        createFirebaseAccount(nom, prenom, birthDate, sexe, role, email, password);
-    }
-
-    /**
-     * Crée l'utilisateur dans Firebase Authentication et sauvegarde ses données dans Realtime Database.
-     */
-    private void createFirebaseAccount(String nom, String prenom, String birthDate, String sexe,
-                                       String role, String email, String password) {
-
-        valideCreateAcc.setText("Création du compte...");
-        valideCreateAcc.setEnabled(false);
-
-        // 1. Création du compte Firebase Auth
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                // 2. Sauvegarder les informations supplémentaires, incluant le RÔLE
-                                saveUserToDatabase(user.getUid(), nom, prenom, birthDate, sexe, role, email);
-
-                                Toast.makeText(CreateAccActivity.this,
-                                        "Compte créé avec succès!",
-                                        Toast.LENGTH_SHORT).show();
-
-                                // 3. Rediriger vers l'écran de connexion (MainActivity)
-                                redirectToMainActivity();
-                            }
-                        } else {
-                            // Échec de création (ex: email déjà utilisé)
-                            String errorMessage = task.getException() != null ? task.getException().getMessage() : "Erreur inconnue";
-                            Toast.makeText(CreateAccActivity.this,
-                                    "Erreur de création de compte: " + errorMessage,
-                                    Toast.LENGTH_LONG).show();
-                            Log.e(TAG, "Erreur de création Firebase: " + errorMessage);
-
-                            // Réactiver le bouton
-                            valideCreateAcc.setText("Suivant");
-                            valideCreateAcc.setEnabled(true);
-                        }
-                    }
-                });
-    }
-
-    /**
-     * Sauvegarde les informations de l'utilisateur (incluant le rôle) dans la base de données Realtime.
-     */
-    private void saveUserToDatabase(String userId, String nom, String prenom, String birthDate,
-                                    String sexe, String role, String email) {
-        String createdAt = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                .format(new Date());
-
-        // Créer l'objet User avec le rôle
-        User user = new User(nom, prenom, birthDate, sexe, role, email, createdAt);
-
-        // Sauvegarder dans la base de données Realtime Database sous la branche "users"
-        mDatabase.child("users").child(userId).setValue(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Utilisateur sauvegardé dans la base de données (ID: " + userId + ")");
-                        } else {
-                            Log.e(TAG, "Erreur sauvegarde dans Firebase DB: ", task.getException());
-                        }
-                    }
-                });
-    }
-
-    /**
-     * Redirige vers MainActivity et vide la pile d'activités.
-     */
-    private void redirectToMainActivity() {
-        Intent intent = new Intent(CreateAccActivity.this, MainActivity.class);
-        // Ces drapeaux empêchent le retour à l'écran d'inscription
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finishAffinity();
-    }
-
-
-    /**
-     * Récupère la valeur texte du RadioButton sélectionné dans un RadioGroup.
-     * Renvoie une chaîne vide si rien n'est sélectionné.
-     */
-    private String getSelected(RadioGroup group) {
-        int id = group.getCheckedRadioButtonId();
-        // Vérifie si un bouton est sélectionné (-1 sinon)
-        if (id != -1) {
-            RadioButton selectedRadioButton = findViewById(id);
-            return selectedRadioButton.getText().toString();
-        } else {
-            return "";
+        // Conversion de la date
+        final Date birthDate = parseBirthDate(birthDateString);
+        if (birthDate == null) {
+            return;
         }
+
+        // Vérification de l'âge (optionnel)
+        if (!isValidAge(birthDate)) {
+            birthDateEditText.setError("Vous devez avoir au moins 16 ans");
+            birthDateEditText.requestFocus();
+            return;
+        }
+
+        // Démarrer le processus de création
+        startAccountCreationProcess(nom, prenom, birthDate, sexe, email, password);
     }
 
-    /**
-     * Contient toute la logique de validation des champs.
-     */
-    private boolean validate(String nom, String prenom, String birthDate, String sexe, String role,
-                             String email, String password, String confirmPassword) {
+    private boolean validateFields(String nom, String prenom, String birthDateString,
+                                   String sexe, String email, String password, String confirmPassword) {
 
-        if (nom.isEmpty()) { nomEditText.setError("Champ obligatoire"); nomEditText.requestFocus(); return false; }
-        if (prenom.isEmpty()) { prenomEditText.setError("Champ obligatoire"); prenomEditText.requestFocus(); return false; }
-        // Ajout d'une simple vérification pour le format de date (non vide)
-        if (birthDate.isEmpty()) { birthDateEditText.setError("Champ obligatoire (JJ/MM/AAAA)"); birthDateEditText.requestFocus(); return false; }
+        // Validation du nom
+        if (nom.isEmpty()) {
+            nomEditText.setError("Le nom est obligatoire");
+            nomEditText.requestFocus();
+            return false;
+        }
 
+        // Validation du prénom
+        if (prenom.isEmpty()) {
+            prenomEditText.setError("Le prénom est obligatoire");
+            prenomEditText.requestFocus();
+            return false;
+        }
+
+        // Validation de la date de naissance
+        if (birthDateString.isEmpty()) {
+            birthDateEditText.setError("La date de naissance est obligatoire");
+            birthDateEditText.requestFocus();
+            return false;
+        }
+
+        // Validation du sexe
         if (sexe.isEmpty()) {
-            Toast.makeText(this, "Sélectionnez le sexe", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Veuillez sélectionner votre sexe", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (role.isEmpty()) {
-            Toast.makeText(this, "Sélectionnez un rôle", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailEditText.setError("Email invalide ou manquant");
+        // Validation de l'email
+        if (email.isEmpty()) {
+            emailEditText.setError("L'email est obligatoire");
             emailEditText.requestFocus();
             return false;
         }
 
-        if (password.length() < 6) {
-            motDePasseEditText.setError("Minimum 6 caractères");
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailEditText.setError("Format d'email invalide");
+            emailEditText.requestFocus();
+            return false;
+        }
+
+        // Validation du mot de passe
+        if (password.isEmpty()) {
+            motDePasseEditText.setError("Le mot de passe est obligatoire");
             motDePasseEditText.requestFocus();
             return false;
         }
 
+        if (password.length() < 6) {
+            motDePasseEditText.setError("Le mot de passe doit contenir au moins 6 caractères");
+            motDePasseEditText.requestFocus();
+            return false;
+        }
+
+        // Validation de la confirmation du mot de passe
         if (!password.equals(confirmPassword)) {
-            confirmerMDPEditText.setError("Ne correspond pas au mot de passe");
+            confirmerMDPEditText.setError("Les mots de passe ne correspondent pas");
             confirmerMDPEditText.requestFocus();
             return false;
         }
@@ -250,12 +194,166 @@ public class CreateAccActivity extends AppCompatActivity {
         return true;
     }
 
+    private Date parseBirthDate(String birthDateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        sdf.setLenient(false);
+
+        try {
+            return sdf.parse(birthDateString);
+        } catch (ParseException e) {
+            Log.e(TAG, "Erreur de parsing de la date: ", e);
+            birthDateEditText.setError("Format invalide. Utilisez JJ/MM/AAAA");
+            birthDateEditText.requestFocus();
+            return null;
+        }
+    }
+
+    private boolean isValidAge(Date birthDate) {
+        Date currentDate = new Date();
+        long ageInMillis = currentDate.getTime() - birthDate.getTime();
+        long ageInYears = ageInMillis / (1000L * 60 * 60 * 24 * 365);
+        return ageInYears >= 16;
+    }
+
     /**
-     * Cette méthode n'est plus utilisée car la vérification par email est désactivée.
-     * Elle est conservée uniquement pour éviter les erreurs de compilation si elle est référencée ailleurs.
+     * Vérifie si l'email existe dans la collection des employés et récupère le rôle.
      */
-    private String generateCode() {
-        // Génère un nombre entre 1000 et 9999
-        return String.valueOf(1000 + new Random().nextInt(9000));
+    private void startAccountCreationProcess(String nom, String prenom, Date birthDate,
+                                             String sexe, String email, String password) {
+
+        showLoading(true);
+
+        // 1. Vérifier si l'email existe dans la collection des employés ET RÉCUPÉRER LE RÔLE
+        db.collection(EMPLOYEE_REFERENCE_COLLECTION)
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            // Email non trouvé dans la base des employés
+                            showLoading(false);
+                            showError("Email non autorisé. Contactez l'administration.");
+                            Log.w(TAG, "Tentative d'inscription avec email non autorisé: " + email);
+                        } else {
+                            // Email trouvé. Récupération du rôle
+                            DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                            String role = doc.getString("role"); // Assurez-vous que le champ "role" existe dans 'employees'
+
+                            if (role == null || role.isEmpty()) {
+                                showLoading(false);
+                                showError("Rôle non défini dans la base de référence (employees). Contactez l'administration.");
+                                Log.e(TAG, "Rôle manquant pour l'email: " + email);
+                                return;
+                            }
+
+                            // Email et Rôle récupérés, on procède à la création du compte
+                            Log.d(TAG, "Email autorisé et Rôle récupéré (" + role + "). Création du compte...");
+                            createFirebaseAccount(nom, prenom, birthDate, sexe, email, password, role);
+                        }
+                    } else {
+                        // Erreur de requête
+                        showLoading(false);
+                        showError("Erreur de vérification. Réessayez.");
+                        Log.e(TAG, "Erreur Firestore: ", task.getException());
+                    }
+                });
+    }
+
+    /**
+     * Crée l'utilisateur dans Firebase Auth.
+     * Ajout du paramètre 'role'.
+     */
+    private void createFirebaseAccount(String nom, String prenom, Date birthDate,
+                                       String sexe, String email, String password, final String role) {
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            // Passer le rôle au moment de la sauvegarde
+                            saveUserToFirestore(firebaseUser.getUid(), nom, prenom, birthDate, sexe, email, role);
+                        }
+                    } else {
+                        handleAuthError(task.getException());
+                    }
+                });
+    }
+
+    /**
+     * Sauvegarde l'utilisateur dans la collection finale 'Users' avec le rôle correct.
+     * Ajout du paramètre 'role'.
+     */
+    private void saveUserToFirestore(String userId, String nom, String prenom, Date birthDate,
+                                     String sexe, String email, String role) { // Ajout du paramètre 'role'
+
+        Timestamp createdAt = new Timestamp(new Date());
+        // Utilisation du rôle récupéré au lieu de DEFAULT_ROLE
+        User user = new User(nom, prenom, birthDate, sexe, role, email, createdAt);
+
+        db.collection(USERS_COLLECTION)
+                .document(userId)
+                .set(user)
+                .addOnCompleteListener(task -> {
+                    showLoading(false);
+
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Utilisateur sauvegardé dans Firestore avec rôle " + role + ": " + userId);
+                        // IMPORTANT : Déconnexion après la création pour forcer le login
+                        mAuth.signOut();
+                        showSuccessAndRedirect();
+                    } else {
+                        Log.e(TAG, "Erreur sauvegarde Firestore: ", task.getException());
+                        showError("Erreur lors de la sauvegarde des données");
+                    }
+                });
+    }
+
+    private void handleAuthError(Exception exception) {
+        showLoading(false);
+
+        if (exception instanceof FirebaseAuthUserCollisionException) {
+            showError("Cet email est déjà utilisé. Connectez-vous.");
+            navigateToMainActivity();
+        } else {
+            String errorMessage = exception != null ? exception.getMessage() : "Erreur inconnue";
+            showError("Erreur de création: " + errorMessage);
+            Log.e(TAG, "Erreur Auth: ", exception);
+        }
+    }
+
+    private String getSelectedSexe() {
+        int selectedId = radioGroupSexe.getCheckedRadioButtonId();
+        if (selectedId != -1) {
+            RadioButton selectedRadioButton = findViewById(selectedId);
+            return selectedRadioButton.getText().toString();
+        }
+        return "";
+    }
+
+    private void showLoading(boolean show) {
+        if (progressBar != null) {
+            progressBar.setVisibility(show ? android.view.View.VISIBLE : android.view.View.GONE);
+        }
+
+        valideCreateAcc.setEnabled(!show);
+        valideCreateAcc.setText(show ? "Création en cours..." : "Valider");
+    }
+
+    private void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void showSuccessAndRedirect() {
+        // Le message est mis à jour pour indiquer de se connecter, car l'utilisateur est déconnecté juste avant
+        Toast.makeText(this, "Compte créé avec succès! Veuillez vous connecter.", Toast.LENGTH_LONG).show();
+        navigateToMainActivity();
+    }
+
+    private void navigateToMainActivity() {
+        Intent intent = new Intent(CreateAccActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }

@@ -1,138 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView android:layout_height="wrap_content"
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp"
-    android:layout_marginVertical="35dp"
+
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginHorizontal="15dp"
-    app:cardCornerRadius="15dp"
+    android:layout_marginVertical="40dp"
+    android:padding="10dp"
+    app:cardCornerRadius="9dp"
     app:cardElevation="10dp"
     app:cardBackgroundColor="@color/white"
-    android:background="@drawable/border_gris"
     app:backgroundTint="@null"
-    android:id="@+id/main"
 
-    >
+    android:background="@drawable/border_gris">
 
+    <!-- CONTAINER GLOBAL -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/border_gris"
-        >
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:paddingRight="10dp"
-            >
-            <FrameLayout
-                android:layout_height="50dp"
-                android:layout_width="50dp"
-                android:layout_margin="5dp"
+        android:background="@drawable/border_gris">
 
-                >
+        <!-- HEADER: PHOTO + INFO + ACTIONS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_marginTop="10dp">
+
+            <!-- PHOTO -->
+            <FrameLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp">
+
                 <TextView
                     android:id="@+id/np"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="EO"
                     android:textColor="@color/white"
-                    android:background="@drawable/bg_circle_blue"
-                    android:layout_gravity="center"
-                    android:gravity="center"
                     android:textSize="25sp"
-                    android:visibility="visible"
-                    />
+                    android:gravity="center"
+                    android:background="@drawable/bg_circle_blue" />
+
                 <ImageView
                     android:id="@+id/photo"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/bg_circle_blue"
                     android:visibility="gone"
-                    android:clipToOutline="true"
-                    />
+                    android:background="@drawable/bg_circle_blue"
+                    android:clipToOutline="true" />
             </FrameLayout>
+
+            <!-- INFOS EMPLOYÉ -->
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:orientation="vertical"
-                android:layout_weight="2"
-                >
+                android:layout_weight="3">
+
                 <TextView
                     android:id="@+id/nomComplet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ELAAMMARI Oumeyma"
-                    android:textSize="14sp"
                     android:textColor="@color/black"
+                    android:textSize="14sp" />
 
-                    />
                 <TextView
                     android:id="@+id/poste"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Développeur"
-                    android:textSize="10sp"
                     android:textColor="@color/grey"
-                    android:layout_marginTop="3dp"
-                    />
+                    android:textSize="10sp"
+                    android:layout_marginTop="3dp" />
+
                 <TextView
                     android:id="@+id/departement"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Développement"
-                    android:textSize="10sp"
                     android:textColor="@color/blue_hover"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginLeft="3dp"
-                    android:background="@drawable/bg_departement_blue"
+                    android:textSize="10sp"
                     android:padding="5dp"
-
-                    />
-
-
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="3dp"
+                    android:background="@drawable/bg_departement_blue" />
             </LinearLayout>
 
+            <!-- ACTIONS -->
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="70dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="10dp">
 
-                >
                 <ImageView
                     android:id="@+id/editEmploye"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:src="@drawable/edit"
-                    android:layout_marginRight="15dp"
-                    android:clickable="true"
-                    />
+                    android:layout_marginEnd="15dp"
+                    android:clickable="true" />
+
                 <ImageView
                     android:id="@+id/deleteEmploye"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:src="@drawable/delete"
-                    android:clickable="true"
-                    />
-
+                    android:clickable="true" />
             </LinearLayout>
-
         </LinearLayout>
 
+        <!-- INFOS COMPLÉMENTAIRES -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp"
-            android:layout_marginLeft="5dp">
+            android:layout_marginStart="5dp">
 
+            <!-- EMAIL -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -141,20 +137,19 @@
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/mail"
-
-                    />
+                    android:src="@drawable/mail" />
 
                 <TextView
                     android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:text="elaammari@gmail.com"
                     android:textColor="@color/grey_light"
                     android:textSize="12sp" />
             </LinearLayout>
 
+            <!-- TELEPHONE -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -170,64 +165,54 @@
                     android:id="@+id/telephone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:text="06 46 65 31 26"
                     android:textColor="@color/grey_light"
-                    android:textSize="12sp"
-
-                    />
+                    android:textSize="12sp" />
             </LinearLayout>
 
+            <!-- SEPARATEUR -->
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_margin="10dp"
-                android:background="@color/gris_clair" />
+                android:background="@color/gris_clair"
+                android:layout_margin="10dp" />
 
+            <!-- DATE EMB. + SOLDE -->
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                >
+                android:layout_marginTop="7dp">
 
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/conge"
-                    android:layout_alignParentLeft="true"
-                    />
+                    android:src="@drawable/conge" />
 
                 <TextView
                     android:id="@+id/dateEmbauche"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
                     android:text="embauché le 15/05/2025"
                     android:textColor="@color/grey_light"
                     android:textSize="12sp"
+                    android:layout_marginStart="25dp" />
 
-                    />
                 <TextView
                     android:id="@+id/soldeConge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:text="XX jours"
                     android:textColor="@color/black"
                     android:textSize="10sp"
                     android:textStyle="bold"
-                    android:layout_alignParentEnd="true"
-                    android:background="@drawable/border_gris"
                     android:padding="4dp"
-
-                    />
-
+                    android:background="@drawable/border_gris"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp" />
             </RelativeLayout>
-
         </LinearLayout>
 
-
     </LinearLayout>
-
 
 </androidx.cardview.widget.CardView>

@@ -11,7 +11,9 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:paddingBottom="80dp"
+
+       >
         <LinearLayout
 
             android:layout_width="match_parent"
@@ -211,6 +213,7 @@
                 android:layout_margin="10dp"
                 android:padding="5dp"
                 android:background="@drawable/border_gris"
+                android:visibility="visible"
 
                 >
                     <TextView
@@ -239,6 +242,7 @@
                 android:layout_margin="10dp"
                 android:padding="5dp"
                 android:background="@drawable/border_gris"
+                android:visibility="visible"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -248,6 +252,46 @@
                     android:textSize="18sp"
                     android:layout_margin="10dp"
                     />
+            </LinearLayout>
+
+            <!--- ******* no reunion  container *******  -->
+            <LinearLayout
+                android:id="@+id/noReunionContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="40dp"
+                android:visibility="gone"
+                android:background="@drawable/border_gris"
+                android:layout_margin="10dp"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/reunion"
+                    android:layout_marginBottom="10dp"
+                    app:tint="@color/black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Aucune réunion trouvée"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Planifier une nouvelle réunion ..."
+                    android:textSize="13sp"
+                    android:textColor="@color/grey"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    />
+
             </LinearLayout>
 
 
@@ -292,7 +336,7 @@
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/white"
         android:elevation="8dp"

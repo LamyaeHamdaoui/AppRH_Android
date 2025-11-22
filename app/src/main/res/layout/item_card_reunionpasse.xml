@@ -1,112 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
     android:padding="10dp"
-    android:layout_margin="5dp"
     app:cardCornerRadius="15dp"
     app:cardElevation="5dp"
     app:cardBackgroundColor="@color/white"
-    android:background="@drawable/border"
-    app:backgroundTint="@null"
-    >
+    app:backgroundTint="@null">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:padding="8dp"
-        android:layout_margin="15dp"
         android:orientation="vertical"
-        >
+        android:padding="12dp"
+        android:background="@drawable/border">
+
+        <!-- HEADER -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-        <TextView
-            android:id="@+id/titreReunion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bilan mensuel"
-            android:layout_margin="5dp"
-            android:textSize="15sp"
-            android:textColor="@color/grey"
-            />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/statutReunion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="terminer"
-            android:background="@drawable/border_gris"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            />
+            <TextView
+                android:id="@+id/titreReunion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Bilan mensuel"
+                android:textColor="@color/grey"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/statutReunion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/border_gris"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
+                android:text="terminé" />
         </RelativeLayout>
 
+        <!-- DATE -->
         <TextView
             android:id="@+id/dateReunion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mercredi 12 Octobre 2024 - 11:30"
-            android:textSize="11sp"
             android:layout_margin="5dp"
+            android:text="Mercredi 12 Octobre 2024 - 11:30"
             android:textColor="@color/grey"
-            />
+            android:textSize="11sp" />
 
+        <!-- LIEU -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="5dp">
-        <ImageView
-            android:id="@+id/iconDate"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/localisation"
-            app:tint="@color/grey"
-            />
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/lieuReunion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Salle de conférence B"
-            android:layout_marginLeft="5dp"
-            android:textSize="11sp"
-            />
+            <ImageView
+                android:id="@+id/iconDate"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/localisation"
+                app:tint="@color/grey" />
+
+            <TextView
+                android:id="@+id/lieuReunion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="Salle de conférence B"
+                android:textSize="11sp" />
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="5dp">
-        <ImageView
-            android:id="@+id/iconParticip"
-            android:src="@drawable/employe"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            app:tint="@color/grey"
-            />
-
-        <TextView
-            android:id="@+id/participants"
-            android:text=" 15 participants"
-            android:layout_width="wrap_content"
+        <!-- PARTICIPANTS -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:textSize="11sp"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
 
-            />
+            <ImageView
+                android:id="@+id/iconParticip"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/employe"
+                app:tint="@color/grey" />
 
-         </LinearLayout>
+            <TextView
+                android:id="@+id/participants"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="15 participants"
+                android:textSize="11sp" />
+        </LinearLayout>
+
     </LinearLayout>
-
 
 </androidx.cardview.widget.CardView>
