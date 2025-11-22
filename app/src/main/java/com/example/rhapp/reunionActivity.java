@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.rhapp.model.Reunion;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.Source;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class reunionActivity extends AppCompatActivity {
 
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
         reunionPasseContainer = findViewById(R.id.reunionPasseContainer);
+        noReunionContainer = findViewById(R.id.noReunionContainer);
 
         // ******************************* Passer d'une fenetre a l'autre ************************************
         LinearLayout accueil = findViewById(R.id.accueil);
@@ -123,12 +125,12 @@ public class reunionActivity extends AppCompatActivity {
 
 
         db.collection("Reunions")
-                .get()
+                .get(Source.SERVER)
                 .addOnSuccessListener(querySnapshot -> {
-//                    if (querySnapshot.isEmpty()) {
-//                        noReunionContainer.setVisibility(View.VISIBLE);
-//                        return;
-//                    }
+                   if (querySnapshot.isEmpty()) {
+                       noReunionContainer.setVisibility(View.VISIBLE);
+                       return;
+                  }
 
 
                     // Pour chaque réunion dans Firestore
@@ -197,12 +199,24 @@ public class reunionActivity extends AppCompatActivity {
                             });
 
                             //************* delete un reunion **************
-                            delete.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    AfficherBoiteDialogue();
-
-                                }
+                            delete.setOnClickListener(v -> {
+                                new AlertDialog.Builder(reunionActivity.this)
+                                        .setTitle("Supprimer")
+                                        .setMessage("Voulez-vous vraiment supprimer cette réunion ?")
+                                        .setPositiveButton("Oui", (dialog, which) -> {
+                                            db.collection("Reunions")
+                                                    .document(reunion.getId())
+                                                    .delete()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Toast.makeText(reunionActivity.this, "Réunion supprimée", Toast.LENGTH_SHORT).show();
+                                                        afficherReunionsVenirs(); // ⬅️ Rafraîchir l'écran
+                                                    })
+                                                    .addOnFailureListener(e ->
+                                                            Toast.makeText(reunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                                    );
+                                        })
+                                        .setNegativeButton("Annuler", null)
+                                        .show();
                             });
 
 
