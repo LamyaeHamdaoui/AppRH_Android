@@ -17,6 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot; // Import nécessaire
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
 
@@ -42,7 +43,8 @@ public class CreateAccActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     // Constantes
-    private static final String DEFAULT_ROLE = "employe";
+    // Suppression de DEFAULT_ROLE car le rôle sera récupéré de Firestore
+    // private static final String DEFAULT_ROLE = "employe";
     private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
     private static final String USERS_COLLECTION = "Users";
 
@@ -213,12 +215,15 @@ public class CreateAccActivity extends AppCompatActivity {
         return ageInYears >= 16;
     }
 
+    /**
+     * Vérifie si l'email existe dans la collection des employés et récupère le rôle.
+     */
     private void startAccountCreationProcess(String nom, String prenom, Date birthDate,
                                              String sexe, String email, String password) {
 
         showLoading(true);
 
-        // Vérifier si l'email existe dans la collection des employés
+        // 1. Vérifier si l'email existe dans la collection des employés ET RÉCUPÉRER LE RÔLE
         db.collection(EMPLOYEE_REFERENCE_COLLECTION)
                 .whereEqualTo("email", email)
                 .get()
@@ -230,9 +235,20 @@ public class CreateAccActivity extends AppCompatActivity {
                             showError("Email non autorisé. Contactez l'administration.");
                             Log.w(TAG, "Tentative d'inscription avec email non autorisé: " + email);
                         } else {
-                            // Email trouvé, créer le compte
-                            Log.d(TAG, "Email autorisé trouvé. Création du compte...");
-                            createFirebaseAccount(nom, prenom, birthDate, sexe, email, password);
+                            // Email trouvé. Récupération du rôle
+                            DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                            String role = doc.getString("role"); // Assurez-vous que le champ "role" existe dans 'employees'
+
+                            if (role == null || role.isEmpty()) {
+                                showLoading(false);
+                                showError("Rôle non défini dans la base de référence (employees). Contactez l'administration.");
+                                Log.e(TAG, "Rôle manquant pour l'email: " + email);
+                                return;
+                            }
+
+                            // Email et Rôle récupérés, on procède à la création du compte
+                            Log.d(TAG, "Email autorisé et Rôle récupéré (" + role + "). Création du compte...");
+                            createFirebaseAccount(nom, prenom, birthDate, sexe, email, password, role);
                         }
                     } else {
                         // Erreur de requête
@@ -243,15 +259,20 @@ public class CreateAccActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Crée l'utilisateur dans Firebase Auth.
+     * Ajout du paramètre 'role'.
+     */
     private void createFirebaseAccount(String nom, String prenom, Date birthDate,
-                                       String sexe, String email, String password) {
+                                       String sexe, String email, String password, final String role) {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                         if (firebaseUser != null) {
-                            saveUserToFirestore(firebaseUser.getUid(), nom, prenom, birthDate, sexe, email);
+                            // Passer le rôle au moment de la sauvegarde
+                            saveUserToFirestore(firebaseUser.getUid(), nom, prenom, birthDate, sexe, email, role);
                         }
                     } else {
                         handleAuthError(task.getException());
@@ -259,11 +280,16 @@ public class CreateAccActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Sauvegarde l'utilisateur dans la collection finale 'Users' avec le rôle correct.
+     * Ajout du paramètre 'role'.
+     */
     private void saveUserToFirestore(String userId, String nom, String prenom, Date birthDate,
-                                     String sexe, String email) {
+                                     String sexe, String email, String role) { // Ajout du paramètre 'role'
 
         Timestamp createdAt = new Timestamp(new Date());
-        User user = new User(nom, prenom, birthDate, sexe, DEFAULT_ROLE, email, createdAt);
+        // Utilisation du rôle récupéré au lieu de DEFAULT_ROLE
+        User user = new User(nom, prenom, birthDate, sexe, role, email, createdAt);
 
         db.collection(USERS_COLLECTION)
                 .document(userId)
@@ -272,7 +298,9 @@ public class CreateAccActivity extends AppCompatActivity {
                     showLoading(false);
 
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "Utilisateur sauvegardé dans Firestore: " + userId);
+                        Log.d(TAG, "Utilisateur sauvegardé dans Firestore avec rôle " + role + ": " + userId);
+                        // IMPORTANT : Déconnexion après la création pour forcer le login
+                        mAuth.signOut();
                         showSuccessAndRedirect();
                     } else {
                         Log.e(TAG, "Erreur sauvegarde Firestore: ", task.getException());
@@ -317,7 +345,8 @@ public class CreateAccActivity extends AppCompatActivity {
     }
 
     private void showSuccessAndRedirect() {
-        Toast.makeText(this, "Compte créé avec succès!", Toast.LENGTH_SHORT).show();
+        // Le message est mis à jour pour indiquer de se connecter, car l'utilisateur est déconnecté juste avant
+        Toast.makeText(this, "Compte créé avec succès! Veuillez vous connecter.", Toast.LENGTH_LONG).show();
         navigateToMainActivity();
     }
 

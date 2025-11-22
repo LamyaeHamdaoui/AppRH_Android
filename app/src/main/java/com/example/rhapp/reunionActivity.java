@@ -29,7 +29,7 @@ import java.util.Locale;
 
 public class reunionActivity extends AppCompatActivity {
 
-    private LinearLayout reunionPlanifieContainer, reunionPasseContainer;
+    private LinearLayout reunionPlanifieContainer, reunionPasseContainer,noReunionContainer;
     private FirebaseFirestore db;
 
     @Override
@@ -125,7 +125,7 @@ public class reunionActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     if (querySnapshot.isEmpty()) {
-                        Toast.makeText(reunionActivity.this, "Aucune réunion trouvée", Toast.LENGTH_SHORT).show();
+                        noReunionContainer.setVisibility(View.VISIBLE);
                         return;
                     }
 
@@ -338,6 +338,65 @@ public class reunionActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+    }
+
+
+
+    //**************************** fct pour remplir les statistique*********************
+    private TextView nbrReunionVenir;
+    private TextView nbrReunionPassees;
+
+    private void statistique() {
+
+        nbrReunionVenir = findViewById(R.id.nbrReunionVenir);
+        nbrReunionPassees = findViewById(R.id.nbrReunionPassees);
+
+
+        db.collection("Reunions")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+
+                    int nbrVenirs = 0;
+                    int nbrPassees = 0;
+
+                    if (querySnapshot.isEmpty()) {
+                        nbrReunionVenir.setText("0");
+                        return;
+                    }
+
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        Reunion reunion = doc.toObject(Reunion.class);
+                        String dateStr = reunion.getDate();
+                        String timeStr = reunion.getHeure();
+
+
+                        // concerant les reunions venirs
+                        int etatDate = compareDate(dateStr,timeStr);
+
+                        //si la date est a venir on affiche cette card
+                        if(etatDate==1 || etatDate==0) {
+                            nbrVenirs++;
+                        }
+                        else {
+                            nbrPassees++;
+                        }
+
+
+                        //les cardes devient invisibles si nbr == 0
+                        if(nbrVenirs==0){
+                            reunionPlanifieContainer.setVisibility(View.GONE);
+                        }
+                        if(nbrPassees==0){
+                            reunionPasseContainer.setVisibility(View.GONE);
+                        }
+
+                        nbrReunionVenir.setText(String.valueOf(nbrVenirs));
+                        nbrReunionPassees.setText(String.valueOf(nbrPassees));
+
+                    }
+
+
+                });
     }
 
 }
