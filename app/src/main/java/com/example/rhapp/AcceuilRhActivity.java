@@ -63,32 +63,32 @@ public class AcceuilRhActivity extends AppCompatActivity {
         if (reunionsInterface != null) {
             reunionsInterface.setOnClickListener(v -> {
                 // Remplacer reunionActivity.class par la classe réelle
-                // startActivity(new Intent(AcceuilRhActivity.this, reunionActivity.class));
-                Toast.makeText(this, "Accès Réunions", Toast.LENGTH_SHORT).show();
+               startActivity(new Intent(AcceuilRhActivity.this, reunionActivity.class));
+                //Toast.makeText(this, "Accès Réunions", Toast.LENGTH_SHORT).show();
             });
         }
 
         if (congesInterface != null) {
             congesInterface.setOnClickListener(v -> {
                 // Remplacer CongesActivity.class par la classe réelle
-                // startActivity(new Intent(AcceuilRhActivity.this, CongesActivity.class));
-                Toast.makeText(this, "Accès Congés", Toast.LENGTH_SHORT).show();
+                 startActivity(new Intent(AcceuilRhActivity.this, CongesActivity.class));
+                //Toast.makeText(this, "Accès Congés", Toast.LENGTH_SHORT).show();
             });
         }
 
         if (employesInterface != null) {
             employesInterface.setOnClickListener(v -> {
                 // Remplacer EmployeActivity.class par la classe réelle
-                // startActivity(new Intent(AcceuilRhActivity.this, EmployeActivity.class));
-                Toast.makeText(this, "Accès Employés", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AcceuilRhActivity.this, EmployeActivity.class));
+                //Toast.makeText(this, "Accès Employés", Toast.LENGTH_SHORT).show();
             });
         }
 
         if (profileInterface != null) {
             profileInterface.setOnClickListener(v -> {
                 // Remplacer ProfileActivity.class par la classe réelle
-                // startActivity(new Intent(AcceuilRhActivity.this, ProfileActivity.class));
-                Toast.makeText(this, "Accès Profile", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AcceuilRhActivity.this, ProfileActivity.class));
+               // Toast.makeText(this, "Accès Profile", Toast.LENGTH_SHORT).show();
             });
         }
 
