@@ -340,7 +340,7 @@ public class reunionActivity extends AppCompatActivity {
 
     }
 
-<<<<<<< HEAD
+
 
     //**************************** fct pour remplir les statistique*********************
     private TextView nbrReunionVenir;
@@ -399,6 +399,4 @@ public class reunionActivity extends AppCompatActivity {
                 });
     }
 
-=======
->>>>>>> 89334ab936d6613d08b07cf4834b8483f31438a5
 }
