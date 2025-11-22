@@ -1,4 +1,3 @@
-// Attestation.java
 package com.example.rhapp.model;
 
 import java.util.Date;
@@ -10,28 +9,30 @@ public class Attestation {
     private String employeDepartement;
     private String typeAttestation;
     private String motif;
-    private String statut; // "en_attente", "approuvee", "refusee"
+    private String statut;
     private Date dateDemande;
     private Date dateTraitement;
     private String motifRefus;
     private String pdfUrl;
 
-    // Constructeur vide REQUIS pour Firebase
-    public Attestation() {}
+    // Constructeur par défaut (obligatoire pour Firestore)
+    public Attestation() {
+        this.dateDemande = new Date();
+        this.statut = "en_attente";
+    }
 
-    // Constructeur pour nouvelles demandes
+    // Constructeur avec paramètres
     public Attestation(String employeId, String employeNom, String employeDepartement,
                        String typeAttestation, String motif) {
+        this();
         this.employeId = employeId;
         this.employeNom = employeNom;
         this.employeDepartement = employeDepartement;
         this.typeAttestation = typeAttestation;
         this.motif = motif;
-        this.statut = "en_attente";
-        this.dateDemande = new Date();
     }
 
-    // Getters et setters pour tous les champs
+    // Getters et Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

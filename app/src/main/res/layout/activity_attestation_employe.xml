@@ -13,8 +13,9 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="80dp">
-
+        android:paddingBottom="80dp"
+        android:fillViewport="true"
+        android:overScrollMode="never">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,7 +107,9 @@
                     android:background="@drawable/border_button"
                     app:backgroundTint="@null"
                     android:layout_marginTop="10dp"
-                    android:padding="0dp"/>
+                    android:padding="0dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
             <!-- BARRE STATUS -->
@@ -121,7 +124,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="5dp"
+                    android:padding="2dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
                     android:layout_margin="8dp">
@@ -137,13 +140,13 @@
                         />
 
                     <TextView
-                        android:id="@+id/congeAttente"
+                        android:id="@+id/AttestaionAttente"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="25sp"
+                        android:textSize="20sp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"/>
 
@@ -152,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:text="En attente"
                         android:textColor="@color/grey"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:layout_marginTop="5dp"
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
@@ -162,7 +165,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="5dp"
+                    android:padding="2dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
                     android:layout_margin="8dp">
@@ -177,22 +180,64 @@
                         android:layout_marginTop="5dp"/>
 
                     <TextView
-                        android:id="@+id/congeApprouve"
+                        android:id="@+id/AttestationApprouve"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="25sp"
+                        android:textSize="20sp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Approuvés"
+                        android:text="Approuvées"
                         android:textColor="@color/grey"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="center_horizontal"/>
+                </LinearLayout>
+
+                <!-- Refusé -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="2dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/border_gris"
+                    android:layout_margin="8dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/border_red"
+                        android:src="@drawable/refuse"
+                        android:padding="12dp"
+                        android:backgroundTint="@color/pink"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/attestationRefuse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Refusées"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp"
                         android:layout_marginTop="5dp"
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
@@ -202,7 +247,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="5dp"
+                    android:padding="2dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
                     android:layout_margin="8dp">
@@ -219,13 +264,13 @@
                         />
 
                     <TextView
-                        android:id="@+id/congePris"
+                        android:id="@+id/attestationTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="25sp"
+                        android:textSize="20sp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"/>
 
@@ -234,7 +279,7 @@
                         android:layout_height="wrap_content"
                         android:text="Total"
                         android:textColor="@color/grey"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:layout_marginTop="5dp"
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
