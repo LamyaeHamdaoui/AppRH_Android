@@ -58,7 +58,7 @@
                 android:visibility="gone" />
 
             <LinearLayout
-                android:id="@+id/profileCard"
+                android:id="@+id/profileDetailsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
@@ -71,6 +71,7 @@
 
                 <!-- 1. Section Nom / Rôle / Initiales (Toujours visible) -->
                 <LinearLayout
+                    android:id="@+id/profileCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
@@ -118,7 +119,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/userRole"
+                            android:id="@+id/userPoste"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
@@ -322,7 +323,7 @@
                 android:id="@+id/parametres"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/profileCard"
+                android:layout_below="@+id/profileDetailsContainer"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="30dp"

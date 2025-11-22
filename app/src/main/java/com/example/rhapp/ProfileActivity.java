@@ -17,35 +17,38 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-// NOTE IMPORTANTE: La classe User est retirée car nous lisons les champs directement du DocumentSnapshot.
-// Si la classe User est toujours nécessaire ailleurs, elle doit être conservée, mais son usage ici
-// pour le toObject est moins fiable que de lire les champs un par un.
-
 public class ProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "ProfileActivity";
-    // Utilisation unique de la collection 'employees' comme source de vérité
     private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
 
-    // UI elements
-    private TextView userNameTextView, userRoleTextView, userDepartmentTextView;
-    private TextView userEmailTextView, userPosteTextView, userDepartmentDetailsTextView;
-    private TextView userDateEmbaucheTextView, userInitialTextView;
+    private TextView userName, userPoste, userDepartment;
+    private TextView userEmail, userPosteDetails, userDepartmentDetails;
+    private TextView userDateEmbauche, userInitial;
     private ProgressBar progressBar;
 
-    // Éléments du pied de page (Footer)
+    // VARIABLE CLÉ: Stocke le rôle (rh ou employe) pour la navigation conditionnelle
+    private String userRole;
+
+    // Conteneurs principaux
+    private LinearLayout profileCard;
+    private LinearLayout profileDetails;
+    private LinearLayout parametres;
+    private LinearLayout sedeconnecter;
+    private Button seDeconnecterButton;
+
+    // Éléments du pied de page
     private ImageView iconAccueil, iconEmployes, iconConges, iconReunions, iconProfile;
     private TextView textAccueil, textEmployes, textConges, textReunions, textProfile;
+    private LinearLayout footerAccueil, footerEmployes, footerConges, footerReunions, footerProfil;
 
-    private LinearLayout profileCardLayout, footerAccueil, footerEmployes, footerConges, footerReunions, footerProfil;
-    private Button seDeconnecterButton;
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -60,219 +63,286 @@ public class ProfileActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
 
+        // Initialisation du rôle à null/défaut pour éviter une erreur potentielle
+        userRole = null;
+
         initializeViews();
         setupClickListeners();
 
         if (currentUser == null) {
-            // Utilisateur non connecté, rediriger
             Toast.makeText(this, "Veuillez vous connecter.", Toast.LENGTH_SHORT).show();
             navigateToMainActivity();
             return;
         }
 
-        // Chargement des données consolidé
-        loadUserProfileData(currentUser.getUid());
+        String userEmail = currentUser.getEmail();
+        if (userEmail != null) {
+            loadUserProfileDataByEmail(userEmail);
+        } else {
+            Toast.makeText(this, "Email d'authentification non disponible.", Toast.LENGTH_LONG).show();
+            showDefaultData();
+        }
+
         highlightFooterIcon();
     }
 
     @SuppressLint("WrongViewCast")
     private void initializeViews() {
         // Bloc Profile Card
-        userNameTextView = findViewById(R.id.userName);
-        userRoleTextView = findViewById(R.id.userRole);
-        userDepartmentTextView = findViewById(R.id.userDepartment);
-        userInitialTextView = findViewById(R.id.userInitial);
+        userName = findViewById(R.id.userName);
+        userPoste = findViewById(R.id.userPoste);
+        userDepartment = findViewById(R.id.userDepartment);
+        userInitial = findViewById(R.id.userInitial);
 
         // Bloc Détails
-        userEmailTextView = findViewById(R.id.userEmailDetail);
-        userPosteTextView = findViewById(R.id.userPosteDetail);
-        userDepartmentDetailsTextView = findViewById(R.id.userDepartmentDetail);
-        userDateEmbaucheTextView = findViewById(R.id.userDateEmbauche);
+        userEmail = findViewById(R.id.userEmailDetail);
+        userPosteDetails = findViewById(R.id.userPosteDetail);
+        userDepartmentDetails = findViewById(R.id.userDepartmentDetail);
+        userDateEmbauche = findViewById(R.id.userDateEmbauche);
 
         // Layouts et autres
-        profileCardLayout = findViewById(R.id.profileCard);
+        profileCard = findViewById(R.id.profileCard);
+        profileDetails = findViewById(R.id.profileDetailsContainer);
+        parametres = findViewById(R.id.parametres);
+        sedeconnecter = findViewById(R.id.sedeconnecter);
         progressBar = findViewById(R.id.progressBar);
         seDeconnecterButton = findViewById(R.id.seDeconnecterButton);
 
-        // Footer Layouts (conteneurs cliquables)
+        // Footer Layouts
         footerAccueil = findViewById(R.id.footerAccueil);
         footerEmployes = findViewById(R.id.footerEmployes);
         footerConges = findViewById(R.id.footerConges);
         footerReunions = findViewById(R.id.footerReunions);
         footerProfil = findViewById(R.id.footerProfil);
 
-        // Récupération des icônes
-        if (footerAccueil != null && footerAccueil.getChildCount() > 0) {
-            iconAccueil = (ImageView) footerAccueil.getChildAt(0);
-        }
-        if (footerEmployes != null && footerEmployes.getChildCount() > 0) {
-            iconEmployes = (ImageView) footerEmployes.getChildAt(0);
-        }
-        if (footerConges != null && footerConges.getChildCount() > 0) {
-            iconConges = (ImageView) footerConges.getChildAt(0);
-        }
-        if (footerReunions != null && footerReunions.getChildCount() > 0) {
-            iconReunions = (ImageView) footerReunions.getChildAt(0);
-        }
-        if (footerProfil != null && footerProfil.getChildCount() > 0) {
-            iconProfile = (ImageView) footerProfil.getChildAt(0);
-        }
+        initializeFooterViews();
+        showLoading(true);
+    }
 
-        // Récupération des textes
+    private void initializeFooterViews() {
+        // Logique pour s'assurer que les enfants existent avant de caster
         if (footerAccueil != null && footerAccueil.getChildCount() > 1) {
+            iconAccueil = (ImageView) footerAccueil.getChildAt(0);
             textAccueil = (TextView) footerAccueil.getChildAt(1);
         }
         if (footerEmployes != null && footerEmployes.getChildCount() > 1) {
+            iconEmployes = (ImageView) footerEmployes.getChildAt(0);
             textEmployes = (TextView) footerEmployes.getChildAt(1);
         }
         if (footerConges != null && footerConges.getChildCount() > 1) {
+            iconConges = (ImageView) footerConges.getChildAt(0);
             textConges = (TextView) footerConges.getChildAt(1);
         }
         if (footerReunions != null && footerReunions.getChildCount() > 1) {
+            iconReunions = (ImageView) footerReunions.getChildAt(0);
             textReunions = (TextView) footerReunions.getChildAt(1);
         }
         if (footerProfil != null && footerProfil.getChildCount() > 1) {
+            iconProfile = (ImageView) footerProfil.getChildAt(0);
             textProfile = (TextView) footerProfil.getChildAt(1);
         }
-
-        showLoading(true);
     }
 
     private void setupClickListeners() {
         if (seDeconnecterButton != null) {
             seDeconnecterButton.setOnClickListener(v -> logoutUser());
         }
+        setupFooterNavigation();
+        setupSettingsClickListeners();
+    }
 
-        // TODO: Ajouter ici les listeners pour la navigation du footer
-        // Exemple :
-        // if (footerAccueil != null) {
-        //     footerAccueil.setOnClickListener(v -> navigateTo(AccueilActivity.class));
-        // }
+    private void setupFooterNavigation() {
+        if (footerAccueil != null) {
+            footerAccueil.setOnClickListener(v -> navigateToHome());
+        }
+        if (footerEmployes != null) {
+            footerEmployes.setOnClickListener(v -> navigateToEmployees());
+        }
+        if (footerConges != null) {
+            footerConges.setOnClickListener(v -> navigateToConges());
+        }
+        if (footerReunions != null) {
+            footerReunions.setOnClickListener(v -> navigateToReunions());
+        }
+    }
+
+    private void setupSettingsClickListeners() {
+        LinearLayout modifierProfil = findViewById(R.id.modifier_profil);
+        LinearLayout notifications = findViewById(R.id.notifications);
+        LinearLayout securityInterface = findViewById(R.id.security_interface);
+        LinearLayout helpSupport = findViewById(R.id.help_support);
+
+        if (modifierProfil != null) {
+            modifierProfil.setOnClickListener(v -> navigateToEditProfile());
+        }
+        if (notifications != null) {
+            notifications.setOnClickListener(v -> navigateToNotifications());
+        }
+        if (securityInterface != null) {
+            securityInterface.setOnClickListener(v -> navigateToSecurity());
+        }
+        if (helpSupport != null) {
+            helpSupport.setOnClickListener(v -> navigateToHelpSupport());
+        }
     }
 
     /**
-     * Met en évidence l'icône de profil.
+     * Charge les données du profil en recherchant par email dans la collection employees.
+     */
+    private void loadUserProfileDataByEmail(String userEmail) {
+        showLoading(true);
+        final String searchEmail = userEmail.toLowerCase(Locale.ROOT).trim();
+
+        db.collection(EMPLOYEE_REFERENCE_COLLECTION)
+                .whereEqualTo("email", searchEmail)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(task -> {
+                    showLoading(false);
+
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                        DocumentSnapshot employeeSnapshot = task.getResult().getDocuments().get(0);
+
+                        String nom = employeeSnapshot.getString("nom");
+                        String prenom = employeeSnapshot.getString("prenom");
+                        String email = employeeSnapshot.getString("email");
+                        String poste = employeeSnapshot.getString("poste");
+                        String departement = employeeSnapshot.getString("departement");
+                        String role = employeeSnapshot.getString("role"); // Extraction du rôle
+                        Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
+
+                        displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp);
+
+                    } else {
+                        if (task.isSuccessful()) {
+                            Log.w(TAG, "Aucun profil trouvé, affichage des données par défaut.");
+                        } else {
+                            Log.e(TAG, "Erreur lors de la recherche par email:", task.getException());
+                        }
+
+                        showDefaultData();
+                        Toast.makeText(this,
+                                "Profil employé non trouvé. Données par défaut affichées.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    /**
+     * Affiche les données par défaut quand le profil n'est pas trouvé.
+     */
+    private void showDefaultData() {
+        String email = currentUser != null ? currentUser.getEmail() : "N/A";
+        String displayName = currentUser != null && currentUser.getDisplayName() != null ?
+                currentUser.getDisplayName() : "Employé";
+
+        // Rôle par défaut : "employe"
+        displayAllUserData(null, displayName, email, "Poste non défini",
+                "Département non défini", "employe", null);
+    }
+
+    /**
+     * Affiche toutes les données utilisateur dans l'UI et stocke le rôle.
+     */
+    private void displayAllUserData(String nom, String prenom, String email,
+                                    String poste, String departement, String role, Timestamp dateEmbaucheTimestamp) {
+
+        // Stockage du rôle pour la navigation conditionnelle
+        this.userRole = role;
+
+        // 1. Bloc Card
+        String fullName = buildFullName(nom, prenom);
+        if (userName != null) userName.setText(fullName);
+
+        String departmentDisplay = formatText(departement, "Non défini");
+        String posteDisplay = formatText(poste, "Poste non défini");
+
+        if (userPoste != null) userPoste.setText(posteDisplay);
+        if (userDepartment != null) userDepartment.setText(departmentDisplay);
+
+        // Initiales
+        if (userInitial != null) {
+            String initial = buildInitials(nom, prenom);
+            userInitial.setText(initial);
+        }
+
+        // 2. Bloc Détails
+        if (userEmail != null) userEmail.setText(formatText(email, "N/A"));
+        if (userPosteDetails != null) userPosteDetails.setText(posteDisplay);
+        if (userDepartmentDetails != null) userDepartmentDetails.setText(departmentDisplay);
+
+        // 3. Date d'embauche
+        if (userDateEmbauche != null) {
+            String dateEmbauche = formatDateEmbauche(dateEmbaucheTimestamp);
+            userDateEmbauche.setText(dateEmbauche);
+        }
+    }
+
+    private String buildFullName(String nom, String prenom) {
+        String finalPrenom = prenom != null ? prenom : "";
+        String finalNom = nom != null ? nom : "";
+
+        String fullName = (finalPrenom + " " + finalNom).trim();
+        return fullName.isEmpty() ? "Utilisateur" : fullName;
+    }
+
+    private String buildInitials(String nom, String prenom) {
+        StringBuilder initial = new StringBuilder();
+        if (prenom != null && !prenom.isEmpty()) {
+            initial.append(prenom.substring(0, 1).toUpperCase(Locale.getDefault()));
+        }
+        if (nom != null && !nom.isEmpty()) {
+            initial.append(nom.substring(0, 1).toUpperCase(Locale.getDefault()));
+        }
+        return initial.length() > 0 ? initial.toString() : "U";
+    }
+
+    private String formatText(String text, String defaultValue) {
+        if (text == null || text.isEmpty()) {
+            return defaultValue;
+        }
+        if ("N/A".equalsIgnoreCase(defaultValue) && text.contains("@")) {
+            return text;
+        }
+        String lowerText = text.toLowerCase(Locale.getDefault());
+        return lowerText.substring(0, 1).toUpperCase(Locale.getDefault()) + lowerText.substring(1);
+    }
+
+    private String formatDateEmbauche(Timestamp timestamp) {
+        if (timestamp != null) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
+                return sdf.format(timestamp.toDate());
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur formatage date:", e);
+                return "Date invalide";
+            }
+        }
+        return "Non définie";
+    }
+
+    /**
+     * Met en évidence l'icône de profil dans le footer
      */
     private void highlightFooterIcon() {
         int colorBlue = ContextCompat.getColor(this, R.color.blue);
         int colorGrey = ContextCompat.getColor(this, R.color.grey);
 
-        // Liste de toutes les vues pour les réinitialiser en gris (sauf le profil)
-        ImageView[] icons = {iconAccueil, iconEmployes, iconConges, iconReunions};
-        TextView[] texts = {textAccueil, textEmployes, textConges, textReunions};
+        resetFooterIcons(colorGrey);
 
-        // 1. Réinitialiser toutes les icônes et textes en gris
+        if (iconProfile != null) iconProfile.setColorFilter(colorBlue);
+        if (textProfile != null) textProfile.setTextColor(colorBlue);
+    }
+
+    private void resetFooterIcons(int colorGrey) {
+        ImageView[] icons = {iconAccueil, iconEmployes, iconConges, iconReunions, iconProfile};
+        TextView[] texts = {textAccueil, textEmployes, textConges, textReunions, textProfile};
+
         for (ImageView icon : icons) {
             if (icon != null) icon.setColorFilter(colorGrey);
         }
         for (TextView text : texts) {
             if (text != null) text.setTextColor(colorGrey);
-        }
-
-        // 2. Mettre en évidence l'icône et le texte de Profil
-        if (iconProfile != null) {
-            iconProfile.setColorFilter(colorBlue);
-        }
-        if (textProfile != null) {
-            textProfile.setTextColor(colorBlue);
-        }
-    }
-
-
-    /**
-     * Charge toutes les données du profil depuis la collection 'employees'
-     * en utilisant le Firebase UID comme ID de document.
-     * @param userId L'ID de l'utilisateur Firebase.
-     */
-    private void loadUserProfileData(String userId) {
-        showLoading(true);
-
-        // Requête unique pour obtenir toutes les données de l'employé
-        DocumentReference employeeDocRef = db.collection(EMPLOYEE_REFERENCE_COLLECTION).document(userId);
-
-        employeeDocRef.get().addOnSuccessListener(employeeSnapshot -> {
-            showLoading(false);
-
-            if (employeeSnapshot.exists()) {
-                // Extraction de tous les champs nécessaires directement du snapshot
-                String nom = employeeSnapshot.getString("nom");
-                String prenom = employeeSnapshot.getString("prenom");
-                String role = employeeSnapshot.getString("role");
-                String email = employeeSnapshot.getString("email");
-                String poste = employeeSnapshot.getString("poste");
-                String departement = employeeSnapshot.getString("departement");
-
-                // IMPORTANT: Assurez-vous que le champ 'dateEmbauche' est bien de type Timestamp dans Firestore.
-                Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
-
-                displayAllUserData(nom, prenom, role, email, poste, departement, dateEmbaucheTimestamp);
-            } else {
-                Toast.makeText(this, "Profil employé non trouvé dans Firestore (ID: " + userId + ").", Toast.LENGTH_LONG).show();
-            }
-        }).addOnFailureListener(e -> {
-            showLoading(false);
-            Log.e(TAG, "Erreur de chargement du profil: ", e);
-            Toast.makeText(this, "Erreur de chargement du profil.", Toast.LENGTH_LONG).show();
-        });
-    }
-
-    /**
-     * Affiche toutes les données utilisateur après les avoir récupérées du document 'employees'.
-     * @param nom Nom de l'employé
-     * @param prenom Prénom de l'employé
-     * @param role Rôle de l'employé
-     * @param email Email de l'employé
-     * @param poste Poste occupé
-     * @param departement Département
-     * @param dateEmbaucheTimestamp Timestamp Firestore de la date d'embauche
-     */
-    private void displayAllUserData(String nom, String prenom, String role, String email,
-                                    String poste, String departement, Timestamp dateEmbaucheTimestamp) {
-
-        // 1. Bloc Card (Nom/Rôle/Initiales)
-        String fullName = (prenom != null ? prenom : "") + " " + (nom != null ? nom : "");
-        if (userNameTextView != null) userNameTextView.setText(fullName.trim());
-
-        String roleDisplay = role;
-        if (roleDisplay != null && !roleDisplay.isEmpty()) {
-            // Formater le rôle (première lettre en majuscule)
-            String formattedRole = roleDisplay.substring(0, 1).toUpperCase(Locale.getDefault()) + roleDisplay.substring(1);
-            if (userRoleTextView != null) userRoleTextView.setText(formattedRole);
-            // Afficher le rôle sous le nom
-            if (userDepartmentTextView != null) userDepartmentTextView.setText(formattedRole);
-        } else {
-            if (userRoleTextView != null) userRoleTextView.setText("Rôle N/A");
-            if (userDepartmentTextView != null) userDepartmentTextView.setText("N/A");
-        }
-
-        // Affichage de l'initiale
-        String initial = "";
-        if (prenom != null && !prenom.isEmpty()) {
-            initial += prenom.substring(0, 1).toUpperCase(Locale.getDefault());
-        }
-        if (nom != null && !nom.isEmpty()) {
-            initial += nom.substring(0, 1).toUpperCase(Locale.getDefault());
-        }
-        if (userInitialTextView != null) userInitialTextView.setText(initial);
-
-        // 2. Bloc Détails
-        if (userEmailTextView != null) userEmailTextView.setText(email != null ? email : "N/A");
-        if (userPosteTextView != null) userPosteTextView.setText(poste != null ? poste : "N/A");
-        if (userDepartmentDetailsTextView != null) userDepartmentDetailsTextView.setText(departement != null ? departement : "N/A");
-
-        // 3. Affichage de la Date d'Embauche (Sécurisation contre les erreurs de format)
-        if (dateEmbaucheTimestamp != null && userDateEmbaucheTextView != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
-            try {
-                // Tente de formater la date
-                userDateEmbaucheTextView.setText(sdf.format(dateEmbaucheTimestamp.toDate()));
-            } catch (Exception e) {
-                // Si une erreur se produit (par exemple, si le champ n'est pas un Timestamp valide)
-                Log.e(TAG, "Erreur de formatage de la date d'embauche: ", e);
-                userDateEmbaucheTextView.setText("Date Invalide");
-            }
-        } else if (userDateEmbaucheTextView != null) {
-            userDateEmbaucheTextView.setText("N/A");
         }
     }
 
@@ -283,27 +353,92 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void navigateToMainActivity() {
-        // Rediriger vers l'écran de connexion (ou la page d'accueil après déconnexion)
         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
 
-    private void showLoading(boolean show) {
-        // La visibilité du contenu principal est l'inverse de la visibilité du ProgressBar
-        int visibility = show ? View.GONE : View.VISIBLE;
+    // --- Méthodes de navigation corrigées ---
 
-        // Afficher/Cacher le contenu principal
-        if (profileCardLayout != null) {
-            profileCardLayout.setVisibility(visibility);
+    /**
+     * Navigue vers l'écran d'accueil en fonction du rôle de l'utilisateur.
+     * Si le rôle est 'rh', va à AcceuilRhActivity, sinon à AcceuilEmployeActivity.
+     */
+    private void navigateToHome() {
+        if (userRole != null && !userRole.isEmpty()) {
+            if (userRole.equalsIgnoreCase("rh")) {
+                startActivity(new Intent(ProfileActivity.this, AcceuilRhActivity.class));
+            } else if (userRole.equalsIgnoreCase("employe")) {
+                startActivity(new Intent(ProfileActivity.this, AcceuilEmployeActivity.class));
+            } else {
+                Toast.makeText(this, "Rôle utilisateur non reconnu (" + userRole + ").", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "Rôle non encore défini. Veuillez attendre le chargement des données.", Toast.LENGTH_LONG).show();
         }
+    }
 
-        // Cacher les détails aussi pour un meilleur effet de chargement
-        if (userEmailTextView != null) findViewById(R.id.profileCard).setVisibility(visibility);
+    private void navigateToEmployees() {
+        // Ajout de startActivity
+        startActivity(new Intent(ProfileActivity.this, EmployeActivity.class));
+    }
+
+    private void navigateToConges() {
+        // Ajout de startActivity
+        startActivity(new Intent(ProfileActivity.this, CongesActivity.class));
+    }
+
+    private void navigateToReunions() {
+        // Correction: Ajout de startActivity. J'assume l'Activity est ReunionActivity.class
+        startActivity(new Intent(ProfileActivity.this, reunionActivity.class));
+    }
+
+    private void navigateToEditProfile() {
+        // Ajout de startActivity (appelé via modifier_profil)
+        startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+    }
 
 
-        // Afficher/Cacher la barre de progression
+    /**
+     * Navigue vers l'écran de Notifications en fonction du rôle de l'utilisateur.
+     * Ce bloc remplace la logique de notification qui était dupliquée dans navigateToHome().
+     */
+    private void navigateToNotifications() {
+        if (userRole != null && !userRole.isEmpty()) {
+            if (userRole.equalsIgnoreCase("rh")) {
+                startActivity(new Intent(ProfileActivity.this, NotificationsRhActivity.class));
+            } else if (userRole.equalsIgnoreCase("employe")) {
+                startActivity(new Intent(ProfileActivity.this, NotificationsEmployesActivity.class));
+            } else {
+                Toast.makeText(this, "Rôle utilisateur non reconnu (" + userRole + ").", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "Rôle non encore défini. Veuillez attendre le chargement des données.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void navigateToSecurity() {
+        // Correction: Ajout de startActivity
+        startActivity(new Intent(ProfileActivity.this, SecurityActivity.class));
+    }
+
+    private void navigateToHelpSupport() {
+        // Correction: Ajout de startActivity
+        startActivity(new Intent(ProfileActivity.this, HelpSupportActivity.class));
+    }
+
+    /**
+     * Gestion de l'affichage du chargement
+     */
+    private void showLoading(boolean show) {
+        int contentVisibility = show ? View.GONE : View.VISIBLE;
+
+        if (profileCard != null) profileCard.setVisibility(contentVisibility);
+        if (profileDetails != null) profileDetails.setVisibility(contentVisibility);
+        if (parametres != null) parametres.setVisibility(contentVisibility);
+        if (sedeconnecter != null) sedeconnecter.setVisibility(contentVisibility);
+
         if (progressBar != null) {
             progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
         }
