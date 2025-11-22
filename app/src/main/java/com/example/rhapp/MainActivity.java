@@ -51,10 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        // Si l'utilisateur est déjà connecté, on le redirige immédiatement.
         if (currentUser != null) {
-            // NOTE: On ne peut pas vérifier le rôle ici sans bloquer l'UI,
-            // on appelle directement la méthode qui va chercher le rôle et rediriger.
             checkUserRoleAndRedirect(currentUser.getUid());
         }
     }
