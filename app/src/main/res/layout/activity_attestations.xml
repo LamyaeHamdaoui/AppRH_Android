@@ -6,22 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AttestationsActivity"
-    android:background="#F5F5F5"
-    >
+    android:background="#F5F5F5">
 
+    <!-- SCROLLVIEW -->
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_anchorGravity="center"
-        android:id="@+id/scrollView2"
-        app:layout_anchor="@+id/scrollView2">
+        android:paddingBottom="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- ***** header ****** -->
+            <!-- HEADER -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,36 +33,35 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Gestion des attestations"
-                    android:textSize="30sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="30sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="Validation et génération de documents"
-                    android:textSize="15sp"
                     android:textColor="@color/white"
-                    android:layout_marginTop="10dp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <!--- ****** Sous header ****** -->
+            <!-- STATS -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:background="@drawable/border_blue"
                 android:layout_margin="10dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp">
+                android:paddingVertical="20dp"
+                android:paddingHorizontal="25dp">
 
+                <!-- REUSABLE BLOCK : 4 fois -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_weight="1">
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="35dp"
@@ -76,26 +74,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5"
-                        android:textStyle="bold"
                         android:layout_marginTop="7dp"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total"
-                        android:textColor="@color/grey_light"
                         android:textSize="12sp"
-
-                        />
+                        android:textColor="@color/grey_light" />
                 </LinearLayout>
 
+                <!-- EN ATTENTE -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_weight="1">
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="35dp"
@@ -108,28 +105,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
-                        android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
-                        />
-
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="En attente"
-                        android:textColor="@color/grey_light"
                         android:textSize="12sp"
-
-                        />
+                        android:textColor="@color/grey_light" />
                 </LinearLayout>
 
+                <!-- APPROUVÉS -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_weight="1">
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="35dp"
@@ -142,28 +136,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
-                        android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
-
-                        />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Approuvés"
-                        android:textColor="@color/grey_light"
                         android:textSize="12sp"
-
-                        />
+                        android:textColor="@color/grey_light" />
                 </LinearLayout>
 
+                <!-- REFUSÉS -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center"
-                    android:layout_weight="1">
+                    android:gravity="center">
 
                     <ImageView
                         android:layout_width="35dp"
@@ -176,111 +167,83 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1"
-                        android:textStyle="bold"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
-
-                        />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Approuvés"
-                        android:textColor="@color/grey_light"
                         android:textSize="12sp"
-
-                        />
+                        android:textColor="@color/grey_light" />
                 </LinearLayout>
-
 
             </LinearLayout>
 
-            <!-- *** barre attente refuse approuve *** -->
+            <!-- BARRE DES FILTRES -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/border_button"
                 android:backgroundTint="#DEDEDE"
-                android:gravity="center"
-                >
+                android:gravity="center">
 
                 <Button
                     android:id="@+id/btnCongeAttente"
+                    android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
                     android:background="@drawable/border_gris"
-                    android:text="En attente "
-                    app:backgroundTint="@null"
+                    android:text="En attente"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:layout_margin="3dp"
                     android:padding="0dp"
-                    android:layout_weight="1"
-                    />
-
-
+                    app:backgroundTint="@null" />
 
                 <Button
                     android:id="@+id/btnCongeApprouve"
+                    android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="#DEDEDE"
                     android:text="Approuvés"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    android:layout_centerInParent="true"
-                    android:layout_weight="1"
                     android:padding="0dp"
-
-                    />
-
+                    app:backgroundTint="@null"/>
 
                 <Button
                     android:id="@+id/btnCongeRefuse"
+                    android:layout_width="0dp"
                     android:layout_height="30dp"
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="#DEDEDE"
                     android:text="Refusés"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:backgroundTint="#DEDEDE"
-                    android:layout_margin="2dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_weight="1"
                     android:padding="0dp"
-                    />
-
-
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    app:backgroundTint="@null"/>
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- NOTIFICATION ICON -->
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_gravity="top|end">
 
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:src="@drawable/bell"
-            android:layout_gravity="right"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp" />
 
         <TextView
             android:layout_width="25dp"
@@ -290,12 +253,13 @@
             android:background="@drawable/notification_border"
             android:backgroundTint="@color/red"
             android:text="0"
+            android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            />
+            android:textAlignment="center" />
     </RelativeLayout>
+
+    <!-- FOOTER -->
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
@@ -305,10 +269,12 @@
         android:background="@color/white"
         android:elevation="8dp"
         android:padding="5dp">
+
+        <!-- Bottom nav icons : reused structure -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
             android:orientation="vertical">
@@ -320,18 +286,19 @@
                 android:src="@drawable/home" />
 
             <TextView
-                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
-                android:textSize="15dp"
-                android:textColor="@color/grey"/>
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:textColor="@color/grey" />
         </LinearLayout>
 
+        <!-- EMPLOYES -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
             android:orientation="vertical">
@@ -343,18 +310,20 @@
                 android:src="@drawable/employe" />
 
             <TextView
-                android:id="@+id/textemployee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Employés"
-                android:textSize="15sp"
-                android:textColor="@color/grey"/>
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:textColor="@color/grey" />
         </LinearLayout>
 
+        <!-- CONGÉS -->
         <LinearLayout
+
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
             android:orientation="vertical">
@@ -366,18 +335,19 @@
                 android:src="@drawable/conge" />
 
             <TextView
-                android:id="@+id/textconge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Congés"
-                android:textSize="15sp"
-                android:textColor="@color/grey"/>
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:textColor="@color/grey" />
         </LinearLayout>
 
+        <!-- REUNIONS -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
             android:orientation="vertical">
@@ -389,17 +359,19 @@
                 android:src="@drawable/reunion" />
 
             <TextView
-                android:id="@+id/textreunion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Réunions"
-                android:textSize="15sp"
-                android:textColor="@color/grey"/>
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:textColor="@color/grey" />
         </LinearLayout>
+
+        <!-- PROFIL -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
             android:orientation="vertical">
@@ -408,16 +380,19 @@
                 android:id="@+id/profil"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:maxWidth="30dp"
-                android:src="@drawable/profil"/>
+                android:src="@drawable/profil" />
 
             <TextView
-                android:id="@+id/textprofil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil"
-                android:textSize="15sp"
-                android:textColor="@color/grey"/>
+                android:textSize="13dp"
+                android:textStyle="bold"
+                android:textColor="@color/grey"
+
+                />
         </LinearLayout>
+
     </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
