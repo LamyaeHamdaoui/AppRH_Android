@@ -258,16 +258,18 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/employe" />
+                android:src="@drawable/employe"
+                app:tint="#4669EB"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="Employés"
-                android:textColor="@color/grey"
+                android:textColor="#4669EB"
                 android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
         </LinearLayout>
 
         <LinearLayout
