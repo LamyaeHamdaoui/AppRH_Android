@@ -8,7 +8,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AcceuilEmployeActivity extends AppCompatActivity {
-    private LinearLayout attestation, profileInterface;
+    private LinearLayout presencefooter, congesfooter, reunionsfooter, profilefooter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,18 +16,33 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_acceuil_employe);
 
-        attestation = findViewById(R.id.attestation);
-        profileInterface = findViewById(R.id.profileInterface);
-        if (attestation != null) {
-            attestation.setOnClickListener(v -> {
+        presencefooter = findViewById(R.id.presencefooter);
+        congesfooter = findViewById(R.id.congesfooter);
+        reunionsfooter = findViewById(R.id.reunionsfooter);
+        profilefooter = findViewById(R.id.profilefooter);
+        if (presencefooter != null) {
+            presencefooter.setOnClickListener(v -> {
                 // Ouvrir l'activité des attestations employé
-                startActivity(new Intent(AcceuilEmployeActivity.this, AttestationEmployeActivity.class));
+                startActivity(new Intent(AcceuilEmployeActivity.this, PresenceActivity.class));
             });
-            if (profileInterface != null) {
-                profileInterface.setOnClickListener(v -> {
+            if (congesfooter != null) {
+                congesfooter.setOnClickListener(v -> {
                     // Remplacer ProfileActivity.class par la classe réelle
-                    startActivity(new Intent(AcceuilEmployeActivity.this, ProfileActivity.class));
+                    startActivity(new Intent(AcceuilEmployeActivity.this, CongesEmploye.class));
                 });
+                if (reunionsfooter != null) {
+                    reunionsfooter.setOnClickListener(v -> {
+                        // Ouvrir l'activité des attestations employé
+                        startActivity(new Intent(AcceuilEmployeActivity.this, ReunionEmployeActivity.class));
+                    });
+                    if (profilefooter != null) {
+                        profilefooter.setOnClickListener(v -> {
+                            // Ouvrir l'activité des attestations employé
+                            startActivity(new Intent(AcceuilEmployeActivity.this, ProfileActivity.class));
+                        });
+
+                    }
+                }
             }
         }
     }
