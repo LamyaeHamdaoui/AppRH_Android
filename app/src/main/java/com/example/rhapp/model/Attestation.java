@@ -1,5 +1,7 @@
 package com.example.rhapp.model;
 
+import android.util.Log;
+
 import java.util.Date;
 
 public class Attestation {
@@ -65,4 +67,13 @@ public class Attestation {
 
     public String getPdfUrl() { return pdfUrl; }
     public void setPdfUrl(String pdfUrl) { this.pdfUrl = pdfUrl; }
-}
+
+    // Méthode utilitaire pour le debug
+    public void logDetails() {
+        Log.d("ATTESTATION_DEBUG",
+                "ID: " + id +
+                        ", EmployeeId: " + employeId +
+                        ", Nom: " + employeNom +
+                        ", Département: " + employeDepartement +
+                        ", Statut: " + statut);
+}}
