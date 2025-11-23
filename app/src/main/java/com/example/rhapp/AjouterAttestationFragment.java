@@ -1,15 +1,21 @@
 package com.example.rhapp;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.rhapp.model.Attestation;
@@ -19,11 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AjouterAttestationFragment extends Fragment {
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = "AjouterAttestation";
 
     private Spinner spinnerTypeAttestation;
     private EditText motifEditText;
@@ -31,6 +33,7 @@ public class AjouterAttestationFragment extends Fragment {
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
 
     private String selectedType = "";
 
@@ -38,126 +41,158 @@ public class AjouterAttestationFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static AjouterAttestationFragment newInstance(String param1, String param2) {
-        AjouterAttestationFragment fragment = new AjouterAttestationFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ajouter_attestation, container, false);
 
-        initViews(view);
+        spinnerTypeAttestation = view.findViewById(R.id.TypeAttestation);
+        motifEditText = view.findViewById(R.id.motifEditText);
+        btnEnvoyer = view.findViewById(R.id.btnEnvoyerDemande);
+
         setupSpinner();
-        setupClickListeners();
+        setupListeners();
+
+        // Désactiver le bouton au démarrage
+        btnEnvoyer.setEnabled(false);
 
         return view;
     }
 
-    private void initViews(View view) {
-        spinnerTypeAttestation = view.findViewById(R.id.TypeAttestation);
-        motifEditText = view.findViewById(R.id.motifEditText);
-        btnEnvoyer = view.findViewById(R.id.btnEnvoyerDemande);
-    }
-
     private void setupSpinner() {
-        if (spinnerTypeAttestation != null) {
-            spinnerTypeAttestation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position > 0) {
-                        selectedType = parent.getItemAtPosition(position).toString();
-                    } else {
-                        selectedType = "";
-                    }
-                    updateButtonState();
-                }
+        // Liste des types d'attestation
+        String[] types = new String[]{"Sélectionnez le type", "Attestation de travail", "Attestation de salaire", "Attestation de présence"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, types);
+        spinnerTypeAttestation.setAdapter(adapter);
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
+        spinnerTypeAttestation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > 0) {
+                    selectedType = parent.getItemAtPosition(position).toString();
+                } else {
                     selectedType = "";
-                    updateButtonState();
                 }
-            });
-        }
+                updateButtonState();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedType = "";
+                updateButtonState();
+            }
+        });
     }
 
-    private void setupClickListeners() {
-        if (btnEnvoyer != null) {
-            btnEnvoyer.setOnClickListener(v -> envoyerDemande());
-        }
+    private void setupListeners() {
+        btnEnvoyer.setOnClickListener(v -> {
+            envoyerDemandeAttestation();
+        });
 
-        if (motifEditText != null) {
-            motifEditText.setOnKeyListener((v, keyCode, event) -> {
+        // TextWatcher pour la validation dynamique
+        motifEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 updateButtonState();
-                return false;
-            });
-        }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
     }
 
     private void updateButtonState() {
-        if (btnEnvoyer != null) {
-            boolean isTypeSelected = !selectedType.isEmpty();
-            boolean hasMotif = motifEditText != null &&
-                    motifEditText.getText().toString().trim().length() > 0;
-
-            btnEnvoyer.setEnabled(isTypeSelected && hasMotif);
-            btnEnvoyer.setAlpha(isTypeSelected && hasMotif ? 1.0f : 0.5f);
-        }
+        String motif = motifEditText.getText().toString().trim();
+        boolean isValid = !selectedType.isEmpty() && motif.length() > 5;
+        btnEnvoyer.setEnabled(isValid);
     }
 
-    private void envoyerDemande() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+    private void envoyerDemandeAttestation() {
         if (currentUser == null) {
-            Toast.makeText(getContext(), "Utilisateur non connecté", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Veuillez vous reconnecter.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (selectedType.isEmpty()) {
-            Toast.makeText(getContext(), "Veuillez sélectionner un type d'attestation", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        btnEnvoyer.setEnabled(false);
+        String userEmail = currentUser.getEmail();
 
-        String motif = motifEditText != null ? motifEditText.getText().toString().trim() : "";
+        Log.d(TAG, "Récupération des données employé pour: " + userEmail);
+
+        // L'utilisateur connecté est forcément un employé
+        db.collection("employees")
+                .whereEqualTo("email", userEmail)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        var document = queryDocumentSnapshots.getDocuments().get(0);
+
+                        String nom = document.getString("nom");
+                        String prenom = document.getString("prenom");
+                        String departement = document.getString("departement");
+                        String nomComplet = document.getString("nomComplet");
+
+                        // Utiliser nomComplet si disponible, sinon nom + prénom
+                        String nomAffiche = (nomComplet != null && !nomComplet.isEmpty()) ?
+                                nomComplet : prenom + " " + nom;
+
+                        String dept = (departement != null && !departement.isEmpty()) ?
+                                departement : "Non spécifié";
+
+                        Log.d(TAG, "Données employé récupérées: " + nomAffiche + " - " + dept);
+                        creerEtEnvoyerAttestation(nomAffiche, dept);
+                    } else {
+                        // Normalement ce cas ne devrait pas arriver
+                        Toast.makeText(getContext(), "Profil employé non trouvé", Toast.LENGTH_LONG).show();
+                        btnEnvoyer.setEnabled(true);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Erreur: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    btnEnvoyer.setEnabled(true);
+                    Log.e(TAG, "Erreur récupération employé: " + e.getMessage());
+                });
+    }
+
+    private void creerEtEnvoyerAttestation(String employeNom, String employeDepartement) {
+        String motif = motifEditText.getText().toString().trim();
 
         // Créer l'objet Attestation
         Attestation attestation = new Attestation(
                 currentUser.getUid(),
-                "Nom Employé", // À remplacer par les vraies données utilisateur
-                "Département", // À remplacer par les vraies données utilisateur
+                employeNom,
+                employeDepartement,
                 selectedType,
                 motif
         );
 
-        // Sauvegarder dans Firebase
+        // Sauvegarder dans Firestore
         db.collection("Attestations")
                 .add(attestation)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(getContext(), "Demande envoyée avec succès", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "Attestation créée avec ID: " + documentReference.getId());
                     resetForm();
+
+                    // Revenir en arrière
                     if (getActivity() != null) {
                         getActivity().onBackPressed();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Erreur lors de l'envoi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    btnEnvoyer.setEnabled(true);
+                    Log.e(TAG, "Erreur création attestation: " + e.getMessage());
                 });
     }
 
