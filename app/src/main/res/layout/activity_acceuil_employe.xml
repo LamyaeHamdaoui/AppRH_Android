@@ -587,6 +587,7 @@ android:background="@color/white"
 android:elevation="8dp"
 android:padding="5dp">
 <LinearLayout
+    android:id="@+id/acceuilfooter"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
@@ -610,6 +611,7 @@ android:padding="5dp">
 </LinearLayout>
 
 <LinearLayout
+    android:id="@+id/presencefooter"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
@@ -633,6 +635,7 @@ android:padding="5dp">
 </LinearLayout>
 
 <LinearLayout
+    android:id="@+id/congesfooter"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
@@ -656,6 +659,7 @@ android:padding="5dp">
 </LinearLayout>
 
 <LinearLayout
+    android:id="@+id/reunionsfooter"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"
@@ -678,7 +682,7 @@ android:padding="5dp">
         android:textColor="@color/grey"/>
 </LinearLayout>
 <LinearLayout
-    android:id="@+id/profileInterface"
+    android:id="@+id/profilefooter"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_weight="1"

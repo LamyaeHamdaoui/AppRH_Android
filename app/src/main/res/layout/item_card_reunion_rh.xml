@@ -61,17 +61,15 @@
 
             <ImageView
                 android:id="@+id/iconEdit"
-                android:layout_width="15dp"
-                android:layout_height="17dp"
-                android:maxWidth="30dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:src="@drawable/edit"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="90dp"/>
             <ImageView
                 android:id="@+id/iconDelete"
-                android:layout_width="15dp"
-                android:layout_height="17dp"
-                android:maxWidth="30dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:src="@drawable/delete"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"/>
