@@ -54,7 +54,7 @@
                 android:layout_margin="15dp"
                 android:padding="0dp"
                 android:background="@drawable/border_button"
-                android:text="+ Planifier un reunion"
+                android:text="+ Planifier une reunion"
                 app:backgroundTint="@null" />
 
 
