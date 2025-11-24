@@ -73,7 +73,7 @@ public class AjouterAttestationFragment extends Fragment {
         String typeAttestation = spinnerTypeAttestation.getSelectedItem().toString();
 
         if (spinnerTypeAttestation.getSelectedItemPosition() == 0) {
-            Toast.makeText(getContext(), "Veuillez sélectionner un type d'attestation", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Veuillez sélectionner le type d'attestation", Toast.LENGTH_SHORT).show();
             return;
         }
 
