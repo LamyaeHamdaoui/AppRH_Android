@@ -7,6 +7,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
+    android:background="@drawable/border_gris"
     android:backgroundTint="@color/white"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
@@ -16,7 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp"
-        android:background="@drawable/border_gris">
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

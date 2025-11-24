@@ -30,7 +30,7 @@ public class AttestationEmployeActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
-    private TextView tvAttente, tvApprouve, tvRefuse, tvTotal;
+    private TextView tvAttente, tvApprouve, tvRefuse;
     private LinearLayout historiqueContainer;
     private Button btnNouvelleDemande;
 
@@ -60,7 +60,6 @@ public class AttestationEmployeActivity extends AppCompatActivity {
         tvAttente = findViewById(R.id.AttestaionAttente);
         tvApprouve = findViewById(R.id.AttestationApprouve);
         tvRefuse = findViewById(R.id.attestationRefuse);
-        tvTotal = findViewById(R.id.attestationTotal);
         historiqueContainer = findViewById(R.id.historiqueContainer);
         btnNouvelleDemande = findViewById(R.id.btnNouvelleDemandeConge);
     }
@@ -102,7 +101,6 @@ public class AttestationEmployeActivity extends AppCompatActivity {
                 .limit(1)
                 .get()
                 .addOnSuccessListener(testSnapshot -> {
-                    Log.d("ATTESTATION", "Collection Attestations accessible, nombre total de documents: " + testSnapshot.size());
 
                     // Maintenant chercher les attestations de l'utilisateur
                     db.collection("Attestations")
@@ -180,7 +178,7 @@ public class AttestationEmployeActivity extends AppCompatActivity {
                                 }
 
                                 Log.d("ATTESTATION", "=== STATISTIQUES ===");
-                                Log.d("ATTESTATION", "En attente: " + enAttente + ", Approuvées: " + approuvees + ", Refusées: " + refusees + ", Total: " + attestations.size());
+                                Log.d("ATTESTATION", "En attente: " + enAttente + ", Approuvées: " + approuvees + ", Refusées: " + refusees);
 
                                 updateStats(enAttente, approuvees, refusees, attestations.size());
                                 afficherHistorique(attestations);
@@ -202,12 +200,11 @@ public class AttestationEmployeActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateStats(int enAttente, int approuvees, int refusees, int total) {
+    private void updateStats(int enAttente, int approuvees, int refusees) {
         runOnUiThread(() -> {
             tvAttente.setText(String.valueOf(enAttente));
             tvApprouve.setText(String.valueOf(approuvees));
             tvRefuse.setText(String.valueOf(refusees));
-            tvTotal.setText(String.valueOf(total));
         });
     }
 
