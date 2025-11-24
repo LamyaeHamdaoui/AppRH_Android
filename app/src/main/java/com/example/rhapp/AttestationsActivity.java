@@ -13,11 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.rhapp.model.Attestation;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.Timestamp;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +42,7 @@ public class AttestationsActivity extends AppCompatActivity {
         loadStats();
         chargerAttestations(filtreActuel);
         setupClickListeners();
-        updateButtonStyles(); // Initialiser les styles des boutons
+        updateButtonStyles();
     }
 
     private void initViews() {
@@ -105,9 +106,9 @@ public class AttestationsActivity extends AppCompatActivity {
     private void chargerAttestations(String statut) {
         Log.d("ATTESTATIONS_RH", "Chargement attestations avec statut: " + statut);
 
+        // SOLUTION : Enlever le orderBy pour éviter l'index, on triera manuellement
         db.collection("Attestations")
                 .whereEqualTo("statut", statut)
-                .orderBy("dateDemande", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<Attestation> attestations = new ArrayList<>();
@@ -147,6 +148,21 @@ public class AttestationsActivity extends AppCompatActivity {
                             Log.e("ATTESTATIONS_RH", "Erreur conversion document: ", e);
                         }
                     }
+
+                    // TRI MANUEL par date de demande (plus récent en premier)
+                    Collections.sort(attestations, new Comparator<Attestation>() {
+                        @Override
+                        public int compare(Attestation a1, Attestation a2) {
+                            Date date1 = a1.getDateDemande();
+                            Date date2 = a2.getDateDemande();
+
+                            if (date1 == null && date2 == null) return 0;
+                            if (date1 == null) return 1;
+                            if (date2 == null) return -1;
+
+                            return date2.compareTo(date1); // Ordre décroissant
+                        }
+                    });
 
                     afficherAttestations(attestations);
                 })
@@ -197,13 +213,13 @@ public class AttestationsActivity extends AppCompatActivity {
     private void configureAdminItemView(View itemView, Attestation attestation) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
 
-        // Récupérer les vues
+        // Récupérer les vues - CORRECTION DES IDS
         TextView nomComplet = itemView.findViewById(R.id.nomComplet);
         TextView departement = itemView.findViewById(R.id.departement);
         TextView typeAttestation = itemView.findViewById(R.id.TypeConge);
         TextView dateDemandee = itemView.findViewById(R.id.DateDemandee);
         TextView motif = itemView.findViewById(R.id.MotifAttestation);
-        TextView statut = itemView.findViewById(R.id.StatutAttestation);
+        TextView statutView = itemView.findViewById(R.id.StatutAttestation);
 
         Button btnDetails = itemView.findViewById(R.id.btnDetails);
         Button btnValidate = itemView.findViewById(R.id.btnValidate);
@@ -233,8 +249,8 @@ public class AttestationsActivity extends AppCompatActivity {
                     "Motif : " + motifText : "Aucun motif spécifié");
         }
 
-        if (statut != null) {
-            statut.setText(getStatutDisplayText(attestation.getStatut()));
+        if (statutView != null) {
+            statutView.setText(getStatutDisplayText(attestation.getStatut()));
         }
 
         // Configurer les boutons - seulement pour les attestations en attente
