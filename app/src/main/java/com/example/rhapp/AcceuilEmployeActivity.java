@@ -39,7 +39,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     if (profilefooter != null) {
                         profilefooter.setOnClickListener(v -> {
                             // Ouvrir l'activité des attestations employé
-                            startActivity(new Intent(AcceuilEmployeActivity.this, ProfileActivity.class));
+                            startActivity(new Intent(AcceuilEmployeActivity.this, ProfileEmployeActivity.class));
                         });
 
                     }
