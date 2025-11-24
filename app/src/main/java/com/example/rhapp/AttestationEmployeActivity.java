@@ -180,7 +180,7 @@ public class AttestationEmployeActivity extends AppCompatActivity {
                                 Log.d("ATTESTATION", "=== STATISTIQUES ===");
                                 Log.d("ATTESTATION", "En attente: " + enAttente + ", Approuvées: " + approuvees + ", Refusées: " + refusees);
 
-                                updateStats(enAttente, approuvees, refusees, attestations.size());
+                                updateStats(enAttente, approuvees, refusees);
                                 afficherHistorique(attestations);
 
                             })
