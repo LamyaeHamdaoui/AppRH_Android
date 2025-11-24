@@ -36,15 +36,15 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/StatutConge"
+                android:id="@+id/StatutAttestation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Approuvée"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/green_dark"
-                android:padding="10dp"
-                android:paddingVertical="3dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
                 android:background="@drawable/approuve_border" />
         </LinearLayout>
 
@@ -73,7 +73,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:background="@color/gris_clair" />
 
         <!-- Footer : Date approuvée + Bouton -->
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
 
             <TextView
                 android:id="@+id/DateApprobation"
