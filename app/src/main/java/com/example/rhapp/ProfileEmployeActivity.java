@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public class ProfileEmployeActivity extends AppCompatActivity {
 
-    private static final String TAG = "ProfileActivity";
+    private static final String TAG = "ProfileEmployeActivity";
     private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
 
     private TextView userName, userPoste, userDepartment;
@@ -57,7 +57,7 @@ public class ProfileEmployeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile_employe);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
