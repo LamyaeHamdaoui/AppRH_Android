@@ -146,7 +146,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Approuvés"
+                        android:text="Approuvées"
                         android:textSize="12sp"
                         android:textColor="@color/grey_light" />
                 </LinearLayout>
@@ -178,7 +178,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Refusés"
+                        android:text="Refusées"
                         android:textSize="12sp"
                         android:textColor="@color/grey_light" />
                 </LinearLayout>
@@ -197,7 +197,7 @@
                 android:gravity="center">
 
                 <Button
-                    android:id="@+id/btnCongeAttente"
+                    android:id="@+id/btnAttente"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
@@ -208,28 +208,28 @@
                     app:backgroundTint="#DEDEDE" />
 
                 <Button
-                    android:id="@+id/btnCongeApprouve"
+                    android:id="@+id/btnApprouve"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#DEDEDE"
-                    android:text="Approuvés"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:padding="0dp"
-                    app:backgroundTint="@null"/>
+                    app:backgroundTint="#DEDEDE"
+                    android:text="Approuvées"
+                   />
 
                 <Button
-                    android:id="@+id/btnCongeRefuse"
+                    android:id="@+id/btnRefuse"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#DEDEDE"
-                    android:text="Refusés"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:padding="0dp"
-                    app:backgroundTint="@null"/>
+                    app:backgroundTint="#DEDEDE"
+                    android:text="Refusées"
+                  />
             </LinearLayout>
             <!-- Après la BARRE DES FILTRES, ajoutez : -->
             <LinearLayout

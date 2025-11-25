@@ -48,9 +48,9 @@ public class AttestationsActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        btnAttente = findViewById(R.id.btnCongeAttente);
-        btnApprouve = findViewById(R.id.btnCongeApprouve);
-        btnRefuse = findViewById(R.id.btnCongeRefuse);
+        btnAttente = findViewById(R.id.btnAttente);
+        btnApprouve = findViewById(R.id.btnApprouve);
+        btnRefuse = findViewById(R.id.btnRefuse);
         containerAttestations = findViewById(R.id.containerAttestations);
 
         tvTotal = findViewById(R.id.tvTotal);
@@ -260,7 +260,7 @@ public class AttestationsActivity extends AppCompatActivity {
         // IDs différents selon les layouts
         TextView typeAttestation = itemView.findViewById(
                 itemView.findViewById(R.id.TypeAttestation) != null ?
-                        R.id.TypeAttestation : R.id.TypeConge
+                        R.id.TypeAttestation : R.id.TypeAttestation
         );
 
         TextView dateDemandee = itemView.findViewById(R.id.DateDemandee);
@@ -499,7 +499,7 @@ public class AttestationsActivity extends AppCompatActivity {
         }
     }
 
-    private void resetButtonStyle(Button button) {
+   private void resetButtonStyle(Button button) {
         button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#DEDEDE")));
     }
 
