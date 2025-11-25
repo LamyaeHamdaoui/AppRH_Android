@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="10dp"
         android:background="@drawable/border_simple">
 
         <!-- Header : Type + Statut -->
@@ -33,18 +33,18 @@
                 android:layout_weight="1"
                 android:text="Attestation de travail"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/StatutConge"
+                android:id="@+id/StatutAttestation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Approuvée"
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/green_dark"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="3dp"
+                android:paddingVertical="5dp"
                 android:background="@drawable/approuve_border" />
         </LinearLayout>
 
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:text="Demandée le 18 Octobre 2025"
             android:textColor="@color/grey"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:layout_marginTop="10dp" />
 
         <!-- Motif -->
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:text="Demande de crédit bancaire"
             android:textColor="@color/grey"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:layout_marginTop="10dp"
             android:textStyle="italic" />
 
@@ -73,7 +73,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:background="@color/gris_clair" />
 
         <!-- Footer : Date approuvée + Bouton -->
@@ -81,26 +81,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
 
             <TextView
+                android:id="@+id/DateApprobation"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Approuvée le 20 Octobre 2025"
                 android:textColor="@color/green_dark"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textSize="12sp"/>
 
             <Button
+                android:id="@+id/btnTelecharger"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Télécharger"
                 android:textStyle="bold"
                 android:textColor="@color/green_dark"
-                android:paddingHorizontal="15dp"
-                android:paddingVertical="10dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="3dp"
                 android:background="@drawable/green_border"
-                app:backgroundTint="@null" />
+                app:backgroundTint="@null"
+                android:textSize="13sp"/>
         </LinearLayout>
 
     </LinearLayout>

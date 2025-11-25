@@ -24,9 +24,9 @@ import com.google.firebase.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileEmployeActivity extends AppCompatActivity {
 
-    private static final String TAG = "ProfileActivity";
+    private static final String TAG = "ProfileEmployeActivity";
     private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
 
     private TextView userName, userPoste, userDepartment;
@@ -45,9 +45,9 @@ public class ProfileActivity extends AppCompatActivity {
     private Button seDeconnecterButton;
 
     // Éléments du pied de page
-    private ImageView iconAccueil, iconEmployes, iconConges, iconReunions, iconProfile;
-    private TextView textAccueil, textEmployes, textConges, textReunions, textProfile;
-    private LinearLayout footerAccueil, footerEmployes, footerConges, footerReunions, footerProfil;
+    private ImageView iconAccueil, iconPresence, iconConges, iconReunions, iconProfile;
+    private TextView textAccueil, textPresence, textConges, textReunions, textProfile;
+    private LinearLayout footerAccueil, footerPresence, footerConges, footerReunions, footerProfil;
 
     // Firebase
     private FirebaseAuth mAuth;
@@ -57,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile_employe);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -110,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Footer Layouts
         footerAccueil = findViewById(R.id.footerAccueil);
-        footerEmployes = findViewById(R.id.footerEmployes);
+        footerPresence = findViewById(R.id.footerPresence);
         footerConges = findViewById(R.id.footerConges);
         footerReunions = findViewById(R.id.footerReunions);
         footerProfil = findViewById(R.id.footerProfil);
@@ -125,9 +125,9 @@ public class ProfileActivity extends AppCompatActivity {
             iconAccueil = (ImageView) footerAccueil.getChildAt(0);
             textAccueil = (TextView) footerAccueil.getChildAt(1);
         }
-        if (footerEmployes != null && footerEmployes.getChildCount() > 1) {
-            iconEmployes = (ImageView) footerEmployes.getChildAt(0);
-            textEmployes = (TextView) footerEmployes.getChildAt(1);
+        if (footerPresence != null && footerPresence.getChildCount() > 1) {
+            iconPresence = (ImageView) footerPresence.getChildAt(0);
+            textPresence = (TextView) footerPresence.getChildAt(1);
         }
         if (footerConges != null && footerConges.getChildCount() > 1) {
             iconConges = (ImageView) footerConges.getChildAt(0);
@@ -155,8 +155,8 @@ public class ProfileActivity extends AppCompatActivity {
         if (footerAccueil != null) {
             footerAccueil.setOnClickListener(v -> navigateToHome());
         }
-        if (footerEmployes != null) {
-            footerEmployes.setOnClickListener(v -> navigateToEmployees());
+        if (footerPresence != null) {
+            footerPresence.setOnClickListener(v -> navigateToEmployees());
         }
         if (footerConges != null) {
             footerConges.setOnClickListener(v -> navigateToConges());
@@ -335,8 +335,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void resetFooterIcons(int colorGrey) {
-        ImageView[] icons = {iconAccueil, iconEmployes, iconConges, iconReunions, iconProfile};
-        TextView[] texts = {textAccueil, textEmployes, textConges, textReunions, textProfile};
+        ImageView[] icons = {iconAccueil, iconPresence, iconConges, iconReunions, iconProfile};
+        TextView[] texts = {textAccueil, textPresence, textConges, textReunions, textProfile};
 
         for (ImageView icon : icons) {
             if (icon != null) icon.setColorFilter(colorGrey);
@@ -353,7 +353,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void navigateToMainActivity() {
-        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        Intent intent = new Intent(ProfileEmployeActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
@@ -366,27 +366,27 @@ public class ProfileActivity extends AppCompatActivity {
      * Si le rôle est 'rh', va à AcceuilRhActivity, sinon à AcceuilEmployeActivity.
      */
     private void navigateToHome() {
-        startActivity(new Intent(ProfileActivity.this, AcceuilRhActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, AcceuilEmployeActivity.class));
     }
 
     private void navigateToEmployees() {
         // Ajout de startActivity
-        startActivity(new Intent(ProfileActivity.this, EmployeActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, EmployeActivity.class));
     }
 
     private void navigateToConges() {
         // Ajout de startActivity
-        startActivity(new Intent(ProfileActivity.this, CongesActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, CongesActivity.class));
     }
 
     private void navigateToReunions() {
         // Correction: Ajout de startActivity. J'assume l'Activity est ReunionActivity.class
-        startActivity(new Intent(ProfileActivity.this, reunionActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, ReunionEmployeActivity.class));
     }
 
     private void navigateToEditProfile() {
         // Ajout de startActivity (appelé via modifier_profil)
-        startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, EditProfileActivity.class));
     }
 
 
@@ -395,17 +395,17 @@ public class ProfileActivity extends AppCompatActivity {
      * Ce bloc remplace la logique de notification qui était dupliquée dans navigateToHome().
      */
     private void navigateToNotifications() {
-        startActivity(new Intent(ProfileActivity.this, NotificationsRhActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, NotificationsRhActivity.class));
     }
 
     private void navigateToSecurity() {
         // Correction: Ajout de startActivity
-        startActivity(new Intent(ProfileActivity.this, SecurityActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, SecurityActivity.class));
     }
 
     private void navigateToHelpSupport() {
         // Correction: Ajout de startActivity
-        startActivity(new Intent(ProfileActivity.this, HelpSupportActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, HelpSupportActivity.class));
     }
 
     /**

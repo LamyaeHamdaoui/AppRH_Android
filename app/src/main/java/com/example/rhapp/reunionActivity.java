@@ -2,6 +2,8 @@ package com.example.rhapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,8 @@ public class reunionActivity extends AppCompatActivity {
 
     private LinearLayout reunionPlanifieContainer, reunionPasseContainer,noReunionContainer;
     private FirebaseFirestore db;
+    // ⚠️ Variable de contrôle pour savoir si on doit rafraîchir
+    private boolean shouldRefresh = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +117,11 @@ public class reunionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        afficherReunionsVenirs(); // recharge toutes les réunions
+        // Seulement rafraîchir si tu viens d'une autre activité de modification
+        if (shouldRefresh) {
+            afficherReunionsVenirs();
+            shouldRefresh = false;
+        }
     }
 
     // ************************************* fonction  Afficher  des reuinons  **************************
@@ -125,12 +133,20 @@ public class reunionActivity extends AppCompatActivity {
 
 
         db.collection("Reunions")
-                .get(Source.SERVER)
-                .addOnSuccessListener(querySnapshot -> {
-                   if (querySnapshot.isEmpty()) {
-                       noReunionContainer.setVisibility(View.VISIBLE);
-                       return;
-                  }
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) {
+                        Toast.makeText(this, "Erreur : " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Vider les containers avant de reconstruire les cards
+                    reunionPlanifieContainer.removeAllViews();
+                    reunionPasseContainer.removeAllViews();
+
+                    if (querySnapshot == null || querySnapshot.isEmpty()) {
+                        noReunionContainer.setVisibility(View.VISIBLE);
+                        return;
+                    }
 
 
                     // Pour chaque réunion dans Firestore
@@ -222,6 +238,13 @@ public class reunionActivity extends AppCompatActivity {
 
 
                             //  On ajoute la carte dans le conteneur
+                            TextView tvHeader = new TextView(this);
+                            tvHeader.setText("Réunions Venirs");
+                            reunionPlanifieContainer.addView(tvHeader);
+                            tvHeader.setTextSize(20);
+                            tvHeader.setPadding(20, 20, 20, 20);
+                            //tvHeader.setTypeface(Typeface.DEFAULT_BOLD);
+                            tvHeader.setTextColor(Color.BLACK);
                             reunionPlanifieContainer.addView(cardView);
 
                         } else if (etatDate==-1) {
@@ -254,15 +277,23 @@ public class reunionActivity extends AppCompatActivity {
                             lieuReunion.setText(reunion.getLieu());
                             participantsReunion.setText(reunion.getDescription());
 
+
+
+                            // Créer TextView programmatique
+                            TextView tvHeader = new TextView(this);
+                            tvHeader.setText("Réunions Passées");
+                            reunionPasseContainer.addView(tvHeader);
+                            tvHeader.setTextSize(20);
+                            tvHeader.setPadding(20, 20, 20, 20);
+                            //tvHeader.setTypeface(Typeface.DEFAULT_BOLD);
+                            tvHeader.setTextColor(Color.BLACK);
                             //  On ajoute la carte dans le conteneur
                             reunionPasseContainer.addView(cardView);
 
                         }
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(reunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+
     }
 
     // ******************* fonction pour convertir la date en date complet **********
@@ -284,6 +315,9 @@ public class reunionActivity extends AppCompatActivity {
 
    // ******* fonct pour comparer une date avec date d aujourd'hui ( pour determiner les passes avec a venir ) *******
    private int compareDate(String date, String time) {
+       if (date == null || date.isEmpty() || time == null || time.isEmpty()) {
+           return -1; // considérer comme passée ou ignorer
+       }
 
        // Conversion de la date en LocalDate
        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");// Format correspondant dans le XML
@@ -362,57 +396,33 @@ public class reunionActivity extends AppCompatActivity {
     private TextView nbrReunionPassees;
 
     private void statistique() {
-
         nbrReunionVenir = findViewById(R.id.nbrReunionVenir);
         nbrReunionPassees = findViewById(R.id.nbrReunionPassees);
 
         db.collection("Reunions")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) return;
 
                     int nbrVenirs = 0;
                     int nbrPassees = 0;
 
-                    if (querySnapshot.isEmpty()) {
-
-                        nbrReunionVenir.setText("0");
-                        nbrReunionPassees.setText("0");
-
-                        noReunionContainer.setVisibility(View.VISIBLE);
-
-                        return;
-                    }
-
-                    for (QueryDocumentSnapshot doc : querySnapshot) {
-
-                        Reunion reunion = doc.toObject(Reunion.class);
-
-                        String dateStr = reunion.getDate();
-                        String timeStr = reunion.getHeure();
-
-                        int etatDate = compareDate(dateStr, timeStr);
-
-                        if (etatDate == 1 || etatDate == 0) {
-                            nbrVenirs++;
-                        } else {
-                            nbrPassees++;
+                    if (querySnapshot != null) {
+                        for (QueryDocumentSnapshot doc : querySnapshot) {
+                            Reunion reunion = doc.toObject(Reunion.class);
+                            int etatDate = compareDate(reunion.getDate(), reunion.getHeure());
+                            if (etatDate == 1 || etatDate == 0) nbrVenirs++;
+                            else nbrPassees++;
                         }
                     }
 
-                    // ➤ METTRE À JOUR L’UI APRÈS LA BOUCLE, pas dedans
                     nbrReunionVenir.setText(String.valueOf(nbrVenirs));
                     nbrReunionPassees.setText(String.valueOf(nbrPassees));
 
-                    // ➤ Gérer la visibilité APRÈS le calcul
-                    reunionPlanifieContainer.setVisibility(
-                            nbrVenirs == 0 ? View.GONE : View.VISIBLE
-                    );
-                    reunionPasseContainer.setVisibility(
-                            nbrPassees == 0 ? View.GONE : View.VISIBLE
-                    );
-
+                    reunionPlanifieContainer.setVisibility(nbrVenirs == 0 ? View.GONE : View.VISIBLE);
+                    reunionPasseContainer.setVisibility(nbrPassees == 0 ? View.GONE : View.VISIBLE);
                 });
     }
+
 
 
 }

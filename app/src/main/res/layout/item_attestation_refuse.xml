@@ -26,6 +26,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@id/nomComplet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -42,28 +43,41 @@
                 />
         </LinearLayout>
         <TextView
+            android:id="@+id/departement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Developpement"
             android:textSize="15sp" />
         <TextView
-            android:id="@+id/TypeConge"
+            android:id="@+id/TypeAttestation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Attestation de travail"
             android:textSize="15sp"
             android:layout_marginTop="5dp"
             />
-        <!-- Dates -->
         <TextView
             android:id="@+id/DateDemandee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Refusée - Usage non spesifie"
+            android:text="date"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp"
+            />
+        <!-- Dates -->
+        <TextView
+            android:id="@+id/motifRefus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refusée - motif"
             android:textColor="@color/red"
             android:textSize="14sp"
             android:layout_marginTop="10dp"
             />
+
+
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

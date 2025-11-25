@@ -183,7 +183,7 @@
             android:id="@+id/btnCreerReunion"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="Créer la réunion"
+            android:text="Modifier la réunion"
             android:layout_marginBottom="20dp"
             android:backgroundTint="@null"
             android:textSize="15dp"

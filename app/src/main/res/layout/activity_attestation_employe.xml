@@ -13,8 +13,9 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="80dp">
-
+        android:paddingBottom="80dp"
+        android:fillViewport="true"
+        android:overScrollMode="never">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,7 +107,9 @@
                     android:background="@drawable/border_button"
                     app:backgroundTint="@null"
                     android:layout_marginTop="10dp"
-                    android:padding="0dp"/>
+                    android:padding="0dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
             <!-- BARRE STATUS -->
@@ -121,10 +124,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="5dp"
+                    android:padding="2dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
-                    android:layout_margin="8dp">
+                    android:layout_margin="10dp">
 
                     <ImageView
                         android:layout_width="50dp"
@@ -137,13 +140,13 @@
                         />
 
                     <TextView
-                        android:id="@+id/congeAttente"
+                        android:id="@+id/AttestaionAttente"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="25sp"
+                        android:textSize="22sp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"/>
 
@@ -153,7 +156,7 @@
                         android:text="En attente"
                         android:textColor="@color/grey"
                         android:textSize="15sp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginVertical="5dp"
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
 
@@ -162,10 +165,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="5dp"
+                    android:padding="2dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
-                    android:layout_margin="8dp">
+                    android:layout_margin="10dp">
 
                     <ImageView
                         android:layout_width="50dp"
@@ -177,87 +180,99 @@
                         android:layout_marginTop="5dp"/>
 
                     <TextView
-                        android:id="@+id/congeApprouve"
+                        android:id="@+id/AttestationApprouve"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="25sp"
+                        android:textSize="22sp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Approuvés"
+                        android:text="Approuvées"
                         android:textColor="@color/grey"
                         android:textSize="15sp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginVertical="5dp"
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
 
-                <!-- TOTAL -->
+                <!-- Refusé -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="5dp"
+                    android:padding="2dp"
                     android:orientation="vertical"
                     android:background="@drawable/border_gris"
-                    android:layout_margin="8dp">
+                    android:layout_margin="10dp">
 
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/border_icon_blue"
-                        android:src="@drawable/ic_pdf"
-                        app:tint="#2196F3"
+                        android:background="@drawable/border_red"
+                        android:src="@drawable/refuse"
                         android:padding="12dp"
+                        android:backgroundTint="@color/pink"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="5dp"
                         />
 
                     <TextView
-                        android:id="@+id/congePris"
+                        android:id="@+id/attestationRefuse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textSize="25sp"
+                        android:textSize="22sp"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center_horizontal"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total"
+                        android:text="Refusées"
                         android:textColor="@color/grey"
                         android:textSize="15sp"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginVertical="5dp"
                         android:layout_gravity="center_horizontal"/>
                 </LinearLayout>
+
+
             </LinearLayout>
 
             <!-- HISTORIQUE -->
-            <LinearLayout
-                android:id="@+id/historiqueContainer"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
                 android:background="@drawable/border_gris"
-                android:orientation="vertical"
                 android:layout_margin="10dp">
 
+
                 <TextView
+                    android:id="@+id/demandes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mes demandes"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
+                    android:textColor="@color/black"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="MissingConstraints" />
+                <LinearLayout
+                    android:id="@+id/historiqueContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/demandes"
+                    />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
 
