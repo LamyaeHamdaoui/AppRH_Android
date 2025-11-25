@@ -62,7 +62,9 @@ dependencies {
     implementation ("com.google.firebase:firebase-messaging")
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-database")
-
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
 }
