@@ -43,15 +43,16 @@
 
         <!-- Métier -->
         <TextView
+            android:id="@+id/departement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Developpement"
             android:textSize="15sp" />
 
-        <!-- Type de congé -->
+        <!-- Type de Attestation -->
         <TextView
-            android:id="@+id/TypeConge"
+            android:id="@+id/TypeAttestation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Attestation de travail"
@@ -60,7 +61,15 @@
 
         <!-- Date -->
         <TextView
-            android:id="@+id/DateDemandee"
+            android:id="@+id/DateDemande"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Demandé le 18 Octobre 2025"
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:layout_marginTop="10dp" />
+        <TextView
+            android:id="@+id/DateApprouvé"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Approuvée le 18 Octobre 2025"

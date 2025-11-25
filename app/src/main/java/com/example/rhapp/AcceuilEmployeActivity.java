@@ -8,7 +8,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AcceuilEmployeActivity extends AppCompatActivity {
-    private LinearLayout presencefooter, congesfooter, reunionsfooter, profilefooter;
+    private LinearLayout presencefooter, congesfooter, reunionsfooter, profilefooter,attestation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         congesfooter = findViewById(R.id.congesfooter);
         reunionsfooter = findViewById(R.id.reunionsfooter);
         profilefooter = findViewById(R.id.profilefooter);
+        attestation = findViewById(R.id.attestation);
         if (presencefooter != null) {
             presencefooter.setOnClickListener(v -> {
                 // Ouvrir l'activité des attestations employé
@@ -39,6 +40,14 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                         profilefooter.setOnClickListener(v -> {
                             // Ouvrir l'activité des attestations employé
                             startActivity(new Intent(AcceuilEmployeActivity.this, ProfileEmployeActivity.class));
+                        });
+
+                    }
+
+                    if (attestation != null) {
+                        attestation.setOnClickListener(v -> {
+                            // Ouvrir l'activité des attestations employé
+                            startActivity(new Intent(AcceuilEmployeActivity.this, AttestationEmployeActivity.class));
                         });
 
                     }

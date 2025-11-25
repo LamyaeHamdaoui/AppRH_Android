@@ -7,6 +7,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
+    android:background="@drawable/border_gris"
     android:backgroundTint="@color/white"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
@@ -16,7 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp"
-        android:background="@drawable/border_gris">
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +39,7 @@
 
             <!-- Statut aligné à droite -->
             <TextView
-                android:id="@+id/StatutConge"
+                android:id="@+id/StatutAttestation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="En attente"
@@ -47,10 +48,11 @@
                 android:textColor="@color/orange"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:background="@drawable/border_orange"
                 android:layout_marginRight="10dp"
+
                 />
         </LinearLayout>
         <!-- Dates -->
