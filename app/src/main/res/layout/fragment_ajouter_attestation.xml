@@ -84,8 +84,8 @@
             android:textStyle="bold"
             android:background="@drawable/border_button"
             android:layout_marginTop="20dp"
-            android:enabled="false"
-            android:padding="12dp"
+            app:backgroundTint="@null"
+            android:padding="0dp"
             />
 
     </LinearLayout>

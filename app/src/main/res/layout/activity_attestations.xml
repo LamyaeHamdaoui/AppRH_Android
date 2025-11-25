@@ -74,7 +74,7 @@
                         android:id="@+id/tvTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5"
+                        android:text="0"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -106,7 +106,7 @@
                         android:id="@+id/tvAttente"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -138,7 +138,7 @@
                         android:id="@+id/tvApprouve"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -170,7 +170,7 @@
                         android:id="@+id/tvRefuse"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
+                        android:text="0"
                         android:layout_marginTop="7dp"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -178,7 +178,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Approuvés"
+                        android:text="Refusés"
                         android:textSize="12sp"
                         android:textColor="@color/grey_light" />
                 </LinearLayout>
@@ -201,12 +201,11 @@
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
-                    android:background="@drawable/border_gris"
                     android:text="En attente"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:padding="0dp"
-                    app:backgroundTint="@null" />
+                    app:backgroundTint="#DEDEDE" />
 
                 <Button
                     android:id="@+id/btnCongeApprouve"

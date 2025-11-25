@@ -36,16 +36,17 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/StatutConge"
+                android:id="@+id/StatutAttestation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Refusée"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/red"
-                android:padding="10dp"
-                android:paddingVertical="3dp"
-                android:background="@drawable/border_red" />
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:background="@drawable/border_redlight"
+               />
         </LinearLayout>
 
         <!-- Dates -->

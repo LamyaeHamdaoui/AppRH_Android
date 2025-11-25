@@ -34,6 +34,7 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/nomComplet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Nissrine EL MNIAI"
@@ -41,6 +42,7 @@
                     android:textSize="20sp" />
 
                 <TextView
+                    android:id="@+id/departement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -64,7 +66,7 @@
 
         <!-- Type -->
         <TextView
-            android:id="@+id/TypeConge"
+            android:id="@+id/TypeAttestation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Attestation de travail"
@@ -118,7 +120,8 @@
                 android:background="@drawable/border"
                 app:backgroundTint="@null"
                 android:textStyle="bold"
-                android:padding="12dp" />
+                android:padding="0dp"
+                />
 
             <Button
                 android:id="@+id/btnValidate"
@@ -131,7 +134,7 @@
                 android:background="@drawable/button_green"
                 app:backgroundTint="@null"
                 android:textStyle="bold"
-                android:padding="12dp" />
+                android:padding="0dp"  />
 
             <Button
                 android:id="@+id/btnReject"
@@ -142,7 +145,8 @@
                 android:background="@drawable/border_red"
                 app:backgroundTint="@null"
                 android:textStyle="bold"
-                android:padding="12dp" />
+                android:padding="0dp"
+                />
 
         </LinearLayout>
 
