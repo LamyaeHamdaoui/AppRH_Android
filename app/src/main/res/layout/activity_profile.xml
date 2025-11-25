@@ -96,6 +96,7 @@
                             android:visibility="visible" />
 
                         <ImageView
+                            android:id="@+id/userProfileImage"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:background="@drawable/bg_circle_blue"
@@ -420,7 +421,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/security_interface"
+                    android:id="@+id/securityInterface"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
