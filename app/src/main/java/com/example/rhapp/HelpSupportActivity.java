@@ -20,7 +20,6 @@ public class HelpSupportActivity extends AppCompatActivity {
     // Section Contact rapide
     private LinearLayout layoutEmailSupport;
     private LinearLayout layoutPhoneSupport;
-    private LinearLayout layoutLiveChat;
 
     // Section FAQ
     private LinearLayout layoutFaq1;
@@ -49,17 +48,11 @@ public class HelpSupportActivity extends AppCompatActivity {
         // Contact rapide
         layoutEmailSupport = findViewById(R.id.layoutEmailSupport);
         layoutPhoneSupport = findViewById(R.id.layoutPhoneSupport);
-        layoutLiveChat = findViewById(R.id.layoutLiveChat);
 
-        // FAQ
-        layoutFaq1 = findViewById(R.id.layoutFaq1);
-        layoutFaq2 = findViewById(R.id.layoutFaq2);
-        layoutFaq3 = findViewById(R.id.layoutFaq3);
-        btnAllFaq = findViewById(R.id.btnAllFaq);
+
 
         // Documentation
         layoutUserGuide = findViewById(R.id.layoutUserGuide);
-        layoutVideoTutorials = findViewById(R.id.layoutVideoTutorials);
         layoutOnlineHelp = findViewById(R.id.layoutOnlineHelp);
     }
 
@@ -70,7 +63,6 @@ public class HelpSupportActivity extends AppCompatActivity {
         // --- Contact rapide ---
         layoutEmailSupport.setOnClickListener(v -> sendEmail());
         layoutPhoneSupport.setOnClickListener(v -> dialPhoneNumber());
-        layoutLiveChat.setOnClickListener(v -> startLiveChat());
 
         // --- FAQ ---
         layoutFaq1.setOnClickListener(v -> navigateToFaqDetail(1));
@@ -124,13 +116,7 @@ public class HelpSupportActivity extends AppCompatActivity {
     /**
      * Simule l'ouverture d'une interface de Chat en direct.
      */
-    private void startLiveChat() {
-        // Dans une application réelle, ceci lancerait une activité/fragment de chat,
-        // ou un SDK de service de support (ex: Intercom, Zendesk).
-        Toast.makeText(this, "Démarrage du Chat en direct...", Toast.LENGTH_SHORT).show();
-        // Exemple: Intent intent = new Intent(this, LiveChatActivity.class);
-        // startActivity(intent);
-    }
+
 
     // ==========================================================
     // MÉTHODES DE GESTION DES ACTIONS (FAQ)
