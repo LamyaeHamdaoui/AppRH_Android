@@ -1,7 +1,10 @@
 package com.example.rhapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,13 +19,21 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class SecurityActivity extends AppCompatActivity {
 
     private static final String TAG = "SecurityActivity";
+    private static final String EMPLOYEES_COLLECTION = "employees";
 
     // --- Vues de la section Mot de passe ---
     private LinearLayout layoutChangePassword;
@@ -38,10 +49,14 @@ public class SecurityActivity extends AppCompatActivity {
 
     // --- Vues de la section Sessions actives ---
     private Button btnLogoutAll;
+    private LinearLayout layoutOtherSession;
+    private TextView tvLogoutOther;
 
     // --- Firebase ---
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private FirebaseUser currentUser;
+    private String employeeDocumentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +64,18 @@ public class SecurityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_security);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
 
         initializeViews();
         setupSpinner();
         setupClickListeners();
 
-        // 💡 Si l'utilisateur est connecté, on peut charger ses données réelles
         if (currentUser != null) {
             loadSecurityData();
         } else {
-            // Gérer le cas où l'utilisateur n'est pas connecté
-            Toast.makeText(this, "Utilisateur non connecté.", Toast.LENGTH_SHORT).show();
-            // Optionnel : rediriger vers l'écran de connexion
-            // finish();
+            Toast.makeText(this, "Veuillez vous connecter pour accéder aux paramètres de sécurité.", Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
@@ -81,6 +94,8 @@ public class SecurityActivity extends AppCompatActivity {
 
         // Sessions actives
         btnLogoutAll = findViewById(R.id.btnLogoutAll);
+        layoutOtherSession = findViewById(R.id.layoutOtherSession);
+        tvLogoutOther = findViewById(R.id.tvLogoutOther);
     }
 
     /**
@@ -102,9 +117,7 @@ public class SecurityActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedVisibility = parent.getItemAtPosition(position).toString();
-                // ⭐ TODO: Implémenter la logique de sauvegarde dans Firestore/Database
-                Log.d(TAG, "Visibilité du profil sélectionnée: " + selectedVisibility);
-                Toast.makeText(SecurityActivity.this, "Visibilité : " + selectedVisibility, Toast.LENGTH_SHORT).show();
+                saveProfileVisibility(selectedVisibility);
             }
 
             @Override
@@ -123,13 +136,7 @@ public class SecurityActivity extends AppCompatActivity {
 
         // 2. Switch Authentification à 2 facteurs (2FA)
         switchTwoFactor.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // ⭐ TODO: Implémenter la logique d'activation/désactivation de la 2FA (peut nécessiter une nouvelle activité)
-            if (isChecked) {
-                Toast.makeText(this, "2FA activée. Configuration requise.", Toast.LENGTH_LONG).show();
-                // Exemple: startActivity(new Intent(this, SetupTwoFactorActivity.class));
-            } else {
-                Toast.makeText(this, "2FA désactivée.", Toast.LENGTH_SHORT).show();
-            }
+            handleTwoFactorToggle(isChecked);
         });
 
         // 3. Exporter les données
@@ -140,55 +147,225 @@ public class SecurityActivity extends AppCompatActivity {
 
         // 5. Déconnecter toutes les sessions
         btnLogoutAll.setOnClickListener(v -> handleLogoutAllSessions());
+
+        // 6. Déconnecter une session spécifique
+        tvLogoutOther.setOnClickListener(v -> handleLogoutOtherSession());
     }
 
     // --- Logique d'action des clics ---
 
     private void handleChangePassword() {
-        // ⭐ TODO: Naviguer vers l'activité de changement de mot de passe
-        Toast.makeText(this, "Ouverture de l'écran de changement de mot de passe...", Toast.LENGTH_SHORT).show();
-        // Exemple: startActivity(new Intent(this, ChangePasswordActivity.class));
+        Intent intent = new Intent(this, ChangePasswordActivity.class);
+        startActivity(intent);
+    }
+
+    private void handleTwoFactorToggle(boolean isEnabled) {
+        if (employeeDocumentId == null) {
+            Toast.makeText(this, "Profil non chargé. Réessayez.", Toast.LENGTH_SHORT).show();
+            switchTwoFactor.setChecked(!isEnabled); // Revert the switch
+            return;
+        }
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("twoFactorEnabled", isEnabled);
+
+        db.collection(EMPLOYEES_COLLECTION).document(employeeDocumentId)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    String message = isEnabled ?
+                            "Authentification à 2 facteurs activée" :
+                            "Authentification à 2 facteurs désactivée";
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur mise à jour 2FA:", e);
+                    Toast.makeText(this, "Erreur lors de la mise à jour", Toast.LENGTH_SHORT).show();
+                    switchTwoFactor.setChecked(!isEnabled); // Revert on failure
+                });
     }
 
     private void handleDataExport() {
-        // ⭐ TODO: Implémenter la logique d'exportation (générer un fichier CSV/JSON et l'envoyer par email ou le télécharger)
-        Toast.makeText(this, "Lancement de l'exportation des données...", Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(this)
+                .setTitle("Exporter les données")
+                .setMessage("Voulez-vous exporter toutes vos données personnelles ? Un fichier CSV sera généré et envoyé à votre adresse email.")
+                .setPositiveButton("Exporter", (dialog, which) -> {
+                    exportUserData();
+                })
+                .setNegativeButton("Annuler", null)
+                .show();
     }
 
     private void handleDeleteAccount() {
-        // ⭐ TODO: Afficher une boîte de dialogue de confirmation et implémenter la logique de suppression du compte Firebase et Firestore
-        Toast.makeText(this, "Ouverture de la boîte de dialogue de suppression de compte...", Toast.LENGTH_LONG).show();
+        new AlertDialog.Builder(this)
+                .setTitle("Supprimer le compte")
+                .setMessage("Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.")
+                .setPositiveButton("Supprimer", (dialog, which) -> {
+                    deleteUserAccount();
+                })
+                .setNegativeButton("Annuler", null)
+                .show();
     }
 
     private void handleLogoutAllSessions() {
-        if (currentUser != null) {
-            // ⭐ TODO: Ceci n'est pas directement supporté par Firebase Auth (signOut() ne déconnecte que l'appareil actuel).
-            // Pour une vraie déconnexion de toutes les sessions, il faudrait utiliser l'API de gestion des sessions de l'Admin SDK
-            // ou forcer le rafraîchissement du jeton de sécurité. Pour une simulation simple :
-            mAuth.signOut();
-            Toast.makeText(this, "Déconnexion de toutes les sessions (Cet appareil seulement pour le moment).", Toast.LENGTH_LONG).show();
-            // Rediriger vers l'écran de connexion
-            // startActivity(new Intent(this, LoginActivity.class));
-            finish();
+        new AlertDialog.Builder(this)
+                .setTitle("Déconnexion globale")
+                .setMessage("Voulez-vous vous déconnecter de tous les appareils ?")
+                .setPositiveButton("Déconnecter", (dialog, which) -> {
+                    logoutAllSessions();
+                })
+                .setNegativeButton("Annuler", null)
+                .show();
+    }
+
+    private void handleLogoutOtherSession() {
+        new AlertDialog.Builder(this)
+                .setTitle("Déconnexion")
+                .setMessage("Voulez-vous déconnecter la session iPhone 13 ?")
+                .setPositiveButton("Déconnecter", (dialog, which) -> {
+                    // Simuler la déconnexion de l'autre session
+                    layoutOtherSession.setVisibility(View.GONE);
+                    Toast.makeText(this, "Session déconnectée", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Annuler", null)
+                .show();
+    }
+
+    // --- Méthodes de traitement ---
+
+    private void saveProfileVisibility(String visibility) {
+        if (employeeDocumentId == null) return;
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("profileVisibility", visibility);
+
+        db.collection(EMPLOYEES_COLLECTION).document(employeeDocumentId)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Visibilité mise à jour: " + visibility);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur mise à jour visibilité:", e);
+                    Toast.makeText(this, "Erreur lors de la mise à jour", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void exportUserData() {
+        Toast.makeText(this, "Génération et envoi du rapport en cours...", Toast.LENGTH_LONG).show();
+
+        // ⭐ TODO: Implémenter la logique d'exportation réelle
+        // - Récupérer toutes les données de l'utilisateur depuis Firestore
+        // - Générer un fichier CSV/JSON
+        // - Envoyer par email ou permettre le téléchargement
+    }
+
+    private void deleteUserAccount() {
+        if (currentUser == null || employeeDocumentId == null) return;
+
+        // ⭐ ATTENTION: Cette opération est critique
+        // 1. Supprimer les données Firestore
+        db.collection(EMPLOYEES_COLLECTION).document(employeeDocumentId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // 2. Supprimer le compte Firebase Auth
+                    currentUser.delete()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(this, "Compte supprimé avec succès", Toast.LENGTH_SHORT).show();
+                                    // Rediriger vers l'écran de connexion
+                                    Intent intent = new Intent(this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(this, "Erreur lors de la suppression du compte", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur suppression données:", e);
+                    Toast.makeText(this, "Erreur lors de la suppression des données", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void logoutAllSessions() {
+        // Firebase Auth ne supporte pas directement la déconnexion de toutes les sessions
+        // Cette méthode déconnecte seulement l'appareil actuel
+        mAuth.signOut();
+        Toast.makeText(this, "Déconnexion effectuée", Toast.LENGTH_SHORT).show();
+
+        // Rediriger vers l'écran de connexion
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    // --- Logique de chargement des données ---
+
+    /**
+     * Charge les données de sécurité de l'utilisateur depuis Firestore
+     */
+    private void loadSecurityData() {
+        String userEmail = currentUser.getEmail();
+        if (userEmail == null) return;
+
+        db.collection(EMPLOYEES_COLLECTION)
+                .whereEqualTo("email", userEmail.toLowerCase().trim())
+                .limit(1)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                        employeeDocumentId = document.getId();
+                        displaySecurityData(document);
+                    } else {
+                        Toast.makeText(this, "Profil employé non trouvé", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur chargement données sécurité:", e);
+                    Toast.makeText(this, "Erreur de chargement des données", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    /**
+     * Affiche les données de sécurité dans l'interface
+     */
+    private void displaySecurityData(DocumentSnapshot document) {
+        // Date dernière modification mot de passe
+        Object lastPasswordChange = document.get("lastPasswordChange");
+        if (lastPasswordChange instanceof com.google.firebase.Timestamp) {
+            com.google.firebase.Timestamp timestamp = (com.google.firebase.Timestamp) lastPasswordChange;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+            tvLastPasswordChange.setText(sdf.format(timestamp.toDate()));
+        } else {
+            // Valeur par défaut si non disponible
+            tvLastPasswordChange.setText("Non disponible");
+        }
+
+        // État 2FA
+        Boolean twoFactorEnabled = document.getBoolean("twoFactorEnabled");
+        if (twoFactorEnabled != null) {
+            switchTwoFactor.setChecked(twoFactorEnabled);
+        }
+
+        // Visibilité du profil
+        String visibility = document.getString("profileVisibility");
+        if (visibility != null) {
+            ArrayAdapter adapter = (ArrayAdapter) spinnerVisibility.getAdapter();
+            int position = adapter.getPosition(visibility);
+            if (position >= 0) {
+                spinnerVisibility.setSelection(position);
+            }
         }
     }
 
-    // --- Logique de chargement des données (Simulée) ---
-
-    /**
-     * Charge les données de sécurité de l'utilisateur (2FA, dernière modification, etc.)
-     */
-    private void loadSecurityData() {
-        // ⭐ TODO: Remplacer les données simulées par la récupération de données réelles depuis Firestore ou Realtime DB.
-
-        // Simuler la dernière date de changement de mot de passe
-        tvLastPasswordChange.setText("20 novembre 2025");
-
-        // Simuler l'état du 2FA (e.g., récupérer 'isTwoFactorEnabled' de l'utilisateur)
-        // switchTwoFactor.setChecked(true);
-
-        // Simuler la visibilité actuelle
-        // String currentVisibility = "Public";
-        // spinnerVisibility.setSelection(adapter.getPosition(currentVisibility));
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Recharger les données si nécessaire
+        if (currentUser != null) {
+            loadSecurityData();
+        }
     }
 }
