@@ -33,6 +33,10 @@ import java.util.Locale;
 
 public class ReunionEmployeActivity extends AppCompatActivity {
     private LinearLayout reunionPlanifieContainer, reunionPasseContainer,noReunionContainer;
+    private int nbrConfirm = 0;
+    private TextView nbrReunionConfirmer;
+
+
     private FirebaseFirestore db;
     // ⚠️ Variable de contrôle pour savoir si on doit rafraîchir
     private boolean shouldRefresh = false;
@@ -46,6 +50,10 @@ public class ReunionEmployeActivity extends AppCompatActivity {
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
         reunionPasseContainer = findViewById(R.id.reunionPasseContainer);
         noReunionContainer = findViewById(R.id.noReunionContainer);
+        nbrReunionConfirmer = findViewById(R.id.nbrReunionConfirmer);
+        nbrReunionVenir = findViewById(R.id.nbrReunionVenir);
+        nbrReunionsMois = findViewById(R.id.nbrReunionsMois);
+
 
         // ******************************* Passer d'une fenetre a l'autre ************************************
 
@@ -100,6 +108,8 @@ public class ReunionEmployeActivity extends AppCompatActivity {
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
         db = FirebaseFirestore.getInstance();
         afficherReunionsVenirs();
+
+
         statistique();
 
     }
@@ -127,6 +137,14 @@ public class ReunionEmployeActivity extends AppCompatActivity {
                         Toast.makeText(this, "Erreur : " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    // Réinitialiser le compteur avant de compter
+                    nbrConfirm = 0;
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        Reunion reunion = doc.toObject(Reunion.class);
+                        if (reunion.isConfirmed()) nbrConfirm++;
+                    }
+                    nbrReunionConfirmer.setText(String.valueOf(nbrConfirm));
+
 
                     // Revide encore une fois pour éviter accumulation
                     reunionPlanifieContainer.removeAllViews();
@@ -191,10 +209,45 @@ public class ReunionEmployeActivity extends AppCompatActivity {
                             lieuReunion.setText(reunion.getLieu());
                             tempsRestantReunion.setText(NbrJourRestant(dateStr));
 
+
+
                             btnConfirmerReunion.setOnClickListener(v -> {
-                                valid.setVisibility(View.VISIBLE);
+                                // Masquer le bouton et afficher l'icône valid
                                 btnConfirmerReunion.setVisibility(View.GONE);
+                                valid.setVisibility(View.VISIBLE);
+
+                                // Incrémenter le compteur local
+                                nbrConfirm++;  // compteur local
+                                nbrReunionConfirmer.setText(String.valueOf(nbrConfirm)); // mettre à jour l'affichage
+
+                                // Mettre à jour Firestore pour que la confirmation soit persistante
+                                db.collection("Reunions").document(reunion.getId())
+                                        .update("confirmed", true)
+                                        .addOnSuccessListener(aVoid -> {
+                                            Toast.makeText(this, "Confirmation enregistrée", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            // si erreur, remettre le bouton visible et décrémenter le compteur
+                                            btnConfirmerReunion.setVisibility(View.VISIBLE);
+                                            valid.setVisibility(View.GONE);
+                                            nbrConfirm--;
+                                            nbrReunionConfirmer.setText(String.valueOf(nbrConfirm));
+                                        });
                             });
+
+
+                            if (reunion.isConfirmed()) {
+                                btnConfirmerReunion.setVisibility(View.GONE);
+                                valid.setVisibility(View.VISIBLE);
+                            } else {
+                                btnConfirmerReunion.setVisibility(View.VISIBLE);
+                                valid.setVisibility(View.GONE);
+                            }
+
+
+
+
 
                             reunionPlanifieContainer.addView(cardView);
                         }
@@ -327,8 +380,7 @@ public class ReunionEmployeActivity extends AppCompatActivity {
     private TextView nbrReunionPassees ,nbrReunionsMois  ;
 
     private void statistique() {
-        nbrReunionVenir = findViewById(R.id.nbrReunionVenir);
-        nbrReunionsMois = findViewById(R.id.nbrReunionsMois);
+
 
         db.collection("Reunions")
                 .addSnapshotListener((querySnapshot, error) -> {
