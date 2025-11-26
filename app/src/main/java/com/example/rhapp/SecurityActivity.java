@@ -3,7 +3,6 @@ package com.example.rhapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FieldValue; // Importation nécessaire pour serverTimestamp()
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,19 +44,17 @@ public class SecurityActivity extends AppCompatActivity {
 
     // --- Vues de la section Confidentialité ---
     private Spinner spinnerVisibility;
-    private LinearLayout layoutDataExport;
     private LinearLayout layoutDeleteAccount;
 
-    // --- Vues de la section Sessions actives ---
-    private Button btnLogoutAll;
-    private LinearLayout layoutOtherSession;
-    private TextView tvLogoutOther;
 
     // --- Firebase ---
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
-    private String employeeDocumentId;
+    private String employeeDocumentId; // Stocke l'ID du document Firestore
+
+    // Code de requête pour identifier le retour de ChangePasswordActivity
+    private static final int REQUEST_CODE_CHANGE_PASSWORD = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,13 +87,8 @@ public class SecurityActivity extends AppCompatActivity {
 
         // Confidentialité
         spinnerVisibility = findViewById(R.id.spinnerVisibility);
-        layoutDataExport = findViewById(R.id.layoutDataExport);
         layoutDeleteAccount = findViewById(R.id.layoutDeleteAccount);
 
-        // Sessions actives
-        btnLogoutAll = findViewById(R.id.btnLogoutAll);
-        layoutOtherSession = findViewById(R.id.layoutOtherSession);
-        tvLogoutOther = findViewById(R.id.tvLogoutOther);
     }
 
     /**
@@ -113,11 +106,15 @@ public class SecurityActivity extends AppCompatActivity {
 
         spinnerVisibility.setAdapter(adapter);
 
+        // L'écouteur est laissé tel quel pour ne pas interférer avec le chargement initial
         spinnerVisibility.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedVisibility = parent.getItemAtPosition(position).toString();
-                saveProfileVisibility(selectedVisibility);
+                // On s'assure que le document ID est disponible avant de sauvegarder
+                if (employeeDocumentId != null) {
+                    String selectedVisibility = parent.getItemAtPosition(position).toString();
+                    saveProfileVisibility(selectedVisibility);
+                }
             }
 
             @Override
@@ -139,23 +136,22 @@ public class SecurityActivity extends AppCompatActivity {
             handleTwoFactorToggle(isChecked);
         });
 
-        // 3. Exporter les données
-        layoutDataExport.setOnClickListener(v -> handleDataExport());
 
         // 4. Supprimer le compte
         layoutDeleteAccount.setOnClickListener(v -> handleDeleteAccount());
 
-        // 5. Déconnecter toutes les sessions
-        btnLogoutAll.setOnClickListener(v -> handleLogoutAllSessions());
-
-        // 6. Déconnecter une session spécifique
-        tvLogoutOther.setOnClickListener(v -> handleLogoutOtherSession());
     }
 
     // --- Logique d'action des clics ---
 
     private void handleChangePassword() {
+        if (employeeDocumentId == null) {
+            Toast.makeText(this, "Veuillez attendre le chargement du profil.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(this, ChangePasswordActivity.class);
+        intent.putExtra("EMPLOYEE_DOC_ID", employeeDocumentId);
         startActivity(intent);
     }
 
@@ -206,31 +202,68 @@ public class SecurityActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void handleLogoutAllSessions() {
-        new AlertDialog.Builder(this)
-                .setTitle("Déconnexion globale")
-                .setMessage("Voulez-vous vous déconnecter de tous les appareils ?")
-                .setPositiveButton("Déconnecter", (dialog, which) -> {
-                    logoutAllSessions();
-                })
-                .setNegativeButton("Annuler", null)
-                .show();
-    }
-
-    private void handleLogoutOtherSession() {
-        new AlertDialog.Builder(this)
-                .setTitle("Déconnexion")
-                .setMessage("Voulez-vous déconnecter la session iPhone 13 ?")
-                .setPositiveButton("Déconnecter", (dialog, which) -> {
-                    // Simuler la déconnexion de l'autre session
-                    layoutOtherSession.setVisibility(View.GONE);
-                    Toast.makeText(this, "Session déconnectée", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("Annuler", null)
-                .show();
-    }
 
     // --- Méthodes de traitement ---
+
+    /**
+     * Logique à inclure dans ChangePasswordActivity après un changement réussi.
+     * Cette méthode utilise FieldValue.serverTimestamp() pour une précision maximale.
+     * @param documentId L'ID du document de l'employé à mettre à jour.
+     */
+    public static void updateLastPasswordChangeTimestampInFirestore(String documentId) {
+        if (documentId == null) {
+            Log.e(TAG, "Impossible de mettre à jour la date: documentId est null.");
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> updates = new HashMap<>();
+        // Utilisez FieldValue.serverTimestamp() pour enregistrer l'heure exacte du serveur.
+        updates.put("lastPasswordChange", FieldValue.serverTimestamp());
+
+        db.collection(EMPLOYEES_COLLECTION).document(documentId)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Date de modification du mot de passe mise à jour dans Firestore.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur lors de la mise à jour de la date:", e);
+                });
+    }
+
+    /**
+     * Déclenche le processus d'exportation des données.
+     * Cette logique doit appeler un service backend (comme Firebase Cloud Functions)
+     * pour effectuer le traitement de données et l'envoi d'email.
+     */
+    private void exportUserData() {
+        if (currentUser == null) {
+            Toast.makeText(this, "Utilisateur non authentifié.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // ----------------------------------------------------------------------------------
+        // ⭐ ÉTAPE CLÉ MANQUANTE : Appel à Firebase Cloud Functions
+        // ----------------------------------------------------------------------------------
+
+        // C'est ici que vous devriez appeler votre fonction cloud (par exemple,
+        // "exportDataAndSendEmail") en lui passant l'UID de l'utilisateur.
+        // Exemple (nécessite l'initialisation de FirebaseFunctions):
+        // FirebaseFunctions.getInstance()
+        //      .getHttpsCallable("exportDataAndSendEmail")
+        //      .call(currentUser.getUid())
+        //      .addOnSuccessListener(...)
+        //      .addOnFailureListener(...)
+
+        // Simulation : Affichage d'un message pour l'utilisateur
+        Toast.makeText(this,
+                "Génération des données lancée. Veuillez vérifier votre boîte email (" + currentUser.getEmail() + ") dans les minutes qui suivent.",
+                Toast.LENGTH_LONG).show();
+
+        Log.i(TAG, "Processus d'exportation déclenché pour l'utilisateur: " + currentUser.getUid());
+
+        // ----------------------------------------------------------------------------------
+    }
 
     private void saveProfileVisibility(String visibility) {
         if (employeeDocumentId == null) return;
@@ -247,15 +280,6 @@ public class SecurityActivity extends AppCompatActivity {
                     Log.e(TAG, "Erreur mise à jour visibilité:", e);
                     Toast.makeText(this, "Erreur lors de la mise à jour", Toast.LENGTH_SHORT).show();
                 });
-    }
-
-    private void exportUserData() {
-        Toast.makeText(this, "Génération et envoi du rapport en cours...", Toast.LENGTH_LONG).show();
-
-        // ⭐ TODO: Implémenter la logique d'exportation réelle
-        // - Récupérer toutes les données de l'utilisateur depuis Firestore
-        // - Générer un fichier CSV/JSON
-        // - Envoyer par email ou permettre le téléchargement
     }
 
     private void deleteUserAccount() {
@@ -316,7 +340,7 @@ public class SecurityActivity extends AppCompatActivity {
                 .addOnSuccessListener(querySnapshot -> {
                     if (!querySnapshot.isEmpty()) {
                         DocumentSnapshot document = querySnapshot.getDocuments().get(0);
-                        employeeDocumentId = document.getId();
+                        employeeDocumentId = document.getId(); // Stocke l'ID
                         displaySecurityData(document);
                     } else {
                         Toast.makeText(this, "Profil employé non trouvé", Toast.LENGTH_LONG).show();
@@ -336,11 +360,11 @@ public class SecurityActivity extends AppCompatActivity {
         Object lastPasswordChange = document.get("lastPasswordChange");
         if (lastPasswordChange instanceof com.google.firebase.Timestamp) {
             com.google.firebase.Timestamp timestamp = (com.google.firebase.Timestamp) lastPasswordChange;
-            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
+            // Format d'affichage corrigé pour inclure les secondes (HH:mm:ss)
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy 'à' HH:mm:ss", Locale.getDefault());
             tvLastPasswordChange.setText(sdf.format(timestamp.toDate()));
         } else {
-            // Valeur par défaut si non disponible
-            tvLastPasswordChange.setText("Non disponible");
+            tvLastPasswordChange.setText("Jamais modifié ou non enregistré");
         }
 
         // État 2FA
@@ -363,7 +387,8 @@ public class SecurityActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Recharger les données si nécessaire
+        // C'est ce onResume() qui est crucial : il recharge les données après le retour de
+        // ChangePasswordActivity, affichant ainsi la date de modification mise à jour.
         if (currentUser != null) {
             loadSecurityData();
         }
