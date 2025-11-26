@@ -21,8 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
-import com.bumptech.glide.Glide; // ⭐ NOUVEAU : Importation pour Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy; // ⭐ NOUVEAU
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -38,7 +38,6 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
     private TextView userDateEmbauche, userInitial;
     private ProgressBar progressBar;
 
-    // VARIABLE CLÉ: Stocke le rôle (rh ou employe) pour la navigation conditionnelle
     private String userRole;
 
     // Conteneurs principaux
@@ -51,14 +50,17 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
     // Éléments du pied de page
     private ImageView iconAccueil, iconEmployes, iconConges, iconReunions, iconProfile;
     private TextView textAccueil, textEmployes, textConges, textReunions, textProfile;
-    private LinearLayout footerAccueil, footerEmployes, footerConges, footerReunions, footerProfil, securityInterface;
+    private LinearLayout footerAccueil, footerEmployes, footerConges, footerReunions, footerProfil;
+
+    // ⭐ CORRECTION : L'élément securityInterface est une variable de classe pour une utilisation facile
+    private LinearLayout securityInterface;
 
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
 
-    // ⭐ NOUVEAU : Référence à l'ImageView de la photo de profil dans la carte
+    // Référence à l'ImageView de la photo de profil dans la carte
     private ImageView userProfileImage;
 
     @Override
@@ -92,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         highlightFooterIcon();
     }
 
-    // ⭐ NOUVELLE MÉTHODE : Recharge les données à chaque fois que l'activité redevient visible
+    // Recharge les données à chaque fois que l'activité redevient visible
     @Override
     protected void onResume() {
         super.onResume();
@@ -112,8 +114,6 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         userPoste = findViewById(R.id.userPoste);
         userDepartment = findViewById(R.id.userDepartment);
         userInitial = findViewById(R.id.userInitial);
-
-
         userProfileImage = findViewById(R.id.userProfileImage);
 
         // Bloc Détails
@@ -136,6 +136,9 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         footerConges = findViewById(R.id.footerConges);
         footerReunions = findViewById(R.id.footerReunions);
         footerProfil = findViewById(R.id.footerProfil);
+
+        // Initialisation de la variable de classe securityInterface
+        securityInterface = findViewById(R.id.securityInterface);
 
         initializeFooterViews();
         showLoading(true);
@@ -189,8 +192,6 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         navigateToMainActivity();
     }
 
-    // ... (Reste de setupFooterNavigation, setupSettingsClickListeners)
-
     private void setupFooterNavigation() {
         if (footerAccueil != null) {
             footerAccueil.setOnClickListener(v -> navigateToHome());
@@ -209,7 +210,10 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
     private void setupSettingsClickListeners() {
         LinearLayout modifierProfil = findViewById(R.id.modifier_profil);
         LinearLayout notifications = findViewById(R.id.notifications);
-        LinearLayout securityInterface = findViewById(R.id.securityInterface);
+        // ⭐ CORRECTION CLÉ : on utilise la variable de classe securityInterface (déjà initialisée)
+        // ou on la ré-initialise ici, mais l'important est de ne pas recréer la variable locale si on utilise la variable de classe ensuite.
+        // Puisque nous faisons un findViewById pour toutes les vues de réglages, maintenons cette approche locale pour plus de clarté dans cette méthode:
+        LinearLayout securityInterfaceLocal = findViewById(R.id.securityInterface);
         LinearLayout helpSupport = findViewById(R.id.help_support);
 
         if (modifierProfil != null) {
@@ -218,9 +222,12 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         if (notifications != null) {
             notifications.setOnClickListener(v -> navigateToNotifications());
         }
-        if (securityInterface != null) {
-            securityInterface.setOnClickListener(v -> navigateToSecurity());
+
+        // Le listener pour securityInterface fonctionne maintenant correctement
+        if (securityInterfaceLocal != null) {
+            securityInterfaceLocal.setOnClickListener(v -> navigateToSecurity());
         }
+
         if (helpSupport != null) {
             helpSupport.setOnClickListener(v -> navigateToHelpSupport());
         }
@@ -250,12 +257,11 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
                         String departement = employeeSnapshot.getString("departement");
                         String role = employeeSnapshot.getString("role");
                         Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
-                        String photoUrl = employeeSnapshot.getString("photoUrl"); // ⭐ RÉCUPÉRATION DE L'URL DE LA PHOTO
+                        String photoUrl = employeeSnapshot.getString("photoUrl");
 
-                        displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp, photoUrl); // ⭐ MISE À JOUR
+                        displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp, photoUrl);
 
                     } else {
-                        // ... (gestion des erreurs existante)
                         if (task.isSuccessful()) {
                             Log.w(TAG, "Aucun profil trouvé, affichage des données par défaut.");
                         } else {
@@ -288,7 +294,7 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
      */
     private void displayAllUserData(String nom, String prenom, String email,
                                     String poste, String departement, String role,
-                                    Timestamp dateEmbaucheTimestamp, String photoUrl) { // ⭐ NOUVEAU PARAMÈTRE
+                                    Timestamp dateEmbaucheTimestamp, String photoUrl) {
 
         this.userRole = role;
         String fullName = buildFullName(nom, prenom);
@@ -299,7 +305,7 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         if (userPoste != null) userPoste.setText(posteDisplay);
         if (userDepartment != null) userDepartment.setText(departmentDisplay);
 
-        // ⭐ LOGIQUE CLÉ : Affichage de la photo ou des initiales
+        // LOGIQUE CLÉ : Affichage de la photo ou des initiales
         if (userProfileImage != null && userInitial != null) {
             if (photoUrl != null && !photoUrl.isEmpty()) {
                 // 1. Photo disponible : Charger l'image et cacher les initiales
@@ -308,15 +314,15 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
 
                 Glide.with(this)
                         .load(photoUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL) // Meilleure performance après la première charge
-                        .placeholder(R.drawable.user) // Image de remplacement pendant le chargement
-                        .error(R.drawable.user) // Image de remplacement en cas d'erreur
-                        .into(userProfileImage); // Afficher dans l'ImageView de profil
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
+                        .into(userProfileImage);
 
             } else {
                 // 2. Pas de photo : Afficher les initiales et cacher l'ImageView
                 userInitial.setVisibility(View.VISIBLE);
-                userProfileImage.setVisibility(View.INVISIBLE); // INVISIBLE pour garder l'espace dans le layout
+                userProfileImage.setVisibility(View.INVISIBLE);
 
                 String initial = buildInitials(nom, prenom);
                 userInitial.setText(initial);
@@ -335,8 +341,6 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
             userDateEmbauche.setText(dateEmbauche);
         }
     }
-
-    // ... (Les autres méthodes comme buildFullName, buildInitials, formatText, formatDateEmbauche restent inchangées)
 
     private String buildFullName(String nom, String prenom) {
         String finalPrenom = prenom != null ? prenom : "";
@@ -437,6 +441,7 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         startActivity(new Intent(ProfileActivity.this, NotificationsRhActivity.class));
     }
 
+    // Navigation vers SecurityActivity
     private void navigateToSecurity() {
         startActivity(new Intent(ProfileActivity.this, SecurityActivity.class));
     }

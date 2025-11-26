@@ -440,7 +440,6 @@
                             android:layout_height="20dp"
                             android:layout_margin="7dp"
                             android:layout_weight="1"
-                            android:linksClickable="true"
                             android:src="@drawable/securite" />
                     </LinearLayout>
 
@@ -449,14 +448,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="10"
-                        android:linksClickable="true"
                         android:text="Securité et confidentialité"
                         android:textSize="20dp" />
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:linksClickable="true"
                         android:src="@drawable/ic_arrow_forward"
                         app:tint="#666666" />
                 </LinearLayout>
@@ -517,9 +514,9 @@
                     android:id="@+id/seDeconnecterButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
+                    android:layout_marginStart="37dp"
                     android:layout_marginTop="30dp"
-                    android:layout_marginEnd="40dp"
+                    android:layout_marginEnd="37dp"
                     android:layout_marginBottom="30dp"
                     android:background="@drawable/border_red"
                     android:text=" [->  Se déconnecter"

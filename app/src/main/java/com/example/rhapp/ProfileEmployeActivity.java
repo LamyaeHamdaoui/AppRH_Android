@@ -224,7 +224,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
             modifierProfil.setOnClickListener(v -> navigateToEditProfile());
         }
         if (notifications != null) {
-            navigateToNotifications();
+            notifications.setOnClickListener(v -> navigateToNotifications());
         }
         if (securityInterface != null) {
             securityInterface.setOnClickListener(v -> navigateToSecurity());
@@ -447,7 +447,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
 
 
     private void navigateToNotifications() {
-        startActivity(new Intent(ProfileEmployeActivity.this, NotificationsRhActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, NotificationsEmployesActivity.class));
     }
 
     private void navigateToSecurity() {

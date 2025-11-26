@@ -1,14 +1,14 @@
 package com.example.rhapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.activity.result.ActivityResultLauncher; // ⭐ NOUVEAU
-import androidx.activity.result.contract.ActivityResultContracts; // ⭐ NOUVEAU
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import android.content.Intent;
-import android.net.Uri; // ⭐ NOUVEAU
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.view.View; // Importation ajoutée pour View.GONE/VISIBLE
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,37 +19,40 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
-import com.google.firebase.storage.FirebaseStorage; // ⭐ NOUVEAU
-import com.google.firebase.storage.StorageReference; // ⭐ NOUVEAU
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class EditProfileActivity extends AppCompatActivity {
 
     private static final String TAG = "EditProfileActivity";
     private static final String EMPLOYEES_COLLECTION = "employees";
 
+    // ⭐ Clé définie dans ProfileEmployeActivity pour recevoir l'autorisation d'édition
+    private static final String IS_PROFESSIONAL_EDIT_ALLOWED = "IS_PROFESSIONAL_EDIT_ALLOWED";
+
+    // ⭐ Variable pour stocker l'autorisation d'édition reçue
+    private boolean isProfessionalEditAllowed = false;
+
     // Vues (Widgets)
-    private CircleImageView ivProfilePhoto;
-    private Button btnChangePhoto, btnCancel, btnSave;
+    private Button btnCancel, btnSave;
     private EditText etFirstName, etLastName, etEmail, etPhone, etPosition, etDepartment, etHireDate;
 
     // Firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirebaseStorage storage; // ⭐ INITIALISATION
+    private FirebaseStorage storage;
     private FirebaseUser currentUser;
     private DocumentReference employeeRef;
 
     // Variables pour l'image
     private String employeeDocumentId;
-    private Uri selectedImageUri; // ⭐ URI de l'image sélectionnée
-    private ActivityResultLauncher<Intent> galleryLauncher; // ⭐ Lanceur pour la galerie
+    private Uri selectedImageUri;
+    private ActivityResultLauncher<Intent> galleryLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance(); // ⭐ Initialisation de Firebase Storage
+        storage = FirebaseStorage.getInstance();
         currentUser = mAuth.getCurrentUser();
 
         if (currentUser == null) {
@@ -67,26 +70,32 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // ⭐ NOUVEAU : Initialisation du lanceur d'activité
+        // ⭐ ÉTAPE 1: Récupérer l'autorisation d'édition professionnelle
+        if (getIntent().hasExtra(IS_PROFESSIONAL_EDIT_ALLOWED)) {
+            // La valeur par défaut 'false' est une sécurité
+            isProfessionalEditAllowed = getIntent().getBooleanExtra(IS_PROFESSIONAL_EDIT_ALLOWED, false);
+        }
+
+        // Initialisation du lanceur d'activité
         setupGalleryLauncher();
 
         initializeViews();
+
+        // ⭐ ÉTAPE 2: Appliquer la restriction d'édition après l'initialisation des vues
+        applyProfessionalEditRestriction();
+
         loadEmployeeData();
         setupClickListeners();
     }
 
     private void initializeViews() {
-        // Photo et Bouton
-        ivProfilePhoto = findViewById(R.id.ivProfilePhoto);
-        btnChangePhoto = findViewById(R.id.btnChangePhoto);
-
         // Informations personnelles
         etFirstName = findViewById(R.id.etFirstName);
         etLastName = findViewById(R.id.etLastName);
         etEmail = findViewById(R.id.etEmail);
         etPhone = findViewById(R.id.etPhone);
 
-        // Champs désactivés (non modifiables par l'employé)
+        // Email désactivé (non modifiable)
         etEmail.setEnabled(false);
 
         // Informations professionnelles
@@ -94,29 +103,40 @@ public class EditProfileActivity extends AppCompatActivity {
         etDepartment = findViewById(R.id.etDepartment);
         etHireDate = findViewById(R.id.etHireDate);
 
-        etPosition.setEnabled(false);
-        etDepartment.setEnabled(false);
-        etHireDate.setEnabled(false);
-
         // Boutons d'action
         btnCancel = findViewById(R.id.btnCancel);
         btnSave = findViewById(R.id.btnSave);
     }
 
+    /**
+     * ⭐ NOUVELLE MÉTHODE : Applique la restriction sur les champs professionnels
+     * si l'Intent extra IS_PROFESSIONAL_EDIT_ALLOWED est false.
+     */
+    private void applyProfessionalEditRestriction() {
+        if (!isProfessionalEditAllowed) {
+            // Désactiver les champs pour l'employé ordinaire
+            etPosition.setEnabled(false);
+            etPosition.setFocusable(false);
+            etPosition.setAlpha(0.7f); // Optionnel : griser légèrement pour l'UX
+
+            etDepartment.setEnabled(false);
+            etDepartment.setFocusable(false);
+            etDepartment.setAlpha(0.7f);
+
+            etHireDate.setEnabled(false);
+            etHireDate.setFocusable(false);
+            etHireDate.setAlpha(0.7f);
+
+        }
+    }
+
     private void setupClickListeners() {
         btnCancel.setOnClickListener(v -> finish());
         btnSave.setOnClickListener(v -> saveProfileChanges());
-
-        // ⭐ Mise à jour : appelle la nouvelle fonction pour choisir la photo
-        btnChangePhoto.setOnClickListener(v -> changeProfilePhoto());
     }
 
-    // --- GESTION DE LA PHOTO DE PROFIL (NOUVEAUTÉS) ---
+    // --- GESTION DE LA PHOTO DE PROFIL (Laissée pour complétude, même si les vues manquent) ---
 
-    /**
-     * ⭐ NOUVEAU : Initialise l'ActivityResultLauncher pour gérer le résultat
-     * de la sélection d'image depuis la galerie.
-     */
     private void setupGalleryLauncher() {
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -124,10 +144,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         selectedImageUri = result.getData().getData();
                         if (selectedImageUri != null) {
-                            // 1. Afficher l'image sélectionnée
-                            ivProfilePhoto.setImageURI(selectedImageUri);
-
-                            // 2. Déclencher l'upload vers Firebase Storage
+                            // ivProfilePhoto.setImageURI(selectedImageUri); // Décommenter si l'ImageView est ajoutée
                             uploadImageToFirebase(selectedImageUri);
                         }
                     } else {
@@ -136,20 +153,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * Lance l'intention de choisir une photo dans la galerie via le ActivityResultLauncher.
-     */
-    private void changeProfilePhoto() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-
-        // Utilisation du lanceur d'activité
-        galleryLauncher.launch(intent);
-    }
-
-    /**
-     * Téléverse l'image sélectionnée vers Firebase Storage et met à jour Firestore.
-     */
     private void uploadImageToFirebase(Uri fileUri) {
         if (currentUser == null || employeeRef == null) {
             Toast.makeText(this, "Erreur de connexion ou de profil. Impossible de télécharger.", Toast.LENGTH_SHORT).show();
@@ -158,19 +161,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
         Toast.makeText(this, "Téléchargement en cours...", Toast.LENGTH_LONG).show();
 
-        // Créer la référence de stockage
         String fileName = currentUser.getUid() + "_" + System.currentTimeMillis() + ".jpg";
         StorageReference profileImagesRef = storage.getReference()
                 .child("profile_images/" + fileName);
 
-        // Téléverser le fichier
         profileImagesRef.putFile(fileUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // Obtenir l'URL de téléchargement
                     profileImagesRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String downloadUrl = uri.toString();
-
-                        // Mettre à jour le champ 'photoUrl' dans Firestore
                         updateFirestoreProfilePhoto(downloadUrl);
                     });
                 })
@@ -180,9 +178,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * Met à jour le champ 'photoUrl' dans le document Firestore de l'employé.
-     */
     private void updateFirestoreProfilePhoto(String photoUrl) {
         employeeRef.update("photoUrl", photoUrl)
                 .addOnSuccessListener(aVoid -> {
@@ -194,11 +189,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-    // --- LOGIQUE DE CHARGEMENT ET SAUVEGARDE EXISTANTE ---
+    // --- LOGIQUE DE CHARGEMENT ET SAUVEGARDE ---
 
-    /**
-     * Recherche et charge les données du profil de l'employé à partir de Firestore.
-     */
     private void loadEmployeeData() {
         String userEmail = currentUser.getEmail();
         if (userEmail == null) return;
@@ -226,9 +218,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * Affiche les données de Firestore dans les champs d'édition.
-     */
     private void displayData(DocumentSnapshot document) {
         // Informations personnelles
         etFirstName.setText(document.getString("prenom"));
@@ -246,33 +235,21 @@ public class EditProfileActivity extends AppCompatActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
             etHireDate.setText(sdf.format(dateEmbaucheTimestamp.toDate()));
         }
-
-        // ⭐ TODO: Charger la photo de profil existante (avec Glide ou Picasso)
-        // String photoUrl = document.getString("photoUrl");
-        // if (photoUrl != null && !photoUrl.isEmpty()) {
-        //     // Utiliser Glide.with(this).load(photoUrl).into(ivProfilePhoto);
-        // }
     }
 
-    /**
-     * Affiche l'email de l'utilisateur authentifié si le profil Firestore est introuvable.
-     */
     private void displayDefaultAuthData(String email) {
         if (etEmail != null) {
             etEmail.setText(email);
         }
     }
 
-    /**
-     * Enregistre les modifications de profil dans Firestore.
-     */
     private void saveProfileChanges() {
         if (employeeRef == null) {
             Toast.makeText(this, "Impossible d'enregistrer: Profil non chargé.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Récupération des données modifiables
+        // Récupération des données modifiables (personnelles)
         String firstName = etFirstName.getText().toString().trim();
         String lastName = etLastName.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
@@ -286,6 +263,14 @@ public class EditProfileActivity extends AppCompatActivity {
         updates.put("prenom", firstName);
         updates.put("nom", lastName);
         updates.put("telephone", phone);
+
+        // ⭐ LOGIQUE CLÉ : Inclure les champs professionnels UNIQUEMENT si l'édition est autorisée
+        if (isProfessionalEditAllowed) {
+            updates.put("poste", etPosition.getText().toString().trim());
+            updates.put("departement", etDepartment.getText().toString().trim());
+            // Note: La modification de la date d'embauche est complexe (Timestamp), elle est exclue ici par simplicité,
+            // mais un admin pourrait vouloir la mettre à jour.
+        }
 
         employeeRef.update(updates)
                 .addOnSuccessListener(aVoid -> {
