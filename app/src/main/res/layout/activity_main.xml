@@ -91,6 +91,7 @@
                             android:background="@android:color/transparent"
                             android:textSize="18dp"
                             android:maxLines="1"
+                            app:boxBackgroundMode="none"
                             />
                 </com.google.android.material.textfield.TextInputLayout>
 
