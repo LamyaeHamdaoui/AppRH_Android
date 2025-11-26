@@ -15,6 +15,9 @@
             android:name=".ProfileEmployeActivity"
             android:exported="false" />
         <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ModifierReunionActivity"
             android:exported="false" />
         <activity
@@ -35,9 +38,6 @@
             android:exported="false" />
         <activity
             android:name=".HelpSupportActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ValidationEmailActivity"
             android:exported="false" />
         <activity
             android:name=".RecuperationPasswordActivity"
@@ -78,6 +78,8 @@
         <activity
             android:name=".NotificationsEmployesActivity"
             android:exported="true" />
+        <activity android:name=".SecurityActivity"
+            android:label="Sécurité du Compte" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

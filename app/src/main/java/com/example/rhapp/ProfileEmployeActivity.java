@@ -2,6 +2,7 @@ package com.example.rhapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -20,11 +21,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
+import com.bumptech.glide.Glide; // ⭐ NOUVEAU
+import com.bumptech.glide.load.engine.DiskCacheStrategy; // ⭐ NOUVEAU
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class ProfileEmployeActivity extends AppCompatActivity {
+// L'activité implémente l'interface pour recevoir le signal de confirmation du Fragment
+public class ProfileEmployeActivity extends AppCompatActivity implements DeconnecterFragment.LogoutListener {
 
     private static final String TAG = "ProfileEmployeActivity";
     private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
@@ -34,7 +38,9 @@ public class ProfileEmployeActivity extends AppCompatActivity {
     private TextView userDateEmbauche, userInitial;
     private ProgressBar progressBar;
 
-    // VARIABLE CLÉ: Stocke le rôle (rh ou employe) pour la navigation conditionnelle
+    // ⭐ NOUVEAU : ImageView pour la photo de profil
+    private ImageView userProfileImage;
+
     private String userRole;
 
     // Conteneurs principaux
@@ -63,7 +69,6 @@ public class ProfileEmployeActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        // Initialisation du rôle à null/défaut pour éviter une erreur potentielle
         userRole = null;
 
         initializeViews();
@@ -86,6 +91,20 @@ public class ProfileEmployeActivity extends AppCompatActivity {
         highlightFooterIcon();
     }
 
+    // ⭐ NOUVELLE MÉTHODE : Recharge les données à chaque fois que l'activité redevient visible
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail();
+            if (userEmail != null) {
+                // Forcer le rechargement pour afficher la nouvelle photo de profil
+                loadUserProfileDataByEmail(userEmail);
+            }
+        }
+    }
+
+
     @SuppressLint("WrongViewCast")
     private void initializeViews() {
         // Bloc Profile Card
@@ -93,6 +112,9 @@ public class ProfileEmployeActivity extends AppCompatActivity {
         userPoste = findViewById(R.id.userPoste);
         userDepartment = findViewById(R.id.userDepartment);
         userInitial = findViewById(R.id.userInitial);
+
+        // ⭐ NOUVEAU : Récupération de l'ImageView
+        userProfileImage = findViewById(R.id.userProfileImage);
 
         // Bloc Détails
         userEmail = findViewById(R.id.userEmailDetail);
@@ -145,18 +167,37 @@ public class ProfileEmployeActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         if (seDeconnecterButton != null) {
-            seDeconnecterButton.setOnClickListener(v -> logoutUser());
+            seDeconnecterButton.setOnClickListener(v -> displayLogoutConfirmation());
         }
         setupFooterNavigation();
         setupSettingsClickListeners();
     }
+
+    private void displayLogoutConfirmation() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        DeconnecterFragment deconnecterFragment = new DeconnecterFragment();
+        deconnecterFragment.show(fragmentManager, "DeconnecterFragmentTag");
+    }
+
+    @Override
+    public void onLogoutConfirmed() {
+        performLogout();
+    }
+
+    private void performLogout() {
+        mAuth.signOut();
+        Toast.makeText(this, "Déconnexion réussie.", Toast.LENGTH_SHORT).show();
+        navigateToMainActivity();
+    }
+
 
     private void setupFooterNavigation() {
         if (footerAccueil != null) {
             footerAccueil.setOnClickListener(v -> navigateToHome());
         }
         if (footerPresence != null) {
-            footerPresence.setOnClickListener(v -> navigateToEmployees());
+            // Remplacez navigateToEmployees par navigateToPresence si c'est l'activité prévue pour l'employé
+            footerPresence.setOnClickListener(v -> navigateToPresence());
         }
         if (footerConges != null) {
             footerConges.setOnClickListener(v -> navigateToConges());
@@ -165,6 +206,13 @@ public class ProfileEmployeActivity extends AppCompatActivity {
             footerReunions.setOnClickListener(v -> navigateToReunions());
         }
     }
+
+    // ⭐ NOUVELLE MÉTHODE DE NAVIGATION AJUSTÉE
+    private void navigateToPresence() {
+        // Remplacez par l'activité correcte pour la gestion de présence si ce n'est pas EmployeActivity
+        startActivity(new Intent(ProfileEmployeActivity.this, EmployeActivity.class));
+    }
+
 
     private void setupSettingsClickListeners() {
         LinearLayout modifierProfil = findViewById(R.id.modifier_profil);
@@ -210,8 +258,10 @@ public class ProfileEmployeActivity extends AppCompatActivity {
                         String departement = employeeSnapshot.getString("departement");
                         String role = employeeSnapshot.getString("role");
                         Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
+                        String photoUrl = employeeSnapshot.getString("photoUrl"); // ⭐ RÉCUPÉRATION DE L'URL
 
-                        displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp);
+                        // ⭐ MISE À JOUR : Passage de l'URL de la photo
+                        displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp, photoUrl);
 
                     } else {
                         if (task.isSuccessful()) {
@@ -236,18 +286,18 @@ public class ProfileEmployeActivity extends AppCompatActivity {
         String displayName = currentUser != null && currentUser.getDisplayName() != null ?
                 currentUser.getDisplayName() : "Employé";
 
-        // Rôle par défaut : "employe"
+        // ⭐ MISE À JOUR : Passage de null pour photoUrl
         displayAllUserData(null, displayName, email, "Poste non défini",
-                "Département non défini", "employe", null);
+                "Département non défini", "employe", null, null);
     }
 
     /**
-     * Affiche toutes les données utilisateur dans l'UI et stocke le rôle.
+     * Affiche toutes les données utilisateur dans l'UI et gère l'affichage de la photo/initiales.
      */
     private void displayAllUserData(String nom, String prenom, String email,
-                                    String poste, String departement, String role, Timestamp dateEmbaucheTimestamp) {
+                                    String poste, String departement, String role,
+                                    Timestamp dateEmbaucheTimestamp, String photoUrl) { // ⭐ NOUVEAU PARAMÈTRE
 
-        // Stockage du rôle pour la navigation conditionnelle
         this.userRole = role;
 
         // 1. Bloc Card
@@ -260,11 +310,31 @@ public class ProfileEmployeActivity extends AppCompatActivity {
         if (userPoste != null) userPoste.setText(posteDisplay);
         if (userDepartment != null) userDepartment.setText(departmentDisplay);
 
-        // Initiales
-        if (userInitial != null) {
-            String initial = buildInitials(nom, prenom);
-            userInitial.setText(initial);
+        // ⭐ LOGIQUE CLÉ : Affichage de la photo ou des initiales
+        if (userProfileImage != null && userInitial != null) {
+            if (photoUrl != null && !photoUrl.isEmpty()) {
+                // 1. Photo disponible : Charger l'image et cacher les initiales
+                userInitial.setVisibility(View.GONE);
+                userProfileImage.setVisibility(View.VISIBLE);
+
+                Glide.with(this)
+                        .load(photoUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
+                        .into(userProfileImage);
+
+            } else {
+                // 2. Pas de photo : Afficher les initiales et cacher l'ImageView
+                userInitial.setVisibility(View.VISIBLE);
+                // Utiliser INVISIBLE pour potentiellement conserver la mise en page
+                userProfileImage.setVisibility(View.INVISIBLE);
+
+                String initial = buildInitials(nom, prenom);
+                userInitial.setText(initial);
+            }
         }
+
 
         // 2. Bloc Détails
         if (userEmail != null) userEmail.setText(formatText(email, "N/A"));
@@ -346,12 +416,6 @@ public class ProfileEmployeActivity extends AppCompatActivity {
         }
     }
 
-    private void logoutUser() {
-        mAuth.signOut();
-        Toast.makeText(this, "Déconnexion réussie.", Toast.LENGTH_SHORT).show();
-        navigateToMainActivity();
-    }
-
     private void navigateToMainActivity() {
         Intent intent = new Intent(ProfileEmployeActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -359,52 +423,38 @@ public class ProfileEmployeActivity extends AppCompatActivity {
         finish();
     }
 
-    // --- Méthodes de navigation corrigées ---
-
-    /**
-     * Navigue vers l'écran d'accueil en fonction du rôle de l'utilisateur.
-     * Si le rôle est 'rh', va à AcceuilRhActivity, sinon à AcceuilEmployeActivity.
-     */
+    // --- Méthodes de navigation ---
     private void navigateToHome() {
         startActivity(new Intent(ProfileEmployeActivity.this, AcceuilEmployeActivity.class));
     }
 
     private void navigateToEmployees() {
-        // Ajout de startActivity
-        startActivity(new Intent(ProfileEmployeActivity.this, EmployeActivity.class));
+        // C'était une erreur de nommage, c'est remplacé par navigateToPresence pour le footer
+        navigateToPresence();
     }
 
     private void navigateToConges() {
-        // Ajout de startActivity
         startActivity(new Intent(ProfileEmployeActivity.this, CongesActivity.class));
     }
 
     private void navigateToReunions() {
-        // Correction: Ajout de startActivity. J'assume l'Activity est ReunionActivity.class
         startActivity(new Intent(ProfileEmployeActivity.this, ReunionEmployeActivity.class));
     }
 
     private void navigateToEditProfile() {
-        // Ajout de startActivity (appelé via modifier_profil)
         startActivity(new Intent(ProfileEmployeActivity.this, EditProfileActivity.class));
     }
 
 
-    /**
-     * Navigue vers l'écran de Notifications en fonction du rôle de l'utilisateur.
-     * Ce bloc remplace la logique de notification qui était dupliquée dans navigateToHome().
-     */
     private void navigateToNotifications() {
-        startActivity(new Intent(ProfileEmployeActivity.this, NotificationsRhActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, NotificationsEmployesActivity.class));
     }
 
     private void navigateToSecurity() {
-        // Correction: Ajout de startActivity
         startActivity(new Intent(ProfileEmployeActivity.this, SecurityActivity.class));
     }
 
     private void navigateToHelpSupport() {
-        // Correction: Ajout de startActivity
         startActivity(new Intent(ProfileEmployeActivity.this, HelpSupportActivity.class));
     }
 

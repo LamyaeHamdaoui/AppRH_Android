@@ -7,12 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="#F5F5F5">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-                android:orientation="vertical"
+            android:orientation="vertical"
             tools:ignore="MissingConstraints"
             android:padding="15dp">
+
                 <ImageView
                     android:id="@+id/logoApp"
                     android:layout_gravity="center_horizontal"
@@ -40,8 +42,8 @@
                     android:text="Connectez-vous pour accédez à votre espace"
                     android:layout_marginTop="20dp"
                     android:textSize="18dp"/>
+
                 <TextView
-                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Email"
@@ -53,29 +55,46 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:hint="votre.email@exemple.com"
-
+                    android:inputType="textEmailAddress"
                     android:background="@drawable/border"
                     android:padding="10dp"
                     android:textSize="18dp"
                     android:layout_marginTop="5dp"/>
+
                 <TextView
-                    android:id="@+id/motDePasse"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Mot de passe"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:layout_marginTop="20dp" />
-                <EditText
-                    android:id="@+id/motDePasseBox"
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:hint="••••••••"
-                    android:inputType="textPassword"
-                    android:background="@drawable/border"
                     android:layout_marginTop="5dp"
-                    android:padding="10dp"
-                    android:textSize="18dp" />
+                    app:passwordToggleEnabled="true"
+                    android:background="@drawable/border"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
+                    android:theme="@style/Theme.RHApp"
+                    >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/motDePasseBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="Mot de passe"
+                            android:inputType="textPassword"
+                            android:background="@android:color/transparent"
+                            android:textSize="18dp"
+                            android:maxLines="1"
+                            app:boxBackgroundMode="none"
+                            />
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <Button
                     android:id="@+id/connecteBtn"
                     android:layout_width="match_parent"
@@ -115,6 +134,4 @@
                     app:backgroundTint="@null"
                     tools:ignore="RtlCompat"/>
         </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

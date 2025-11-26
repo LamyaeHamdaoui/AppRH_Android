@@ -17,33 +17,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <!-- Carte Photo de profil -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/card_shadow"
-                android:padding="24dp"
-                android:gravity="center"
-                android:layout_marginBottom="16dp">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ivProfilePhoto"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/user"
-                    app:civ_border_width="3dp"
-                    app:civ_border_color="#2196F3"/>
-
-                <Button
-                    android:id="@+id/btnChangePhoto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Changer la photo"
-                    android:textColor="#2196F3"
-                    android:background="@android:color/transparent"
-                    android:layout_marginTop="12dp" />
-
-            </LinearLayout>
 
             <!-- Carte Informations personnelles -->
             <LinearLayout
