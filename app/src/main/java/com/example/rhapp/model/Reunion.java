@@ -74,4 +74,15 @@ public class Reunion {
     public void setParticipants(String participants) { this.participants = participants; }
 
 
+    private int confirmedCount; // compteur des confirmations
+
+    public int getConfirmedCount() { return confirmedCount; }
+    public void setConfirmedCount(int confirmedCount) { this.confirmedCount = confirmedCount; }
+
+    private boolean confirmed = false; // indique si l'employé a confirmé
+
+    public boolean isConfirmed() { return confirmed; }
+    public void setConfirmed(boolean confirmed) { this.confirmed = confirmed; }
+
+
 }

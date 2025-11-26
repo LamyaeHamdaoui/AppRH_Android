@@ -34,6 +34,9 @@ public class reunionActivity extends AppCompatActivity {
 
     private LinearLayout reunionPlanifieContainer, reunionPasseContainer,noReunionContainer;
     private FirebaseFirestore db;
+    private TextView nbrParticipants;
+    String Participants;
+
     // ⚠️ Variable de contrôle pour savoir si on doit rafraîchir
     private boolean shouldRefresh = false;
 
@@ -109,9 +112,12 @@ public class reunionActivity extends AppCompatActivity {
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
         db = FirebaseFirestore.getInstance();
         afficherReunionsVenirs();
+
+
+        Intent intent = getIntent();
+         Participants = intent.getStringExtra("nbrConfirm");
+
         statistique();
-
-
     }
 
     @Override
@@ -267,6 +273,8 @@ public class reunionActivity extends AppCompatActivity {
                             lieuReunion.setText(reunion.getLieu());
                             participantsReunion.setText(reunion.getDescription());
 
+
+
                             reunionPasseContainer.addView(cardView);
                         }
                     }
@@ -372,9 +380,11 @@ public class reunionActivity extends AppCompatActivity {
     private TextView nbrReunionVenir;
     private TextView nbrReunionPassees;
 
+
     private void statistique() {
         nbrReunionVenir = findViewById(R.id.nbrReunionVenir);
         nbrReunionPassees = findViewById(R.id.nbrReunionPassees);
+        nbrParticipants = findViewById(R.id.nbrParticipants);
 
         db.collection("Reunions")
                 .addSnapshotListener((querySnapshot, error) -> {
@@ -382,6 +392,7 @@ public class reunionActivity extends AppCompatActivity {
 
                     int nbrVenirs = 0;
                     int nbrPassees = 0;
+                    int nbrConfirmes = 0; // ← compteur des participants confirmés
 
                     if (querySnapshot != null) {
                         for (QueryDocumentSnapshot doc : querySnapshot) {
@@ -389,16 +400,21 @@ public class reunionActivity extends AppCompatActivity {
                             int etatDate = compareDate(reunion.getDate(), reunion.getHeure());
                             if (etatDate == 1 || etatDate == 0) nbrVenirs++;
                             else nbrPassees++;
+
+                            // 🔹 Compter les participants confirmés
+                            if (reunion.isConfirmed()) nbrConfirmes++;
                         }
                     }
 
                     nbrReunionVenir.setText(String.valueOf(nbrVenirs));
                     nbrReunionPassees.setText(String.valueOf(nbrPassees));
+                    nbrParticipants.setText(String.valueOf(nbrConfirmes));
 
                     reunionPlanifieContainer.setVisibility(nbrVenirs == 0 ? View.GONE : View.VISIBLE);
                     reunionPasseContainer.setVisibility(nbrPassees == 0 ? View.GONE : View.VISIBLE);
                 });
     }
+
 
 
 
