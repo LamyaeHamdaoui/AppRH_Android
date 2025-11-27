@@ -1,3 +1,4 @@
+
 package com.example.rhapp;
 
 import android.app.DatePickerDialog;
@@ -15,6 +16,9 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.rhapp.model.Conge;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -22,11 +26,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.UUID;
 
 public class DemandeCongeFragment extends Fragment {
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     private Spinner typeCongeSpinner;
     private EditText dateDebutEditText, dateFinEditText, motifEditText;
@@ -44,8 +48,9 @@ public class DemandeCongeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_demande_conge, container, false);
 
-        // Initialisation Firebase seulement Firestore
+        // Initialisation Firebase
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         initializeViews(view);
         setupDatePickers();
@@ -93,6 +98,13 @@ public class DemandeCongeFragment extends Fragment {
                 calendarDebut.set(Calendar.MONTH, month);
                 calendarDebut.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                 updateDateEditText(dateDebutEditText, calendarDebut);
+
+                // Si la date de fin est avant la nouvelle date de début, la mettre à jour
+                if (calendarFin.before(calendarDebut)) {
+                    calendarFin.setTime(calendarDebut.getTime());
+                    calendarFin.add(Calendar.DAY_OF_MONTH, 1);
+                    updateDateEditText(dateFinEditText, calendarFin);
+                }
             }
         };
 
@@ -134,6 +146,45 @@ public class DemandeCongeFragment extends Fragment {
     }
 
     private void envoyerDemandeConge() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(getContext(), "Veuillez vous connecter", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userEmail = currentUser.getEmail();
+        if (userEmail == null) {
+            Toast.makeText(getContext(), "Email utilisateur non disponible", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Récupérer les informations de l'employé depuis Firestore
+        db.collection("employees")
+                .whereEqualTo("email", userEmail.toLowerCase().trim())
+                .limit(1)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                        DocumentSnapshot employeeDoc = task.getResult().getDocuments().get(0);
+                        String userId = employeeDoc.getId();
+                        String nom = employeeDoc.getString("nom");
+                        String prenom = employeeDoc.getString("prenom");
+                        String departement = employeeDoc.getString("departement");
+                        Integer soldeConge = employeeDoc.getLong("soldeConge") != null ?
+                                employeeDoc.getLong("soldeConge").intValue() : 23; // Valeur par défaut
+
+                        String userName = (prenom != null ? prenom : "") + " " + (nom != null ? nom : "");
+                        userName = userName.trim();
+
+                        // Continuer avec l'envoi de la demande
+                        envoyerDemandeAvecInfos(userId, userName, userEmail, departement, soldeConge);
+                    } else {
+                        Toast.makeText(getContext(), "Profil employé non trouvé", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void envoyerDemandeAvecInfos(String userId, String userName, String userEmail, String departement, int soldeConge) {
         String typeConge = typeCongeSpinner.getSelectedItem().toString();
         String dateDebutStr = dateDebutEditText.getText().toString();
         String dateFinStr = dateFinEditText.getText().toString();
@@ -174,16 +225,18 @@ public class DemandeCongeFragment extends Fragment {
                 return;
             }
 
-            // Générer un ID unique pour l'utilisateur (sans authentification)
-            String userId = "user_" + UUID.randomUUID().toString().substring(0, 8);
-            String userName = "Employé Test";
-            String userDepartment = "Développement";
+            // Vérifier si le solde est suffisant
+            if (duree > soldeConge) {
+                Toast.makeText(getContext(), "Solde insuffisant. Vous avez " + soldeConge + " jours disponibles", Toast.LENGTH_LONG).show();
+                return;
+            }
 
-            // Création de l'objet Conge
+            // Création de l'objet Conge avec les vraies informations
             Conge conge = new Conge(
                     userId,
                     userName,
-                    userDepartment,
+                    userEmail,
+                    departement != null ? departement : "Non spécifié",
                     typeConge,
                     dateDebut,
                     dateFin,
