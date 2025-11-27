@@ -312,9 +312,23 @@ public class CongesEmploye extends AppCompatActivity {
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM. yyyy", Locale.FRENCH);
 
-                for (Conge conge : congesList) {
+                for (int i = 0; i < congesList.size(); i++) {
                     try {
+                        Conge conge = congesList.get(i);
                         View carteView = getLayoutInflater().inflate(R.layout.item_historique_conge_card, null);
+
+                        // Ajouter un espace supplémentaire entre les cartes
+                        if (i > 0) {
+                            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carteView.getLayoutParams();
+                            if (params == null) {
+                                params = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                            }
+                            params.topMargin = 16; // 16dp d'espace entre les cartes
+                            carteView.setLayoutParams(params);
+                        }
 
                         TextView typeConge = carteView.findViewById(R.id.TypeConge);
                         TextView statutConge = carteView.findViewById(R.id.StatutConge);
@@ -322,6 +336,7 @@ public class CongesEmploye extends AppCompatActivity {
                         TextView dureeConge = carteView.findViewById(R.id.DureeConge);
                         TextView motifConge = carteView.findViewById(R.id.MotifConge);
 
+                        // Le reste de votre code pour remplir les données...
                         if (typeConge != null && conge.getTypeConge() != null)
                             typeConge.setText(conge.getTypeConge());
                         if (statutConge != null && conge.getStatut() != null) {
