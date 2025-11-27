@@ -6,6 +6,7 @@ public class Conge {
     private String id;
     private String userId;
     private String userName;
+    private String userEmail; // AJOUT: Email de l'utilisateur
     private String userDepartment;
     private String typeConge;
     private Date dateDebut;
@@ -17,12 +18,15 @@ public class Conge {
 
     // Constructeur vide OBLIGATOIRE pour Firestore
     public Conge() {
+        this.dateDemande = new Date();
     }
 
-    public Conge(String userId, String userName, String userDepartment, String typeConge,
+    // Constructeur complet
+    public Conge(String userId, String userName, String userEmail, String userDepartment, String typeConge,
                  Date dateDebut, Date dateFin, int duree, String motif, String statut) {
         this.userId = userId;
         this.userName = userName;
+        this.userEmail = userEmail; // AJOUT
         this.userDepartment = userDepartment;
         this.typeConge = typeConge;
         this.dateDebut = dateDebut;
@@ -33,7 +37,7 @@ public class Conge {
         this.dateDemande = new Date();
     }
 
-    // Getters et Setters (TOUS doivent être présents)
+    // Getters et Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -42,6 +46,9 @@ public class Conge {
 
     public String getUserName() { return userName; }
     public void setUserName(String userName) { this.userName = userName; }
+
+    public String getUserEmail() { return userEmail; } // AJOUT
+    public void setUserEmail(String userEmail) { this.userEmail = userEmail; } // AJOUT
 
     public String getUserDepartment() { return userDepartment; }
     public void setUserDepartment(String userDepartment) { this.userDepartment = userDepartment; }
