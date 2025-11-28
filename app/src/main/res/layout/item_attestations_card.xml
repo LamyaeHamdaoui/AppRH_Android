@@ -140,11 +140,12 @@
                 android:id="@+id/btnReject"
                 android:layout_width="45dp"
                 android:layout_height="wrap_content"
-                android:text="⊗"
+                android:text="X"
                 android:textColor="@color/white"
                 android:background="@drawable/border_red"
                 app:backgroundTint="@null"
                 android:textStyle="bold"
+                android:textSize="17sp"
                 android:padding="0dp"
                 />
 

@@ -1,10 +1,14 @@
 package com.example.rhapp;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.InputType;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.rhapp.model.Attestation;
@@ -22,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.Timestamp;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,20 +36,27 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AttestationsActivity extends AppCompatActivity {
 
     private Button btnAttente, btnApprouve, btnRefuse;
     private LinearLayout containerAttestations;
+    private ProgressDialog progressDialog;
     private TextView tvTotal, tvAttente, tvApprouve, tvRefuse;
 
-    // AJOUT: Écouteurs temps réel
+    // Écouteurs temps réel
     private ListenerRegistration attestationsListener;
     private ListenerRegistration statsListener;
     private SwipeRefreshLayout swipeRefreshLayout;
-
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
     private String filtreActuel = "en_attente";
+
+    // Executor pour les opérations en arrière-plan
+    private final ExecutorService backgroundExecutor = Executors.newFixedThreadPool(2);
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +83,6 @@ public class AttestationsActivity extends AppCompatActivity {
         tvRefuse = findViewById(R.id.tvRefuse);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
-// Configurer le swipe to refresh
         swipeRefreshLayout.setOnRefreshListener(() -> {
             rechargerDonnees();
             swipeRefreshLayout.setRefreshing(false);
@@ -79,24 +91,23 @@ public class AttestationsActivity extends AppCompatActivity {
 
     private void setupFirebase() {
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Nettoyer les écouteurs
+        // Nettoyer les écouteurs et l'executor
         if (attestationsListener != null) {
             attestationsListener.remove();
         }
         if (statsListener != null) {
             statsListener.remove();
         }
+        backgroundExecutor.shutdown();
     }
 
-
-
     private void loadStats() {
-        // Supprimer l'écouteur précédent s'il existe
         if (statsListener != null) {
             statsListener.remove();
         }
@@ -104,48 +115,55 @@ public class AttestationsActivity extends AppCompatActivity {
         statsListener = db.collection("Attestations")
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
-                        Toast.makeText(this, "Erreur chargement stats: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        showErrorOnMainThread("Erreur chargement stats: " + e.getMessage());
                         Log.e("ATTESTATIONS_RH", "Erreur stats: ", e);
                         return;
                     }
 
-                    int total = 0, enAttente = 0, approuvees = 0, refusees = 0;
+                    // Traitement des stats en arrière-plan
+                    backgroundExecutor.execute(() -> {
+                        try {
+                            int total = 0, enAttente = 0, approuvees = 0, refusees = 0;
 
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        total++;
-                        String statut = document.getString("statut");
+                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                total++;
+                                String statut = document.getString("statut");
 
-                        if (statut != null) {
-                            switch (statut) {
-                                case "en_attente":
-                                    enAttente++;
-                                    break;
-                                case "approuvee":
-                                    approuvees++;
-                                    break;
-                                case "refusee":
-                                    refusees++;
-                                    break;
+                                if (statut != null) {
+                                    switch (statut) {
+                                        case "en_attente":
+                                            enAttente++;
+                                            break;
+                                        case "approuvee":
+                                            approuvees++;
+                                            break;
+                                        case "refusee":
+                                            refusees++;
+                                            break;
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    updateStatsUI(total, enAttente, approuvees, refusees);
+                            updateStatsUI(total, enAttente, approuvees, refusees);
+                        } catch (Exception ex) {
+                            Log.e("ATTESTATIONS_RH", "Erreur calcul stats: ", ex);
+                        }
+                    });
                 });
     }
 
     private void updateStatsUI(int total, int enAttente, int approuvees, int refusees) {
-        runOnUiThread(() -> {
+        mainHandler.post(() -> {
             if (tvTotal != null) tvTotal.setText(String.valueOf(total));
             if (tvAttente != null) tvAttente.setText(String.valueOf(enAttente));
             if (tvApprouve != null) tvApprouve.setText(String.valueOf(approuvees));
             if (tvRefuse != null) tvRefuse.setText(String.valueOf(refusees));
         });
     }
+
     private void chargerAttestations(String statut) {
         Log.d("ATTESTATIONS_RH", "Chargement TEMPS RÉEL attestations avec statut: " + statut);
 
-        // Supprimer l'écouteur précédent s'il existe
         if (attestationsListener != null) {
             attestationsListener.remove();
         }
@@ -154,92 +172,123 @@ public class AttestationsActivity extends AppCompatActivity {
                 .whereEqualTo("statut", statut)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
-                        Toast.makeText(this, "Erreur chargement: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        showErrorOnMainThread("Erreur chargement: " + e.getMessage());
                         Log.e("ATTESTATIONS_RH", "Erreur Firestore: ", e);
                         return;
                     }
 
-                    List<Attestation> attestations = new ArrayList<>();
-                    Log.d("ATTESTATIONS_RH", "Nombre de documents trouvés (temps réel): " + queryDocumentSnapshots.size());
-
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                    // Traitement des données en arrière-plan
+                    backgroundExecutor.execute(() -> {
                         try {
-                            // RÉCUPÉRATION CORRECTE DES DONNÉES DEPUIS FIRESTORE
-                            Attestation attestation = new Attestation();
-                            attestation.setId(document.getId());
-
-                            // Données de base de l'attestation
-                            attestation.setEmployeId(document.getString("employeeId"));
-                            attestation.setTypeAttestation(document.getString("typeAttestation"));
-                            attestation.setMotif(document.getString("motif"));
-                            attestation.setStatut(document.getString("statut"));
-
-                            // Récupération des données de l'employé
-                            String employeeNom = document.getString("employeeNom");
-                            String employeeDepartment = document.getString("employeeDepartment");
-
-                            if (employeeNom != null && !employeeNom.isEmpty()) {
-                                attestation.setEmployeNom(employeeNom);
-                            } else {
-                                attestation.setEmployeNom("Nom non disponible");
-                            }
-
-                            if (employeeDepartment != null && !employeeDepartment.isEmpty()) {
-                                attestation.setEmployeDepartement(employeeDepartment);
-                            } else {
-                                attestation.setEmployeDepartement("Département non disponible");
-                            }
-
-                            // Gestion des dates
-                            Timestamp dateDemande = document.getTimestamp("dateDemande");
-                            if (dateDemande != null) {
-                                attestation.setDateDemande(dateDemande.toDate());
-                            }
-
-                            Timestamp dateTraitement = document.getTimestamp("dateTraitement");
-                            if (dateTraitement != null) {
-                                attestation.setDateTraitement(dateTraitement.toDate());
-                            }
-
-                            attestation.setPdfUrl(document.getString("pdfUrl"));
-                            attestation.setMotifRefus(document.getString("motifRefus"));
-
-                            attestations.add(attestation);
-
+                            List<Attestation> attestations = processAttestationsData(queryDocumentSnapshots);
+                            afficherAttestations(attestations);
                         } catch (Exception ex) {
-                            Log.e("ATTESTATIONS_RH", "Erreur conversion document: ", ex);
-                        }
-                    }
-
-                    // TRI MANUEL par date de demande (plus récent en premier)
-                    Collections.sort(attestations, new Comparator<Attestation>() {
-                        @Override
-                        public int compare(Attestation a1, Attestation a2) {
-                            Date date1 = a1.getDateDemande();
-                            Date date2 = a2.getDateDemande();
-
-                            if (date1 == null && date2 == null) return 0;
-                            if (date1 == null) return 1;
-                            if (date2 == null) return -1;
-
-                            return date2.compareTo(date1); // Ordre décroissant
+                            Log.e("ATTESTATIONS_RH", "Erreur traitement attestations: ", ex);
                         }
                     });
-
-                    afficherAttestations(attestations);
                 });
     }
 
+    private List<Attestation> processAttestationsData(Iterable<QueryDocumentSnapshot> queryDocumentSnapshots) {
+        List<Attestation> attestations = new ArrayList<>();
+        Log.d("ATTESTATIONS_RH", "Traitement des attestations en arrière-plan");
+
+        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+            try {
+                Attestation attestation = createAttestationFromDocument(document);
+                if (attestation != null) {
+                    attestations.add(attestation);
+                }
+            } catch (Exception ex) {
+                Log.e("ATTESTATIONS_RH", "Erreur conversion document: ", ex);
+            }
+        }
+
+        // Tri par date de demande (plus récent en premier)
+        Collections.sort(attestations, new Comparator<Attestation>() {
+            @Override
+            public int compare(Attestation a1, Attestation a2) {
+                Date date1 = a1.getDateDemande();
+                Date date2 = a2.getDateDemande();
+
+                if (date1 == null && date2 == null) return 0;
+                if (date1 == null) return 1;
+                if (date2 == null) return -1;
+
+                return date2.compareTo(date1);
+            }
+        });
+
+        return attestations;
+    }
+
+    private Attestation createAttestationFromDocument(QueryDocumentSnapshot document) {
+        Attestation attestation = new Attestation();
+        attestation.setId(document.getId());
+
+        // Données de base
+        attestation.setEmployeId(document.getString("employeeId"));
+        attestation.setTypeAttestation(document.getString("typeAttestation"));
+        attestation.setMotif(document.getString("motif"));
+        attestation.setStatut(document.getString("statut"));
+
+        // Données employé
+        String employeeNom = document.getString("employeeNom");
+        String employeeDepartment = document.getString("employeeDepartment");
+
+        attestation.setEmployeNom(employeeNom != null && !employeeNom.isEmpty() ?
+                employeeNom : "Nom non disponible");
+        attestation.setEmployeDepartement(employeeDepartment != null && !employeeDepartment.isEmpty() ?
+                employeeDepartment : "Département non disponible");
+
+        // Gestion des dates
+        Timestamp dateDemande = document.getTimestamp("dateDemande");
+        if (dateDemande != null) {
+            attestation.setDateDemande(dateDemande.toDate());
+        }
+
+        Timestamp dateTraitement = document.getTimestamp("dateTraitement");
+        if (dateTraitement != null) {
+            attestation.setDateTraitement(dateTraitement.toDate());
+        }
+
+        attestation.setPdfUrl(document.getString("pdfUrl"));
+        attestation.setMotifRefus(document.getString("motifRefus"));
+
+        return attestation;
+    }
+
     private void showMotifRefusDialog(Attestation attestation) {
-        // Créer un dialog personnalisé
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Motif du refus");
         builder.setMessage("Veuillez saisir le motif du refus :");
 
-        // Créer l'input
-        final EditText input = new EditText(this);
+        final EditText input = createMotifRefusInput();
+        LinearLayout container = createDialogContainer(input);
+
+        builder.setView(container);
+
+        builder.setPositiveButton("Confirmer le refus", (dialog, which) -> {
+            String motifRefus = input.getText().toString().trim();
+            if (motifRefus.isEmpty()) {
+                showErrorOnMainThread("Veuillez saisir un motif de refus");
+            } else {
+                refuserAttestation(attestation, motifRefus);
+            }
+        });
+
+        builder.setNegativeButton("Annuler", (dialog, which) -> dialog.cancel());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        customizeDialogButton(dialog, AlertDialog.BUTTON_POSITIVE, Color.RED);
+    }
+
+    private EditText createMotifRefusInput() {
+        EditText input = new EditText(this);
         input.setHint("Saisissez le motif du refus...");
-        input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setInputType(android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         input.setMinLines(3);
         input.setMaxLines(5);
         input.setGravity(Gravity.START);
@@ -251,60 +300,56 @@ public class AttestationsActivity extends AppCompatActivity {
         layoutParams.setMargins(50, 20, 50, 20);
         input.setLayoutParams(layoutParams);
 
+        return input;
+    }
+
+    private LinearLayout createDialogContainer(EditText input) {
         LinearLayout container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
         container.addView(input);
+        container.setBackgroundColor(Color.WHITE);
+        return container;
+    }
 
-        builder.setView(container);
-
-        // Boutons du dialog
-        builder.setPositiveButton("Confirmer le refus", (dialog, which) -> {
-            String motifRefus = input.getText().toString().trim();
-            if (motifRefus.isEmpty()) {
-                Toast.makeText(this, "Veuillez saisir un motif de refus", Toast.LENGTH_SHORT).show();
-            } else {
-                refuserAttestation(attestation, motifRefus);
-            }
-        });
-
-        builder.setNegativeButton("Annuler", (dialog, which) -> {
-            dialog.cancel();
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        // Personnaliser le bouton positif
-        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        if (positiveButton != null) {
-            positiveButton.setTextColor(Color.RED);
+    private void customizeDialogButton(AlertDialog dialog, int buttonId, int color) {
+        Button button = dialog.getButton(buttonId);
+        if (button != null) {
+            button.setTextColor(color);
         }
     }
+
     private void afficherAttestations(List<Attestation> attestations) {
-        runOnUiThread(() -> {
+        mainHandler.post(() -> {
             if (containerAttestations == null) return;
 
             containerAttestations.removeAllViews();
-
-            Log.d("ATTESTATIONS_RH", "Nombre d'attestations à afficher: " + attestations.size());
+            Log.d("ATTESTATIONS_RH", "Affichage de " + attestations.size() + " attestations");
 
             if (attestations.isEmpty()) {
-                TextView emptyText = new TextView(this);
-                emptyText.setText("Aucune attestation " + getStatutText(filtreActuel));
-                emptyText.setTextSize(16);
-                emptyText.setPadding(50, 50, 50, 50);
-                emptyText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                containerAttestations.addView(emptyText);
+                showEmptyState();
                 return;
             }
 
             for (Attestation attestation : attestations) {
-                Log.d("ATTESTATIONS_RH", "Création vue pour: " + attestation.getEmployeNom() + " - " + attestation.getStatut());
-                View itemView = getLayoutForStatut(attestation.getStatut());
-                configureItemView(itemView, attestation);
+                View itemView = createAttestationItemView(attestation);
                 containerAttestations.addView(itemView);
             }
         });
+    }
+
+    private void showEmptyState() {
+        TextView emptyText = new TextView(this);
+        emptyText.setText("Aucune attestation " + getStatutText(filtreActuel));
+        emptyText.setTextSize(16);
+        emptyText.setPadding(50, 50, 50, 50);
+        emptyText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        containerAttestations.addView(emptyText);
+    }
+
+    private View createAttestationItemView(Attestation attestation) {
+        View itemView = getLayoutForStatut(attestation.getStatut());
+        configureItemView(itemView, attestation);
+        return itemView;
     }
 
     private View getLayoutForStatut(String statut) {
@@ -328,79 +373,57 @@ public class AttestationsActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
         String statut = attestation.getStatut();
 
-        // Récupérer les vues communes avec différents IDs possibles
+        // Récupérer et configurer les vues
+        setupCommonViews(itemView, attestation, dateFormat);
+
+        // Configurer selon le statut
+        switch (statut) {
+            case "en_attente":
+                configureEnAttenteView(itemView, attestation, dateFormat);
+                break;
+            case "approuvee":
+                configureApprouveeView(itemView, attestation, dateFormat);
+                break;
+            case "refusee":
+                configureRefuseeView(itemView, attestation, dateFormat);
+                break;
+        }
+    }
+
+    private void setupCommonViews(View itemView, Attestation attestation, SimpleDateFormat dateFormat) {
         TextView nomComplet = itemView.findViewById(R.id.nomComplet);
         TextView departement = itemView.findViewById(R.id.departement);
-
-        // IDs différents selon les layouts
-        TextView typeAttestation = itemView.findViewById(
-                itemView.findViewById(R.id.TypeAttestation) != null ?
-                        R.id.TypeAttestation : R.id.TypeAttestation
-        );
-
-        // CORRECTION : Utiliser le même ID pour tous les layouts
+        TextView typeAttestation = itemView.findViewById(R.id.TypeAttestation);
         TextView dateDemandee = itemView.findViewById(R.id.DateDemandee);
         TextView motif = itemView.findViewById(R.id.MotifAttestation);
 
-        // Remplir les données communes
         if (nomComplet != null) {
-            String nomEmploye = attestation.getEmployeNom();
-            if (nomEmploye != null && !nomEmploye.isEmpty()) {
-                nomComplet.setText(nomEmploye);
-            } else {
-                nomComplet.setText("Employé inconnu");
-            }
+            nomComplet.setText(attestation.getEmployeNom() != null ?
+                    attestation.getEmployeNom() : "Employé inconnu");
         }
 
         if (departement != null) {
-            String deptEmploye = attestation.getEmployeDepartement();
-            if (deptEmploye != null && !deptEmploye.isEmpty()) {
-                departement.setText(deptEmploye);
-            } else {
-                departement.setText("Département inconnu");
-            }
+            departement.setText(attestation.getEmployeDepartement() != null ?
+                    attestation.getEmployeDepartement() : "Département inconnu");
         }
 
         if (typeAttestation != null) {
-            String type = attestation.getTypeAttestation();
-            if (type != null && !type.isEmpty()) {
-                typeAttestation.setText(type);
-            } else {
-                typeAttestation.setText("Type non spécifié");
-            }
+            typeAttestation.setText(attestation.getTypeAttestation() != null ?
+                    attestation.getTypeAttestation() : "Type non spécifié");
         }
 
-        // CORRECTION : Afficher la date pour TOUS les statuts
-        if (dateDemandee != null) {
-            if (attestation.getDateDemande() != null) {
-                String dateStr = dateFormat.format(attestation.getDateDemande());
-                dateDemandee.setText("Demandée le " + dateStr);
-            } else {
-                dateDemandee.setText("Date inconnue");
-            }
+        if (dateDemandee != null && attestation.getDateDemande() != null) {
+            dateDemandee.setText("Demandée le " + dateFormat.format(attestation.getDateDemande()));
         }
 
         if (motif != null) {
             String motifText = attestation.getMotif();
-            if (motifText != null && !motifText.isEmpty()) {
-                motif.setText("Motif : " + motifText);
-            } else {
-                motif.setText("Aucun motif spécifié");
-            }
-        }
-
-        // Configurer selon le statut
-        if ("en_attente".equals(statut)) {
-            configureEnAttenteView(itemView, attestation, dateFormat);
-        } else if ("approuvee".equals(statut)) {
-            configureApprouveeView(itemView, attestation, dateFormat);
-        } else if ("refusee".equals(statut)) {
-            configureRefuseeView(itemView, attestation, dateFormat);
+            motif.setText("Motif : " + (motifText != null ? motifText : "Aucun motif spécifié"));
         }
     }
+
     private void configureEnAttenteView(View itemView, Attestation attestation, SimpleDateFormat dateFormat) {
         TextView statutView = itemView.findViewById(R.id.StatutAttestation);
-
         Button btnDetails = itemView.findViewById(R.id.btnDetails);
         Button btnValidate = itemView.findViewById(R.id.btnValidate);
         Button btnReject = itemView.findViewById(R.id.btnReject);
@@ -409,13 +432,11 @@ public class AttestationsActivity extends AppCompatActivity {
             statutView.setText("En attente");
         }
 
-        // Configurer les boutons pour les attestations en attente
         if (btnValidate != null) {
             btnValidate.setOnClickListener(v -> validerAttestation(attestation));
         }
 
         if (btnReject != null) {
-            // MODIFICATION ICI : Ouvrir le dialog pour saisir le motif
             btnReject.setOnClickListener(v -> showMotifRefusDialog(attestation));
         }
 
@@ -423,6 +444,7 @@ public class AttestationsActivity extends AppCompatActivity {
             btnDetails.setOnClickListener(v -> voirDetails(attestation));
         }
     }
+
     private void configureApprouveeView(View itemView, Attestation attestation, SimpleDateFormat dateFormat) {
         TextView dateApprouvee = itemView.findViewById(R.id.DateApprouvé);
 
@@ -432,8 +454,12 @@ public class AttestationsActivity extends AppCompatActivity {
         }
 
         Button btnTelecharger = itemView.findViewById(R.id.btnTelecharger);
+
+        // MODIFICATION : Afficher "PDF non disponible" au clic
         if (btnTelecharger != null) {
-            btnTelecharger.setOnClickListener(v -> telechargerAttestation(attestation));
+            btnTelecharger.setOnClickListener(v -> {
+                Toast.makeText(this, "PDF non disponible", Toast.LENGTH_SHORT).show();
+            });
         }
     }
 
@@ -442,35 +468,12 @@ public class AttestationsActivity extends AppCompatActivity {
 
         if (motifRefusView != null) {
             String motifRefus = attestation.getMotifRefus();
-            if (motifRefus != null && !motifRefus.isEmpty()) {
-                motifRefusView.setText("Refusée - " + motifRefus);
-            } else {
-                motifRefusView.setText("Refusée - Motif non spécifié");
-            }
+            motifRefusView.setText("Refusée - " + (motifRefus != null ? motifRefus : "Motif non spécifié"));
         }
 
-        // Afficher aussi la date de traitement si disponible
         TextView dateTraitementView = itemView.findViewById(R.id.DateDemandee);
         if (dateTraitementView != null && attestation.getDateTraitement() != null) {
-            String dateStr = dateFormat.format(attestation.getDateTraitement());
-            dateTraitementView.setText("Refusée le " + dateStr);
-        }
-    }
-    private void telechargerAttestation(Attestation attestation) {
-        if (attestation.getPdfUrl() != null && !attestation.getPdfUrl().isEmpty()) {
-            Toast.makeText(this, "Téléchargement du PDF pour " + attestation.getEmployeNom(), Toast.LENGTH_SHORT).show();
-            // Implémenter le téléchargement ici
-        } else {
-            Toast.makeText(this, "PDF non disponible pour " + attestation.getEmployeNom(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private String getStatutText(String statut) {
-        switch (statut) {
-            case "en_attente": return "en attente";
-            case "approuvee": return "approuvée";
-            case "refusee": return "refusée";
-            default: return "";
+            dateTraitementView.setText("Refusée le " + dateFormat.format(attestation.getDateTraitement()));
         }
     }
 
@@ -481,20 +484,15 @@ public class AttestationsActivity extends AppCompatActivity {
                         "statut", "approuvee",
                         "dateTraitement", new Date()
                 )
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Attestation approuvée avec succès", Toast.LENGTH_SHORT).show();
-                    rechargerDonnees();
-                })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Erreur: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    showErrorOnMainThread("Erreur validation: " + e.getMessage());
                     Log.e("ATTESTATIONS_RH", "Erreur validation: ", e);
                 });
     }
 
     private void refuserAttestation(Attestation attestation, String motifRefus) {
-        // Vérifier que le motif n'est pas vide
         if (motifRefus == null || motifRefus.trim().isEmpty()) {
-            Toast.makeText(this, "Le motif de refus ne peut pas être vide", Toast.LENGTH_SHORT).show();
+            showErrorOnMainThread("Le motif de refus ne peut pas être vide");
             return;
         }
 
@@ -506,34 +504,63 @@ public class AttestationsActivity extends AppCompatActivity {
                         "motifRefus", motifRefus.trim()
                 )
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Attestation refusée", Toast.LENGTH_SHORT).show();
-                    // Les données se mettront à jour automatiquement grâce à l'écouteur temps réel
+                    showSuccessOnMainThread("Attestation refusée");
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Erreur: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    showErrorOnMainThread("Erreur: " + e.getMessage());
                     Log.e("ATTESTATIONS_RH", "Erreur refus: ", e);
                 });
     }
-    private void voirDetails(Attestation attestation) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRENCH);
 
-        String details = "Nom: " + attestation.getEmployeNom() + "\n" +
-                "Département: " + attestation.getEmployeDepartement() + "\n" +
-                "Type: " + attestation.getTypeAttestation() + "\n" +
-                "Motif: " + (attestation.getMotif() != null ? attestation.getMotif() : "Aucun") + "\n" +
-                "Statut: " + getStatutDisplayText(attestation.getStatut()) + "\n" +
-                "Demandée le: " + (attestation.getDateDemande() != null ?
-                dateFormat.format(attestation.getDateDemande()) : "Date inconnue");
+    private void voirDetails(Attestation attestation) {
+        backgroundExecutor.execute(() -> {
+            try {
+                String details = buildDetailsString(attestation);
+                mainHandler.post(() -> showDetailsDialog(details));
+            } catch (Exception e) {
+                Log.e("ATTESTATIONS_RH", "Erreur construction détails: ", e);
+            }
+        });
+    }
+
+    private String buildDetailsString(Attestation attestation) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRENCH);
+        StringBuilder details = new StringBuilder();
+
+        details.append("Nom: ").append(attestation.getEmployeNom()).append("\n")
+                .append("Département: ").append(attestation.getEmployeDepartement()).append("\n")
+                .append("Type: ").append(attestation.getTypeAttestation()).append("\n")
+                .append("Motif: ").append(attestation.getMotif() != null ? attestation.getMotif() : "Aucun").append("\n")
+                .append("Statut: ").append(getStatutDisplayText(attestation.getStatut())).append("\n")
+                .append("Demandée le: ").append(attestation.getDateDemande() != null ?
+                        dateFormat.format(attestation.getDateDemande()) : "Date inconnue");
 
         if (attestation.getDateTraitement() != null) {
-            details += "\nTraité le: " + dateFormat.format(attestation.getDateTraitement());
+            details.append("\nTraité le: ").append(dateFormat.format(attestation.getDateTraitement()));
         }
 
         if ("refusee".equals(attestation.getStatut()) && attestation.getMotifRefus() != null) {
-            details += "\nMotif du refus: " + attestation.getMotifRefus();
+            details.append("\nMotif du refus: ").append(attestation.getMotifRefus());
         }
 
-        Toast.makeText(this, details, Toast.LENGTH_LONG).show();
+        return details.toString();
+    }
+
+    private void showDetailsDialog(String details) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Détails de l'attestation");
+        builder.setMessage(details);
+        builder.setPositiveButton("Fermer", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    private String getStatutText(String statut) {
+        switch (statut) {
+            case "en_attente": return "en attente";
+            case "approuvee": return "approuvée";
+            case "refusee": return "refusée";
+            default: return "";
+        }
     }
 
     private String getStatutDisplayText(String statut) {
@@ -583,18 +610,27 @@ public class AttestationsActivity extends AppCompatActivity {
         }
     }
 
-   private void resetButtonStyle(Button button) {
+    private void resetButtonStyle(Button button) {
         button.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#DEDEDE")));
     }
 
     private void setActiveButtonStyle(Button button) {
-        button.setBackgroundResource(R.drawable.border_gris);  // même fond que XML
+        button.setBackgroundResource(R.drawable.border_gris);
         button.setBackgroundTintList(null);
     }
 
     private void rechargerDonnees() {
         loadStats();
         chargerAttestations(filtreActuel);
+    }
+
+    // Méthodes utilitaires pour afficher les messages sur le thread principal
+    private void showErrorOnMainThread(String message) {
+        mainHandler.post(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+    }
+
+    private void showSuccessOnMainThread(String message) {
+        mainHandler.post(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
     }
 
     @Override
