@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="15dp"
-    android:background="#F5F5F5"
-    android:layout_gravity="center"
-    >
+    android:background="#CC000000"
+
+    android:padding="20dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@drawable/cotearrondi"
+        android:padding="20dp"
+        android:layout_margin="40dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp">
 
         <!-- Titre principal -->
         <TextView
@@ -33,28 +39,26 @@
             android:text="Remplissez les informations de votre demande"
             android:textColor="@color/grey"
             android:gravity="center"
-            android:layout_marginBottom="30dp"
-            />
+            android:layout_marginBottom="20dp"
+            android:textSize="12sp" />
+
         <!-- Type de congé -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Type de congé"
             android:textStyle="bold"
+            android:textSize="14sp"
             android:layout_marginBottom="5dp" />
 
         <Spinner
             android:id="@+id/typeConge"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/border"
-            android:padding="5dp"
-            android:entries="@array/types_conge"
-            />
-
-
-
+            android:padding="10dp"
+            android:entries="@array/types_conge" />
 
         <!-- Date debut -->
         <TextView
@@ -62,17 +66,19 @@
             android:layout_height="wrap_content"
             android:text="Date de début"
             android:textStyle="bold"
+            android:textSize="14sp"
             android:layout_marginBottom="5dp" />
 
         <EditText
             android:id="@+id/dateDebutConge"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:hint=" jj/mm/aaaa "
             android:inputType="date"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="10dp"
+            android:textSize="12sp"/>
 
         <!-- Date fin -->
         <TextView
@@ -80,17 +86,19 @@
             android:layout_height="wrap_content"
             android:text="Date de fin"
             android:textStyle="bold"
+            android:textSize="14sp"
             android:layout_marginBottom="5dp" />
 
         <EditText
             android:id="@+id/dateFinConge"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:hint=" jj/mm/aaaa"
             android:inputType="date"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="10dp"
+            android:textSize="12sp"/>
 
         <!-- Motif -->
         <TextView
@@ -98,34 +106,34 @@
             android:layout_height="wrap_content"
             android:text="Motif"
             android:textStyle="bold"
+            android:textSize="14sp"
             android:layout_marginBottom="5dp" />
 
         <EditText
             android:id="@+id/MotifConge"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:hint=" Expliquez brièvement la raison de votre demande"
-            android:textSize="15dp"
+            android:textSize="12sp"
             android:inputType="textLongMessage"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="10dp"
+            android:gravity="top"/>
 
-
-        <!-- Section Ajuster l'employé -->
+        <!-- Bouton Envoyer demande -->
         <Button
             android:id="@+id/btnEnvoyerDemande"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="Envoyer demande"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:backgroundTint="@null"
-            android:textSize="15dp"
+            android:textSize="14sp"
             android:textColor="#FFFFFF"
             android:background="@drawable/border_button"
             app:backgroundTint="@null"
-            android:padding="0dp"
-            />
+            android:padding="0dp" />
 
     </LinearLayout>
 </ScrollView>
