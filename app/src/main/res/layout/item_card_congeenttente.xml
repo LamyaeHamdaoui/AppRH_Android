@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:App="http://schemas.android.com/tools"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
@@ -21,29 +21,24 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:background="@drawable/border_orangelight">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <!-- Type de congé -->
+
+            <!-- Nom de l'employé -->
             <TextView
                 android:id="@+id/nomConge"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="EL AAMMARI Oumeyma"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:layout_marginTop="5dp"
-                />
-            <Space
-                android:layout_weight="1"
-                android:layout_height="0dp"
-                android:layout_width="0dp"
-                />
+                android:layout_marginTop="5dp" />
 
-            <!-- *****Sold actuel  ********-->
-
-
+            <!-- Durée du congé -->
             <TextView
                 android:id="@+id/DureeConge"
                 android:layout_width="wrap_content"
@@ -57,11 +52,10 @@
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
                 android:background="@drawable/border_orange"
-                android:layout_marginRight="10dp"
-                />
+                android:layout_marginRight="10dp" />
         </LinearLayout>
 
-        <!--****** departement congé **** -->
+        <!-- Département -->
         <TextView
             android:id="@+id/DepartementConge"
             android:layout_width="wrap_content"
@@ -71,15 +65,15 @@
             android:textSize="19sp"
             android:layout_marginTop="10dp" />
 
-         <!-- ******* type congé ******-->
-         <TextView
+        <!-- Type de congé -->
+        <TextView
             android:id="@+id/typeConge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Congés payés"
             android:textColor="@color/grey"
             android:textSize="15sp"
-             android:textStyle="bold"
+            android:textStyle="bold"
             android:layout_marginTop="15dp" />
 
         <!-- Dates -->
@@ -97,27 +91,30 @@
             android:id="@+id/MotifConge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vaccances en famille"
+            android:text="Vacances en famille"
             android:textColor="@color/grey"
             android:textSize="15sp"
             android:layout_marginTop="15dp"
             android:textStyle="italic"/>
 
+        <!-- Solde actuel -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="15dp"
-            >
+            android:layout_marginTop="15dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Solde actuel:"
                 android:textColor="@color/grey"
                 android:textSize="14sp"
-                android:layout_marginTop="3dp"
-                />
+                android:layout_marginTop="3dp" />
+
+            <!-- TextView pour le solde actuel avec ID -->
             <TextView
+                android:id="@+id/soldeActuelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="25 jours"
@@ -129,12 +126,10 @@
                 android:paddingRight="10dp"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
-                android:layout_gravity="center_vertical"
-                />
-
-
+                android:layout_gravity="center_vertical" />
         </LinearLayout>
 
+        <!-- Ligne de séparation -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -143,57 +138,54 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@color/orange" />
+
+        <!-- Layout des boutons -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            >
+            android:layout_marginBottom="10dp">
 
+            <!-- Bouton Détails -->
             <TextView
                 android:id="@+id/btnDetaileConge"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
                 android:text="Détails"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="18sp"
+                android:gravity="center"
                 android:background="@drawable/border_gris"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:paddingRight="45dp"
-                android:paddingLeft="45dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginBottom="1dp"
-                />
-                <ImageView
-                    android:id="@+id/acceptConge"
-                    android:layout_width="90dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/approuve_blanc"
-                    android:background="@drawable/bg_green"
-                    android:paddingBottom="9dp"
-                    android:paddingTop="9dp"
-                    android:paddingRight="5dp"
-                    android:paddingLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    />
+                android:textColor="@color/black" />
 
+            <!-- Bouton Accepter -->
+            <ImageView
+                android:id="@+id/acceptConge"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:src="@drawable/approuve_blanc"
+                android:background="@drawable/bg_green"
+                android:scaleType="centerInside"
+                android:padding="5dp"
+                android:layout_marginRight="10dp"
+                android:contentDescription="@string/accept_conge" />
+
+            <!-- Bouton Refuser -->
             <ImageView
                 android:id="@+id/refuseConge"
-                android:layout_width="90dp"
-                android:layout_height="35dp"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
                 android:src="@drawable/reffuse_blanc"
                 android:background="@drawable/bg_red"
-                android:paddingBottom="9dp"
-                android:paddingTop="9dp"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
-                />
+                android:scaleType="centerInside"
+                android:padding="5dp"
+                android:contentDescription="@string/refuse_conge" />
         </LinearLayout>
-
-
-
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>
