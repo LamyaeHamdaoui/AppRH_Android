@@ -6,7 +6,7 @@ public class Conge {
     private String id;
     private String userId;
     private String userName;
-    private String userEmail; // AJOUT: Email de l'utilisateur
+    private String userEmail;
     private String userDepartment;
     private String typeConge;
     private Date dateDebut;
@@ -15,6 +15,7 @@ public class Conge {
     private String motif;
     private String statut;
     private Date dateDemande;
+    private int soldeActuel; // AJOUT: Solde actuel de l'employé
 
     // Constructeur vide OBLIGATOIRE pour Firestore
     public Conge() {
@@ -26,7 +27,7 @@ public class Conge {
                  Date dateDebut, Date dateFin, int duree, String motif, String statut) {
         this.userId = userId;
         this.userName = userName;
-        this.userEmail = userEmail; // AJOUT
+        this.userEmail = userEmail;
         this.userDepartment = userDepartment;
         this.typeConge = typeConge;
         this.dateDebut = dateDebut;
@@ -34,6 +35,7 @@ public class Conge {
         this.duree = duree;
         this.motif = motif;
         this.statut = statut;
+        this.soldeActuel = soldeActuel; // AJOUT
         this.dateDemande = new Date();
     }
 
@@ -47,8 +49,8 @@ public class Conge {
     public String getUserName() { return userName; }
     public void setUserName(String userName) { this.userName = userName; }
 
-    public String getUserEmail() { return userEmail; } // AJOUT
-    public void setUserEmail(String userEmail) { this.userEmail = userEmail; } // AJOUT
+    public String getUserEmail() { return userEmail; }
+    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
 
     public String getUserDepartment() { return userDepartment; }
     public void setUserDepartment(String userDepartment) { this.userDepartment = userDepartment; }
@@ -73,4 +75,8 @@ public class Conge {
 
     public Date getDateDemande() { return dateDemande; }
     public void setDateDemande(Date dateDemande) { this.dateDemande = dateDemande; }
+
+    // AJOUT: Getter et Setter pour soldeActuel
+    public int getSoldeActuel() { return soldeActuel; }
+    public void setSoldeActuel(int soldeActuel) { this.soldeActuel = soldeActuel; }
 }
