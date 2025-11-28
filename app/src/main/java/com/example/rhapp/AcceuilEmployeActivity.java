@@ -29,7 +29,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
             if (congesfooter != null) {
                 congesfooter.setOnClickListener(v -> {
                     // Remplacer ProfileActivity.class par la classe réelle
-                    startActivity(new Intent(AcceuilEmployeActivity.this, CongesEmployeActivity.class));
+                    startActivity(new Intent(AcceuilEmployeActivity.this, CongesEmploye.class));
                 });
                 if (reunionsfooter != null) {
                     reunionsfooter.setOnClickListener(v -> {

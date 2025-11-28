@@ -1,5 +1,6 @@
 package com.example.rhapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -7,19 +8,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rhapp.model.Conge;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class CongesEmployeActivity extends AppCompatActivity {
+public class CongesEmploye extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private LinearLayout historiqueContainer;
@@ -61,23 +66,23 @@ public class CongesEmployeActivity extends AppCompatActivity {
 
         // Navigation
         findViewById(R.id.accueil).setOnClickListener(v ->
-                Toast.makeText(CongesEmployeActivity.this, "Accueil", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmploye.this, "Accueil", Toast.LENGTH_SHORT).show()
         );
 
         findViewById(R.id.employes).setOnClickListener(v ->
-                Toast.makeText(CongesEmployeActivity.this, "Présence", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmploye.this, "Présence", Toast.LENGTH_SHORT).show()
         );
 
         findViewById(R.id.conge).setOnClickListener(v ->
-                Toast.makeText(CongesEmployeActivity.this, "Congés", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmploye.this, "Congés", Toast.LENGTH_SHORT).show()
         );
 
         findViewById(R.id.reunions).setOnClickListener(v ->
-                Toast.makeText(CongesEmployeActivity.this, "Réunions", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmploye.this, "Réunions", Toast.LENGTH_SHORT).show()
         );
 
         findViewById(R.id.profil).setOnClickListener(v ->
-                Toast.makeText(CongesEmployeActivity.this, "Profil", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmploye.this, "Profil", Toast.LENGTH_SHORT).show()
         );
     }
 
