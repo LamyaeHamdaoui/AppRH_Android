@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     private ImageView userProfileImage;
 
     private String userRole;
+    private RelativeLayout notificationsButton;
 
     // Conteneurs principaux
     private LinearLayout profileCard;
@@ -115,6 +117,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
 
         // ⭐ NOUVEAU : Récupération de l'ImageView
         userProfileImage = findViewById(R.id.userProfileImage);
+        notificationsButton = findViewById(R.id.notificationsButton);
 
         // Bloc Détails
         userEmail = findViewById(R.id.userEmailDetail);
@@ -205,12 +208,15 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         if (footerReunions != null) {
             footerReunions.setOnClickListener(v -> navigateToReunions());
         }
+        if (notificationsButton != null) {
+            notificationsButton.setOnClickListener(v -> navigateToNotifications());
+        }
     }
 
     // ⭐ NOUVELLE MÉTHODE DE NAVIGATION AJUSTÉE
     private void navigateToPresence() {
         // Remplacez par l'activité correcte pour la gestion de présence si ce n'est pas EmployeActivity
-        startActivity(new Intent(ProfileEmployeActivity.this, EmployeActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, PresenceActivity.class));
     }
 
 
