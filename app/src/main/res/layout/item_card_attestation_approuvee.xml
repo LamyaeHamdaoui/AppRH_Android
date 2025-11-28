@@ -8,7 +8,6 @@
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
     android:backgroundTint="@color/white"
-    android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
 
@@ -17,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp"
-        android:background="@drawable/border_simple">
+        android:background="@drawable/approuve_border">
 
         <!-- Header : Type + Statut -->
         <LinearLayout

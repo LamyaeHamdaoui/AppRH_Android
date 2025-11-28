@@ -1,19 +1,25 @@
 package com.example.rhapp;
 
+import android.app.AlertDialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.rhapp.model.Attestation;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.Timestamp;
 
@@ -30,6 +36,11 @@ public class AttestationsActivity extends AppCompatActivity {
     private Button btnAttente, btnApprouve, btnRefuse;
     private LinearLayout containerAttestations;
     private TextView tvTotal, tvAttente, tvApprouve, tvRefuse;
+
+    // AJOUT: Écouteurs temps réel
+    private ListenerRegistration attestationsListener;
+    private ListenerRegistration statsListener;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private FirebaseFirestore db;
     private String filtreActuel = "en_attente";
@@ -57,16 +68,47 @@ public class AttestationsActivity extends AppCompatActivity {
         tvAttente = findViewById(R.id.tvAttente);
         tvApprouve = findViewById(R.id.tvApprouve);
         tvRefuse = findViewById(R.id.tvRefuse);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+
+// Configurer le swipe to refresh
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            rechargerDonnees();
+            swipeRefreshLayout.setRefreshing(false);
+        });
     }
 
     private void setupFirebase() {
         db = FirebaseFirestore.getInstance();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Nettoyer les écouteurs
+        if (attestationsListener != null) {
+            attestationsListener.remove();
+        }
+        if (statsListener != null) {
+            statsListener.remove();
+        }
+    }
+
+
+
     private void loadStats() {
-        db.collection("Attestations")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+        // Supprimer l'écouteur précédent s'il existe
+        if (statsListener != null) {
+            statsListener.remove();
+        }
+
+        statsListener = db.collection("Attestations")
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Toast.makeText(this, "Erreur chargement stats: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("ATTESTATIONS_RH", "Erreur stats: ", e);
+                        return;
+                    }
+
                     int total = 0, enAttente = 0, approuvees = 0, refusees = 0;
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
@@ -89,10 +131,6 @@ public class AttestationsActivity extends AppCompatActivity {
                     }
 
                     updateStatsUI(total, enAttente, approuvees, refusees);
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Erreur chargement stats: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("ATTESTATIONS_RH", "Erreur stats: ", e);
                 });
     }
 
@@ -104,16 +142,25 @@ public class AttestationsActivity extends AppCompatActivity {
             if (tvRefuse != null) tvRefuse.setText(String.valueOf(refusees));
         });
     }
-
     private void chargerAttestations(String statut) {
-        Log.d("ATTESTATIONS_RH", "Chargement attestations avec statut: " + statut);
+        Log.d("ATTESTATIONS_RH", "Chargement TEMPS RÉEL attestations avec statut: " + statut);
 
-        db.collection("Attestations")
+        // Supprimer l'écouteur précédent s'il existe
+        if (attestationsListener != null) {
+            attestationsListener.remove();
+        }
+
+        attestationsListener = db.collection("Attestations")
                 .whereEqualTo("statut", statut)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Toast.makeText(this, "Erreur chargement: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("ATTESTATIONS_RH", "Erreur Firestore: ", e);
+                        return;
+                    }
+
                     List<Attestation> attestations = new ArrayList<>();
-                    Log.d("ATTESTATIONS_RH", "Nombre de documents trouvés: " + queryDocumentSnapshots.size());
+                    Log.d("ATTESTATIONS_RH", "Nombre de documents trouvés (temps réel): " + queryDocumentSnapshots.size());
 
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         try {
@@ -127,15 +174,13 @@ public class AttestationsActivity extends AppCompatActivity {
                             attestation.setMotif(document.getString("motif"));
                             attestation.setStatut(document.getString("statut"));
 
-                            // Récupération des données de l'employé depuis les champs de l'attestation
+                            // Récupération des données de l'employé
                             String employeeNom = document.getString("employeeNom");
                             String employeeDepartment = document.getString("employeeDepartment");
 
-                            // Si les champs employeeNom et employeeDepartment existent, les utiliser
                             if (employeeNom != null && !employeeNom.isEmpty()) {
                                 attestation.setEmployeNom(employeeNom);
                             } else {
-                                // Sinon, essayer de récupérer depuis la collection employees
                                 attestation.setEmployeNom("Nom non disponible");
                             }
 
@@ -159,19 +204,10 @@ public class AttestationsActivity extends AppCompatActivity {
                             attestation.setPdfUrl(document.getString("pdfUrl"));
                             attestation.setMotifRefus(document.getString("motifRefus"));
 
-                            // DEBUG: Afficher les données récupérées
-                            Log.d("ATTESTATIONS_RH", "=== DONNÉES RÉCUPÉRÉES ===");
-                            Log.d("ATTESTATIONS_RH", "ID: " + document.getId());
-                            Log.d("ATTESTATIONS_RH", "employeeNom: " + employeeNom);
-                            Log.d("ATTESTATIONS_RH", "employeeDepartment: " + employeeDepartment);
-                            Log.d("ATTESTATIONS_RH", "typeAttestation: " + attestation.getTypeAttestation());
-                            Log.d("ATTESTATIONS_RH", "motif: " + attestation.getMotif());
-                            Log.d("ATTESTATIONS_RH", "statut: " + attestation.getStatut());
-
                             attestations.add(attestation);
 
-                        } catch (Exception e) {
-                            Log.e("ATTESTATIONS_RH", "Erreur conversion document: ", e);
+                        } catch (Exception ex) {
+                            Log.e("ATTESTATIONS_RH", "Erreur conversion document: ", ex);
                         }
                     }
 
@@ -191,13 +227,59 @@ public class AttestationsActivity extends AppCompatActivity {
                     });
 
                     afficherAttestations(attestations);
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Erreur chargement: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("ATTESTATIONS_RH", "Erreur Firestore: ", e);
                 });
     }
 
+    private void showMotifRefusDialog(Attestation attestation) {
+        // Créer un dialog personnalisé
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Motif du refus");
+        builder.setMessage("Veuillez saisir le motif du refus :");
+
+        // Créer l'input
+        final EditText input = new EditText(this);
+        input.setHint("Saisissez le motif du refus...");
+        input.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setMinLines(3);
+        input.setMaxLines(5);
+        input.setGravity(Gravity.START);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(50, 20, 50, 20);
+        input.setLayoutParams(layoutParams);
+
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.addView(input);
+
+        builder.setView(container);
+
+        // Boutons du dialog
+        builder.setPositiveButton("Confirmer le refus", (dialog, which) -> {
+            String motifRefus = input.getText().toString().trim();
+            if (motifRefus.isEmpty()) {
+                Toast.makeText(this, "Veuillez saisir un motif de refus", Toast.LENGTH_SHORT).show();
+            } else {
+                refuserAttestation(attestation, motifRefus);
+            }
+        });
+
+        builder.setNegativeButton("Annuler", (dialog, which) -> {
+            dialog.cancel();
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Personnaliser le bouton positif
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        if (positiveButton != null) {
+            positiveButton.setTextColor(Color.RED);
+        }
+    }
     private void afficherAttestations(List<Attestation> attestations) {
         runOnUiThread(() -> {
             if (containerAttestations == null) return;
@@ -246,13 +328,6 @@ public class AttestationsActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
         String statut = attestation.getStatut();
 
-        // DEBUG: Vérifier les données avant affichage
-        Log.d("ATTESTATIONS_RH", "=== CONFIGURATION CARD ===");
-        Log.d("ATTESTATIONS_RH", "Nom: " + attestation.getEmployeNom());
-        Log.d("ATTESTATIONS_RH", "Département: " + attestation.getEmployeDepartement());
-        Log.d("ATTESTATIONS_RH", "Type: " + attestation.getTypeAttestation());
-        Log.d("ATTESTATIONS_RH", "Motif: " + attestation.getMotif());
-
         // Récupérer les vues communes avec différents IDs possibles
         TextView nomComplet = itemView.findViewById(R.id.nomComplet);
         TextView departement = itemView.findViewById(R.id.departement);
@@ -263,6 +338,7 @@ public class AttestationsActivity extends AppCompatActivity {
                         R.id.TypeAttestation : R.id.TypeAttestation
         );
 
+        // CORRECTION : Utiliser le même ID pour tous les layouts
         TextView dateDemandee = itemView.findViewById(R.id.DateDemandee);
         TextView motif = itemView.findViewById(R.id.MotifAttestation);
 
@@ -273,7 +349,6 @@ public class AttestationsActivity extends AppCompatActivity {
                 nomComplet.setText(nomEmploye);
             } else {
                 nomComplet.setText("Employé inconnu");
-                Log.w("ATTESTATIONS_RH", "Nom employé manquant pour l'attestation: " + attestation.getId());
             }
         }
 
@@ -295,12 +370,11 @@ public class AttestationsActivity extends AppCompatActivity {
             }
         }
 
+        // CORRECTION : Afficher la date pour TOUS les statuts
         if (dateDemandee != null) {
             if (attestation.getDateDemande() != null) {
                 String dateStr = dateFormat.format(attestation.getDateDemande());
-                if ("en_attente".equals(statut)) {
-                    dateDemandee.setText("Demandée le " + dateStr);
-                }
+                dateDemandee.setText("Demandée le " + dateStr);
             } else {
                 dateDemandee.setText("Date inconnue");
             }
@@ -324,7 +398,6 @@ public class AttestationsActivity extends AppCompatActivity {
             configureRefuseeView(itemView, attestation, dateFormat);
         }
     }
-
     private void configureEnAttenteView(View itemView, Attestation attestation, SimpleDateFormat dateFormat) {
         TextView statutView = itemView.findViewById(R.id.StatutAttestation);
 
@@ -342,14 +415,14 @@ public class AttestationsActivity extends AppCompatActivity {
         }
 
         if (btnReject != null) {
-            btnReject.setOnClickListener(v -> refuserAttestation(attestation));
+            // MODIFICATION ICI : Ouvrir le dialog pour saisir le motif
+            btnReject.setOnClickListener(v -> showMotifRefusDialog(attestation));
         }
 
         if (btnDetails != null) {
             btnDetails.setOnClickListener(v -> voirDetails(attestation));
         }
     }
-
     private void configureApprouveeView(View itemView, Attestation attestation, SimpleDateFormat dateFormat) {
         TextView dateApprouvee = itemView.findViewById(R.id.DateApprouvé);
 
@@ -375,8 +448,14 @@ public class AttestationsActivity extends AppCompatActivity {
                 motifRefusView.setText("Refusée - Motif non spécifié");
             }
         }
-    }
 
+        // Afficher aussi la date de traitement si disponible
+        TextView dateTraitementView = itemView.findViewById(R.id.DateDemandee);
+        if (dateTraitementView != null && attestation.getDateTraitement() != null) {
+            String dateStr = dateFormat.format(attestation.getDateTraitement());
+            dateTraitementView.setText("Refusée le " + dateStr);
+        }
+    }
     private void telechargerAttestation(Attestation attestation) {
         if (attestation.getPdfUrl() != null && !attestation.getPdfUrl().isEmpty()) {
             Toast.makeText(this, "Téléchargement du PDF pour " + attestation.getEmployeNom(), Toast.LENGTH_SHORT).show();
@@ -412,24 +491,29 @@ public class AttestationsActivity extends AppCompatActivity {
                 });
     }
 
-    private void refuserAttestation(Attestation attestation) {
+    private void refuserAttestation(Attestation attestation, String motifRefus) {
+        // Vérifier que le motif n'est pas vide
+        if (motifRefus == null || motifRefus.trim().isEmpty()) {
+            Toast.makeText(this, "Le motif de refus ne peut pas être vide", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         db.collection("Attestations")
                 .document(attestation.getId())
                 .update(
                         "statut", "refusee",
                         "dateTraitement", new Date(),
-                        "motifRefus", "Refusé par le service RH"
+                        "motifRefus", motifRefus.trim()
                 )
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Attestation refusée", Toast.LENGTH_SHORT).show();
-                    rechargerDonnees();
+                    // Les données se mettront à jour automatiquement grâce à l'écouteur temps réel
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Erreur: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("ATTESTATIONS_RH", "Erreur refus: ", e);
                 });
     }
-
     private void voirDetails(Attestation attestation) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRENCH);
 
