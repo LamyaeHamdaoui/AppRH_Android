@@ -40,6 +40,9 @@
             android:name=".HelpSupportActivity"
             android:exported="false" />
         <activity
+            android:name=".CongesEmployeActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
         <activity

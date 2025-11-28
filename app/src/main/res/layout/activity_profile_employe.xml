@@ -550,9 +550,12 @@
         </RelativeLayout>
     </ScrollView>
     <RelativeLayout
+        android:id="@+id/notificationsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_gravity="top|end">
 
         <ImageView

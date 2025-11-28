@@ -13,7 +13,8 @@
         android:layout_height="match_parent"
         app:layout_anchorGravity="center"
         android:id="@+id/scrollView2"
-        app:layout_anchor="@+id/scrollView2">
+        app:layout_anchor="@+id/scrollView2"
+        android:layout_marginBottom="80dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,6 +48,7 @@
 
             <!--- ****** Sous header ****** -->
             <LinearLayout
+                android:id="@+id/presence_action_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -101,6 +103,7 @@
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/btn_marquer_presence"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Marquer ma présence"
@@ -109,6 +112,7 @@
                     app:backgroundTint="@null"
                     />
                 <Button
+                    android:id="@+id/btn_justifier_absence"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Justifier une absence"
@@ -122,6 +126,7 @@
 
             <!-- *** barre attente refuse approuve *** -->
             <LinearLayout
+                android:id="@+id/statistiqueMois"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -249,16 +254,28 @@
                     android:text="Historique"
                     android:textStyle="bold"
                     android:textSize="16sp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewHistorique"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_card_presence"
                     />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
     <RelativeLayout
+        android:id="@+id/notificationsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_gravity="top|end">
+        android:layout_gravity="top|end"
+        android:clickable="true"
+        android:focusable="true">
 
         <ImageView
             android:layout_width="35dp"
@@ -292,6 +309,7 @@
         android:elevation="8dp"
         android:padding="5dp">
         <LinearLayout
+            android:id="@+id/footerAccueil"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -315,6 +333,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/footerPresence"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -338,6 +357,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/footerConges"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -361,6 +381,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/footerReunions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -383,6 +404,7 @@
                 android:textColor="@color/grey"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/footerProfile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

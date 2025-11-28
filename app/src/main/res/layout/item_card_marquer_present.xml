@@ -75,27 +75,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Présence enregistrée"
+                android:text="Votre présence a été enregistrée !"
                 android:textAlignment="center"
                 android:textSize="15dp"
                 android:textColor="@color/green"/>
             <TextView
+                android:id="@+id/tv_heure_arrivee"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Arrivée : 12:26"
+                android:text="Arrivée : --:--:--"
                 android:textAlignment="center"
                 android:textColor="@color/green"/>
 
         </LinearLayout>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Justifier une absence"
-            android:background="@drawable/border_vide"
-            android:textColor="@color/black"
-            android:layout_marginTop="10dp"
-            app:backgroundTint="@null"
-            />
 
     </LinearLayout>
 

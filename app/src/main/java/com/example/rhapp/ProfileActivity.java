@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
     private TextView userEmail, userPosteDetails, userDepartmentDetails;
     private TextView userDateEmbauche, userInitial;
     private ProgressBar progressBar;
+    private RelativeLayout notificationsButton;
 
     private String userRole;
 
@@ -136,6 +138,7 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         footerConges = findViewById(R.id.footerConges);
         footerReunions = findViewById(R.id.footerReunions);
         footerProfil = findViewById(R.id.footerProfil);
+        notificationsButton = findViewById(R.id.notificationsButton);
 
         // Initialisation de la variable de classe securityInterface
         securityInterface = findViewById(R.id.securityInterface);
@@ -204,6 +207,9 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         }
         if (footerReunions != null) {
             footerReunions.setOnClickListener(v -> navigateToReunions());
+        }
+        if (notificationsButton != null) {
+            notificationsButton.setOnClickListener(v -> navigateToNotifications());
         }
     }
 
