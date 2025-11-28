@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class CongesEmploye extends AppCompatActivity {
+public class CongesEmployeActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private LinearLayout historiqueContainer;
@@ -66,23 +66,23 @@ public class CongesEmploye extends AppCompatActivity {
 
         // Navigation
         findViewById(R.id.accueil).setOnClickListener(v ->
-                Toast.makeText(CongesEmploye.this, "Accueil", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmployeActivity.this, "Accueil", Toast.LENGTH_SHORT).show()
         );
 
         findViewById(R.id.employes).setOnClickListener(v ->
-                Toast.makeText(CongesEmploye.this, "Présence", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmployeActivity.this, "Présence", Toast.LENGTH_SHORT).show()
         );
 
         findViewById(R.id.conge).setOnClickListener(v ->
-                Toast.makeText(CongesEmploye.this, "Congés", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmployeActivity.this, "Congés", Toast.LENGTH_SHORT).show()
         );
 
         findViewById(R.id.reunions).setOnClickListener(v ->
-                Toast.makeText(CongesEmploye.this, "Réunions", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmployeActivity.this, "Réunions", Toast.LENGTH_SHORT).show()
         );
 
         findViewById(R.id.profil).setOnClickListener(v ->
-                Toast.makeText(CongesEmploye.this, "Profil", Toast.LENGTH_SHORT).show()
+                Toast.makeText(CongesEmployeActivity.this, "Profil", Toast.LENGTH_SHORT).show()
         );
     }
 
