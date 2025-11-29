@@ -24,7 +24,7 @@ public class Conge {
 
     // Constructeur complet
     public Conge(String userId, String userName, String userEmail, String userDepartment, String typeConge,
-                 Date dateDebut, Date dateFin, int duree, String motif, String statut) {
+                 Date dateDebut, Date dateFin, int duree, String motif, String statut, int soldeActuel) {
         this.userId = userId;
         this.userName = userName;
         this.userEmail = userEmail;
@@ -35,7 +35,7 @@ public class Conge {
         this.duree = duree;
         this.motif = motif;
         this.statut = statut;
-        this.soldeActuel = soldeActuel; // AJOUT
+        this.soldeActuel = soldeActuel; // CORRECTION: Utiliser le paramètre
         this.dateDemande = new Date();
     }
 
