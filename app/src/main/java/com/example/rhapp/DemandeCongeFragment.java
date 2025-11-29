@@ -260,7 +260,7 @@ public class DemandeCongeFragment extends Fragment {
                 return;
             }
 
-            // Création de l'objet Conge avec les vraies informations
+            // CORRECTION: Passer le soldeActuel au constructeur
             Conge conge = new Conge(
                     userId,
                     userName,
@@ -271,7 +271,8 @@ public class DemandeCongeFragment extends Fragment {
                     dateFin,
                     duree,
                     motif,
-                    "En attente" // Statut par défaut
+                    "En attente", // Statut par défaut
+                    soldeRestant  // CORRECTION: Ajout du solde actuel
             );
 
             // Afficher un message de chargement
