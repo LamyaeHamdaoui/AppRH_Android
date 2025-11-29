@@ -288,6 +288,7 @@
 
         <!-- Bottom nav icons : reused structure -->
         <LinearLayout
+            android:id="@+id/Acceuil"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -312,6 +313,7 @@
 
         <!-- EMPLOYES -->
         <LinearLayout
+            android:id="@id/employes"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -320,7 +322,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/employes"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/employe" />
@@ -336,7 +338,7 @@
 
         <!-- CONGÉS -->
         <LinearLayout
-
+            android:id="@+id/conges"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -345,7 +347,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/conge"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/conge" />
@@ -361,6 +363,7 @@
 
         <!-- REUNIONS -->
         <LinearLayout
+            android:id="@+id/reunions"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -369,7 +372,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/reunions"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/reunion" />
@@ -385,6 +388,7 @@
 
         <!-- PROFIL -->
         <LinearLayout
+            android:id="@+id/profile"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -393,7 +397,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/profil"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/profil" />
