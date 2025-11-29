@@ -1,9 +1,8 @@
+
 package com.example.rhapp;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.rhapp.model.Attestation;
@@ -50,9 +48,7 @@ public class AttestationsActivity extends AppCompatActivity {
     // Écouteurs temps réel
     private ListenerRegistration attestationsListener;
     private ListenerRegistration statsListener;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private FirebaseFirestore db;
-    private FirebaseStorage storage;
     private String filtreActuel = "en_attente";
 
     // Executor pour les opérations en arrière-plan
@@ -83,17 +79,12 @@ public class AttestationsActivity extends AppCompatActivity {
         tvAttente = findViewById(R.id.tvAttente);
         tvApprouve = findViewById(R.id.tvApprouve);
         tvRefuse = findViewById(R.id.tvRefuse);
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            rechargerDonnees();
-            swipeRefreshLayout.setRefreshing(false);
-        });
+
     }
 
     private void setupFirebase() {
         db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
     }
 
     @Override
@@ -657,4 +648,5 @@ public class AttestationsActivity extends AppCompatActivity {
         findViewById(R.id.profile).setOnClickListener(v ->
                 startActivity(new Intent(this, ProfileActivity.class)));
     }
+
 }

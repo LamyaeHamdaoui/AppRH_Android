@@ -9,10 +9,7 @@
     android:background="#F5F5F5"
     tools:context=".AttestationEmployeActivity">
     <!-- AJOUT: SwipeRefreshLayout -->
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -279,7 +276,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <!-- NOTIFICATIONS -->
     <RelativeLayout
