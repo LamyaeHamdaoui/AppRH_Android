@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -64,6 +65,7 @@ public class AttestationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attestations);
 
         initViews();
+        gererNavigationFooter();
         setupFirebase();
         loadStats();
         chargerAttestations(filtreActuel);
@@ -637,5 +639,22 @@ public class AttestationsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         rechargerDonnees();
+    }
+
+
+    private void gererNavigationFooter() {
+        findViewById(R.id.reunions).setOnClickListener(v ->
+                startActivity(new Intent(this, reunionActivity.class)));
+
+        findViewById(R.id.conges).setOnClickListener(v ->
+                startActivity(new Intent(this, CongesActivity.class)));
+        findViewById(R.id.employes).setOnClickListener(v ->
+                startActivity(new Intent(this, EmployeActivity.class)));
+
+        findViewById(R.id.Acceuil).setOnClickListener(v ->
+                startActivity(new Intent(this, AcceuilRhActivity.class)));
+
+        findViewById(R.id.profile).setOnClickListener(v ->
+                startActivity(new Intent(this, ProfileActivity.class)));
     }
 }

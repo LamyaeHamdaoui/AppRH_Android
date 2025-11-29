@@ -2,6 +2,7 @@ package com.example.rhapp;
 
 import com.google.firebase.Timestamp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -61,6 +62,7 @@ public class AttestationEmployeActivity extends AppCompatActivity {
         mainHandler = new Handler(Looper.getMainLooper());
 
         initViews();
+        gererNavigationFooter();
         setupFirebase();
         setupClickListeners();
         setupSwipeRefresh();
@@ -439,5 +441,21 @@ public class AttestationEmployeActivity extends AppCompatActivity {
             executorService.shutdown();
         }
         historiqueContainer = null;
+    }
+
+    private void gererNavigationFooter() {
+        findViewById(R.id.reunions).setOnClickListener(v ->
+                startActivity(new Intent(this,ReunionEmployeActivity.class)));
+
+        findViewById(R.id.conges).setOnClickListener(v ->
+                startActivity(new Intent(this, CongesEmploye.class)));
+        findViewById(R.id.presence).setOnClickListener(v ->
+                startActivity(new Intent(this, PresenceActivity.class)));
+
+        findViewById(R.id.Acceuil).setOnClickListener(v ->
+                startActivity(new Intent(this, AcceuilEmployeActivity.class)));
+
+        findViewById(R.id.profile).setOnClickListener(v ->
+                startActivity(new Intent(this, ProfileEmployeActivity.class)));
     }
 }
