@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.rhapp.model.Attestation;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,7 +40,6 @@ public class AttestationEmployeActivity extends AppCompatActivity {
     private LinearLayout historiqueContainer;
     private Button btnNouvelleDemande;
     private ListenerRegistration attestationListener;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     // Thread management
     private ExecutorService executorService;
@@ -65,7 +63,6 @@ public class AttestationEmployeActivity extends AppCompatActivity {
         gererNavigationFooter();
         setupFirebase();
         setupClickListeners();
-        setupSwipeRefresh();
 
         // Charger les données après un petit délai pour laisser l'UI s'initialiser
         historiqueContainer.postDelayed(this::setupRealTimeListener, 300);
@@ -77,28 +74,8 @@ public class AttestationEmployeActivity extends AppCompatActivity {
         tvRefuse = findViewById(R.id.attestationRefuse);
         historiqueContainer = findViewById(R.id.historiqueContainer);
         btnNouvelleDemande = findViewById(R.id.btnNouvelleDemandeConge);
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
     }
 
-    private void setupSwipeRefresh() {
-        if (swipeRefreshLayout == null) {
-            Log.e("ATTESTATION", "SwipeRefreshLayout non trouvé dans le layout");
-            return;
-        }
-
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.blue,
-                R.color.green,
-                R.color.orange
-        );
-
-        swipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.white);
-
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            Log.d("ATTESTATION", "Swipe to refresh déclenché");
-            reloadData();
-        });
-    }
 
     private void reloadData() {
         Log.d("ATTESTATION", "Forçage du rechargement des données");
@@ -116,7 +93,6 @@ public class AttestationEmployeActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             Log.e("ATTESTATION", "Utilisateur non connecté");
-            stopRefreshAnimation();
             showToast("Utilisateur non connecté");
             return;
         }
@@ -133,7 +109,7 @@ public class AttestationEmployeActivity extends AppCompatActivity {
         attestationListener = db.collection("Attestations")
                 .whereEqualTo("employeeId", userUid)
                 .addSnapshotListener(executorService, (queryDocumentSnapshots, error) -> {
-                    stopRefreshAnimation();
+
 
                     if (error != null) {
                         Log.e("ATTESTATION", "Erreur écouteur temps réel: " + error.getMessage());
@@ -214,16 +190,13 @@ public class AttestationEmployeActivity extends AppCompatActivity {
                 final int finalEnAttente = enAttente;
                 final int finalApprouvees = approuvees;
                 final int finalRefusees = refusees;
-                final boolean isRefreshing = swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing();
 
                 // Retour au thread principal pour mettre à jour l'UI
                 mainHandler.post(() -> {
                     updateStats(finalEnAttente, finalApprouvees, finalRefusees);
                     afficherHistorique(finalAttestations);
 
-                    if (isRefreshing) {
-                        showToast("Données rafraîchies");
-                    }
+
                 });
 
             } catch (Exception e) {
@@ -233,13 +206,7 @@ public class AttestationEmployeActivity extends AppCompatActivity {
         });
     }
 
-    private void stopRefreshAnimation() {
-        mainHandler.post(() -> {
-            if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-    }
+
 
     private void setupFirebase() {
         db = FirebaseFirestore.getInstance();
@@ -302,7 +269,6 @@ public class AttestationEmployeActivity extends AppCompatActivity {
     private void handleLoadError(Exception e, String message) {
         isLoading = false;
         lastLoadTime = System.currentTimeMillis();
-        stopRefreshAnimation();
         Log.e("ATTESTATION", message + e.getMessage());
         e.printStackTrace();
         mainHandler.post(() -> showToast("Erreur de chargement: " + e.getMessage()));

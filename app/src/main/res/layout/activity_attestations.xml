@@ -8,12 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".AttestationsActivity"
     android:background="#F5F5F5">
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="80dp"
-        >
+
     <!-- SCROLLVIEW -->
     <ScrollView
         android:id="@+id/scrollView2"
@@ -247,7 +242,6 @@
 
         </LinearLayout>
     </ScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <!-- NOTIFICATION ICON -->
     <RelativeLayout
         android:layout_width="wrap_content"
