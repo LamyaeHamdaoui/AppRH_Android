@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CongesEmployeActivity"
+    tools:context=".CongesEmploye"
     android:background="#F5F5F5"
     >
 <ScrollView
@@ -541,8 +541,7 @@
                     android:layout_marginTop="0dp"
                     android:text="Il y'a 3h"
                     android:textColor="#666666"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
 
 
             </LinearLayout>
@@ -580,13 +579,15 @@ android:layout_gravity="top|end">
 </RelativeLayout>
 <LinearLayout
 android:id="@+id/footer"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_gravity="bottom"
-android:orientation="horizontal"
-android:background="@color/white"
-android:elevation="8dp"
-android:padding="5dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:orientation="horizontal"
+    android:background="@color/white"
+    android:elevation="8dp"
+    android:padding="5dp"
+    android:layout_marginBottom="50dp"
+    >
 <LinearLayout
     android:id="@+id/acceuilfooter"
     android:layout_width="0dp"
@@ -600,8 +601,7 @@ android:padding="5dp">
         android:id="@+id/accueil"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/home"
-        app:tint="#4669EB"/>
+        android:src="@drawable/home" />
 
     <TextView
         android:id="@+id/textView3"
@@ -609,9 +609,7 @@ android:padding="5dp">
         android:layout_height="wrap_content"
         android:text="Accueil"
         android:textSize="15sp"
-        android:textColor="#4669EB"
-        />
-
+        android:textColor="@color/grey"/>
 </LinearLayout>
 
 <LinearLayout
@@ -624,12 +622,13 @@ android:padding="5dp">
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/employes"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/presence"
-        app:tint="@color/grey"/>
+        android:src="@drawable/presence" />
 
     <TextView
+        android:id="@+id/textemployee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Présence"
