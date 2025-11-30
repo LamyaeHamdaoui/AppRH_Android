@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -241,7 +242,6 @@
 
         </LinearLayout>
     </ScrollView>
-
     <!-- NOTIFICATION ICON -->
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -282,6 +282,7 @@
 
         <!-- Bottom nav icons : reused structure -->
         <LinearLayout
+            android:id="@+id/Acceuil"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -306,6 +307,7 @@
 
         <!-- EMPLOYES -->
         <LinearLayout
+            android:id="@id/employes"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -314,7 +316,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/employes"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/employe" />
@@ -330,7 +332,7 @@
 
         <!-- CONGÉS -->
         <LinearLayout
-
+            android:id="@+id/conges"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -339,7 +341,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/conge"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/conge" />
@@ -355,6 +357,7 @@
 
         <!-- REUNIONS -->
         <LinearLayout
+            android:id="@+id/reunions"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -363,7 +366,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/reunions"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/reunion" />
@@ -379,6 +382,7 @@
 
         <!-- PROFIL -->
         <LinearLayout
+            android:id="@+id/profile"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -387,7 +391,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/profil"
+
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/profil" />

@@ -11,7 +11,7 @@
         android:radius="10dp"
 
         />
-    <stroke android:color="@color/orange"
+    <stroke android:color="@color/orange_light"
         android:width="2dp"
 
         />

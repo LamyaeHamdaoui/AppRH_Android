@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CongesEmployeActivity"
+    tools:context=".CongesEmploye"
     android:background="#F5F5F5"
     >
 
@@ -328,7 +328,8 @@
                     android:id="@+id/accueil"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/home" />
+                    android:src="@drawable/home"
+                    android:contentDescription="Accueil" />
 
                 <TextView
                     android:id="@+id/textView3"
@@ -352,7 +353,8 @@
                     android:id="@+id/employes"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/presence" />
+                    android:src="@drawable/presence"
+                    android:contentDescription="Présence" />
 
                 <TextView
                     android:id="@+id/textemployee"
@@ -376,7 +378,8 @@
                     android:id="@+id/conge"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/conge" />
+                    android:src="@drawable/conge"
+                    android:contentDescription="Congés" />
 
                 <TextView
                     android:id="@+id/textconge"
@@ -400,7 +403,8 @@
                     android:id="@+id/reunions"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/reunion" />
+                    android:src="@drawable/reunion"
+                    android:contentDescription="Réunions" />
 
                 <TextView
                     android:id="@+id/textreunion"
@@ -424,7 +428,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:maxWidth="30dp"
-                    android:src="@drawable/profil"/>
+                    android:src="@drawable/profil"
+                    android:contentDescription="Profil"/>
 
                 <TextView
                     android:id="@+id/textprofil"
@@ -449,7 +454,8 @@
             android:src="@drawable/bell"
             android:layout_gravity="right"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="10dp"
+            android:contentDescription="Notifications"/>
 
         <TextView
             android:layout_width="25dp"

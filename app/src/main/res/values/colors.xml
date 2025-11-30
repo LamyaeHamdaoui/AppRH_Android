@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="blue">#0057F0</color>
+    <color name="blueikramachaneg">#0057F0</color>
     <color name="blue_hover">#090DC8</color>
     <color name="red">#FF0000</color>
     <color name="red_hover">#FF0000</color>
@@ -24,4 +24,5 @@
     <color name="orange_light">#FFD08A</color>
     <color name="orange_light2">#FFF3E6</color>
     <color name="green_dark">#00C853</color>
+    <color name="blue">#4669EB</color>
 </resources>

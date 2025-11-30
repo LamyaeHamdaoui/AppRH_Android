@@ -1,4 +1,3 @@
-
 package com.example.rhapp;
 
 import android.app.DatePickerDialog;
@@ -170,21 +169,50 @@ public class DemandeCongeFragment extends Fragment {
                         String nom = employeeDoc.getString("nom");
                         String prenom = employeeDoc.getString("prenom");
                         String departement = employeeDoc.getString("departement");
-                        Integer soldeConge = employeeDoc.getLong("soldeConge") != null ?
-                                employeeDoc.getLong("soldeConge").intValue() : 23; // Valeur par défaut
+                        Integer soldeInitial = employeeDoc.getLong("soldeConge") != null ?
+                                employeeDoc.getLong("soldeConge").intValue() : 30; // Valeur par défaut
 
                         String userName = (prenom != null ? prenom : "") + " " + (nom != null ? nom : "");
                         userName = userName.trim();
 
-                        // Continuer avec l'envoi de la demande
-                        envoyerDemandeAvecInfos(userId, userName, userEmail, departement, soldeConge);
+                        // Calculer le solde restant en fonction des congés déjà approuvés
+                        calculerSoldeRestant(userId, soldeInitial, userName, userEmail, departement);
                     } else {
                         Toast.makeText(getContext(), "Profil employé non trouvé", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void envoyerDemandeAvecInfos(String userId, String userName, String userEmail, String departement, int soldeConge) {
+    private void calculerSoldeRestant(String userId, int soldeInitial, String userName, String userEmail, String departement) {
+        // Récupérer tous les congés approuvés de cet utilisateur
+        db.collection("conges")
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("statut", "Approuvé")
+                .get()
+                .addOnCompleteListener(task -> {
+                    int totalJoursPris = 0;
+
+                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                        for (DocumentSnapshot doc : task.getResult().getDocuments()) {
+                            Integer duree = doc.getLong("duree") != null ?
+                                    doc.getLong("duree").intValue() : 0;
+                            totalJoursPris += duree;
+                        }
+                    }
+
+                    int soldeRestant = soldeInitial - totalJoursPris;
+
+                    // Continuer avec l'envoi de la demande en passant le solde restant
+                    envoyerDemandeAvecInfos(userId, userName, userEmail, departement, soldeRestant);
+                })
+                .addOnFailureListener(e -> {
+                    // En cas d'erreur, utiliser le solde initial
+                    Toast.makeText(getContext(), "Erreur de calcul du solde, utilisation du solde initial", Toast.LENGTH_SHORT).show();
+                    envoyerDemandeAvecInfos(userId, userName, userEmail, departement, soldeInitial);
+                });
+    }
+
+    private void envoyerDemandeAvecInfos(String userId, String userName, String userEmail, String departement, int soldeRestant) {
         String typeConge = typeCongeSpinner.getSelectedItem().toString();
         String dateDebutStr = dateDebutEditText.getText().toString();
         String dateFinStr = dateFinEditText.getText().toString();
@@ -225,13 +253,14 @@ public class DemandeCongeFragment extends Fragment {
                 return;
             }
 
-            // Vérifier si le solde est suffisant
-            if (duree > soldeConge) {
-                Toast.makeText(getContext(), "Solde insuffisant. Vous avez " + soldeConge + " jours disponibles", Toast.LENGTH_LONG).show();
+            // Vérifier si le solde RESTANT est suffisant
+            if (duree > soldeRestant) {
+                // Afficher le solde RESTANT au lieu du solde initial
+                Toast.makeText(getContext(), "Solde insuffisant. Vous avez " + soldeRestant + " jours disponibles", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            // Création de l'objet Conge avec les vraies informations
+            // CORRECTION: Passer le soldeActuel au constructeur
             Conge conge = new Conge(
                     userId,
                     userName,
@@ -242,7 +271,8 @@ public class DemandeCongeFragment extends Fragment {
                     dateFin,
                     duree,
                     motif,
-                    "En attente" // Statut par défaut
+                    "En attente", // Statut par défaut
+                    soldeRestant  // CORRECTION: Ajout du solde actuel
             );
 
             // Afficher un message de chargement
