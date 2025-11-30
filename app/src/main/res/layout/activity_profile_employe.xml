@@ -629,7 +629,8 @@
                     android:id="@+id/iconPresence"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/presence"/>
+                    android:src="@drawable/presence"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textPresence"
@@ -655,7 +656,8 @@
                     android:id="@+id/conge"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/conge"/>
+                    android:src="@drawable/conge"
+                    />
 
                 <TextView
                     android:id="@+id/textconge"
@@ -707,7 +709,8 @@
                     android:id="@+id/profil"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/profil"/>
+                    android:src="@drawable/profil"
+                    app:tint="#4669EB"/>
 
                 <TextView
                     android:id="@+id/textprofil"
@@ -716,7 +719,7 @@
                     android:text="Profil"
                     android:textSize="13sp"
                     android:textStyle="bold"
-                    android:textColor="@color/grey"/>
+                    android:textColor="#4669EB"/>
             </LinearLayout>
         </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
