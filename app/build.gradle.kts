@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.ai)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.gridlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
