@@ -8,7 +8,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AcceuilEmployeActivity extends AppCompatActivity {
-    private LinearLayout presencefooter, congesfooter, reunionsfooter, profilefooter,attestation;
+    private LinearLayout presencefooter, congesfooter, reunionsfooter, profilefooter, attestation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,38 +21,40 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         reunionsfooter = findViewById(R.id.reunionsfooter);
         profilefooter = findViewById(R.id.profilefooter);
         attestation = findViewById(R.id.attestation);
+
+        // Navigation vers Presence
         if (presencefooter != null) {
             presencefooter.setOnClickListener(v -> {
-                // Ouvrir l'activité des attestations employé
                 startActivity(new Intent(AcceuilEmployeActivity.this, PresenceActivity.class));
             });
-            if (congesfooter != null) {
-                congesfooter.setOnClickListener(v -> {
-                    // Remplacer ProfileActivity.class par la classe réelle
-                    startActivity(new Intent(AcceuilEmployeActivity.this, CongesEmploye.class));
-                });
-                if (reunionsfooter != null) {
-                    reunionsfooter.setOnClickListener(v -> {
-                        // Ouvrir l'activité des attestations employé
-                        startActivity(new Intent(AcceuilEmployeActivity.this, ReunionEmployeActivity.class));
-                    });
-                    if (profilefooter != null) {
-                        profilefooter.setOnClickListener(v -> {
-                            // Ouvrir l'activité des attestations employé
-                            startActivity(new Intent(AcceuilEmployeActivity.this, ProfileEmployeActivity.class));
-                        });
+        }
 
-                    }
+        // Navigation vers Congés
+        if (congesfooter != null) {
+            congesfooter.setOnClickListener(v -> {
+                startActivity(new Intent(AcceuilEmployeActivity.this, CongesEmploye.class));
+            });
+        }
 
-                    if (attestation != null) {
-                        attestation.setOnClickListener(v -> {
-                            // Ouvrir l'activité des attestations employé
-                            startActivity(new Intent(AcceuilEmployeActivity.this, AttestationEmployeActivity.class));
-                        });
+        // Navigation vers Réunions
+        if (reunionsfooter != null) {
+            reunionsfooter.setOnClickListener(v -> {
+                startActivity(new Intent(AcceuilEmployeActivity.this, ReunionEmployeActivity.class));
+            });
+        }
 
-                    }
-                }
-            }
+        // Navigation vers Profil
+        if (profilefooter != null) {
+            profilefooter.setOnClickListener(v -> {
+                startActivity(new Intent(AcceuilEmployeActivity.this, ProfileEmployeActivity.class));
+            });
+        }
+
+        // Navigation vers Attestations
+        if (attestation != null) {
+            attestation.setOnClickListener(v -> {
+                startActivity(new Intent(AcceuilEmployeActivity.this, AttestationEmployeActivity.class));
+            });
         }
     }
 }

@@ -1,14 +1,15 @@
 package com.example.rhapp;
 
+import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.rhapp.model.Conge;
@@ -28,9 +29,15 @@ public class CongesActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private ListenerRegistration congesListener;
     private LinearLayout viewCongeAttente, viewCongeApprouve, viewCongeRefuse;
-    private Button btnCongeAttente, btnCongeApprouve, btnCongeRefuse;
+    private TextView btnCongeAttente, btnCongeApprouve, btnCongeRefuse;
+
+    // Variables pour les éléments du footer
+    private ImageView accueilIcon, employesIcon, congesIcon, reunionsIcon, profilIcon;
+    private TextView accueilText, employesText, congesText, reunionsText, profilText;
 
     private static final String TAG = "CongesActivity";
+    private static final int ACTIVE_COLOR = 0xFF4669EB; // Couleur #4669EB
+    private static final int INACTIVE_COLOR = 0xFF808080; // Couleur grise
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,11 @@ public class CongesActivity extends AppCompatActivity {
         initializeViews();
         setupClickListeners();
         setupFirestoreListener();
+        setupFooterNavigation();
+        setActiveFooterItem(R.id.congesLayout); // Marquer Congés comme actif
+
+        // Initialiser avec le bouton "En attente" sélectionné
+        setActiveButton(btnCongeAttente);
     }
 
     private void initializeViews() {
@@ -54,6 +66,19 @@ public class CongesActivity extends AppCompatActivity {
         btnCongeApprouve = findViewById(R.id.btnCongeApprouve);
         btnCongeRefuse = findViewById(R.id.btnCongeRefuse);
 
+        // Initialiser les éléments du footer
+        accueilIcon = findViewById(R.id.accueilIcon);
+        employesIcon = findViewById(R.id.employesIcon);
+        congesIcon = findViewById(R.id.congesIcon);
+        reunionsIcon = findViewById(R.id.reunionsIcon);
+        profilIcon = findViewById(R.id.profilIcon);
+
+        accueilText = findViewById(R.id.accueilText);
+        employesText = findViewById(R.id.employesText);
+        congesText = findViewById(R.id.congesText);
+        reunionsText = findViewById(R.id.reunionsText);
+        profilText = findViewById(R.id.profilText);
+
         // Initialiser les statistiques
         updateStatistics();
     }
@@ -61,16 +86,72 @@ public class CongesActivity extends AppCompatActivity {
     private void setupClickListeners() {
         btnCongeAttente.setOnClickListener(v -> {
             Log.d(TAG, "Bouton En attente cliqué");
+            setActiveButton(btnCongeAttente);
             showCongesByStatus("En attente");
         });
         btnCongeApprouve.setOnClickListener(v -> {
             Log.d(TAG, "Bouton Approuvé cliqué");
+            setActiveButton(btnCongeApprouve);
             showCongesByStatus("Approuvé");
         });
         btnCongeRefuse.setOnClickListener(v -> {
             Log.d(TAG, "Bouton Refusé cliqué");
+            setActiveButton(btnCongeRefuse);
             showCongesByStatus("Refusé");
         });
+    }
+
+    // MÉTHODE CORRIGÉE: Gérer l'état actif des boutons
+    private void setActiveButton(TextView activeButton) {
+        // Réinitialiser tous les boutons
+        btnCongeAttente.setBackgroundResource(R.drawable.button_tab_unselected);
+        btnCongeApprouve.setBackgroundResource(R.drawable.button_tab_unselected);
+        btnCongeRefuse.setBackgroundResource(R.drawable.button_tab_unselected);
+
+        // Définir le bouton actif
+        activeButton.setBackgroundResource(R.drawable.button_tab_selected);
+
+        // Forcer le rafraîchissement de l'affichage
+        activeButton.invalidate();
+    }
+
+    // Méthode pour gérer l'état actif des éléments du footer - CORRIGÉE
+    private void setActiveFooterItem(int activeItemId) {
+        // Réinitialiser toutes les couleurs
+        resetFooterColors();
+
+        // CORRECTION: Utiliser if/else au lieu de switch pour éviter l'erreur "Constant expression required"
+        if (activeItemId == R.id.accueilLayout) {
+            if (accueilIcon != null) accueilIcon.setColorFilter(ACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+            if (accueilText != null) accueilText.setTextColor(ACTIVE_COLOR);
+        } else if (activeItemId == R.id.employesLayout) {
+            if (employesIcon != null) employesIcon.setColorFilter(ACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+            if (employesText != null) employesText.setTextColor(ACTIVE_COLOR);
+        } else if (activeItemId == R.id.congesLayout) {
+            if (congesIcon != null) congesIcon.setColorFilter(ACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+            if (congesText != null) congesText.setTextColor(ACTIVE_COLOR);
+        } else if (activeItemId == R.id.reunionsLayout) {
+            if (reunionsIcon != null) reunionsIcon.setColorFilter(ACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+            if (reunionsText != null) reunionsText.setTextColor(ACTIVE_COLOR);
+        } else if (activeItemId == R.id.profilLayout) {
+            if (profilIcon != null) profilIcon.setColorFilter(ACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+            if (profilText != null) profilText.setTextColor(ACTIVE_COLOR);
+        }
+    }
+
+    // Réinitialiser toutes les couleurs du footer
+    private void resetFooterColors() {
+        if (accueilIcon != null) accueilIcon.setColorFilter(INACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+        if (employesIcon != null) employesIcon.setColorFilter(INACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+        if (congesIcon != null) congesIcon.setColorFilter(INACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+        if (reunionsIcon != null) reunionsIcon.setColorFilter(INACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+        if (profilIcon != null) profilIcon.setColorFilter(INACTIVE_COLOR, PorterDuff.Mode.SRC_IN);
+
+        if (accueilText != null) accueilText.setTextColor(INACTIVE_COLOR);
+        if (employesText != null) employesText.setTextColor(INACTIVE_COLOR);
+        if (congesText != null) congesText.setTextColor(INACTIVE_COLOR);
+        if (reunionsText != null) reunionsText.setTextColor(INACTIVE_COLOR);
+        if (profilText != null) profilText.setTextColor(INACTIVE_COLOR);
     }
 
     private void setupFirestoreListener() {
@@ -101,6 +182,67 @@ public class CongesActivity extends AppCompatActivity {
                         showNoDataMessage();
                     }
                 });
+    }
+
+    // NAVIGATION DU FOOTER
+    private void setupFooterNavigation() {
+        // Accueil
+        LinearLayout accueilLayout = findViewById(R.id.accueilLayout);
+        if (accueilLayout != null) {
+            accueilLayout.setOnClickListener(v -> {
+                setActiveFooterItem(R.id.accueilLayout);
+                Intent intent = new Intent(CongesActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(R.navigation.slide_in_right, R.navigation.slide_out_left);
+            });
+        }
+
+        // Employés
+        LinearLayout employesLayout = findViewById(R.id.employesLayout);
+        if (employesLayout != null) {
+            employesLayout.setOnClickListener(v -> {
+                setActiveFooterItem(R.id.employesLayout);
+                Intent intent = new Intent(CongesActivity.this, EmployeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(R.navigation.slide_in_right, R.navigation.slide_out_left);
+            });
+        }
+
+        // Congés (actuel - désactivé ou highlighté)
+        LinearLayout congesLayout = findViewById(R.id.congesLayout);
+        if (congesLayout != null) {
+            congesLayout.setOnClickListener(v -> {
+                setActiveFooterItem(R.id.congesLayout);
+                // Déjà sur la page congés, on peut soit ne rien faire soit afficher un message
+                Toast.makeText(CongesActivity.this, "Vous êtes déjà sur la page Congés", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        // Réunions
+        LinearLayout reunionsLayout = findViewById(R.id.reunionsLayout);
+        if (reunionsLayout != null) {
+            reunionsLayout.setOnClickListener(v -> {
+                setActiveFooterItem(R.id.reunionsLayout);
+                Intent intent = new Intent(CongesActivity.this, reunionActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(R.navigation.slide_in_right, R.navigation.slide_out_left);
+            });
+        }
+
+        // Profil
+        LinearLayout profilLayout = findViewById(R.id.profilLayout);
+        if (profilLayout != null) {
+            profilLayout.setOnClickListener(v -> {
+                setActiveFooterItem(R.id.profilLayout);
+                Intent intent = new Intent(CongesActivity.this, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(R.navigation.slide_in_right, R.navigation.slide_out_left);
+            });
+        }
     }
 
     private void showNoDataMessage() {
@@ -251,12 +393,130 @@ public class CongesActivity extends AppCompatActivity {
                 if (conge != null) {
                     // Définir l'ID du congé
                     conge.setId(document.getId());
-                    View carteView = createCongeCard(conge, statut, dateFormat);
-                    container.addView(carteView);
+
+                    // Calculer le solde actuel en temps réel
+                    calculerEtAfficherSoldeActuel(conge, container, statut, dateFormat);
                 }
             }
 
             Log.d(TAG, "Affichage de " + documents.size() + " demandes " + statut);
+        });
+    }
+
+    private void calculerEtAfficherSoldeActuel(Conge conge, LinearLayout container, String statut, SimpleDateFormat dateFormat) {
+        // Récupérer le solde initial de l'employé
+        db.collection("employees")
+                .document(conge.getUserId())
+                .get()
+                .addOnCompleteListener(employeeTask -> {
+                    if (employeeTask.isSuccessful() && employeeTask.getResult() != null) {
+                        DocumentSnapshot employeeDoc = employeeTask.getResult();
+                        Integer soldeInitial = employeeDoc.getLong("soldeConge") != null ?
+                                employeeDoc.getLong("soldeConge").intValue() : 30;
+
+                        // Calculer le solde actuel en temps réel
+                        calculerSoldeActuelReel(conge.getUserId(), soldeInitial, conge, container, statut, dateFormat);
+                    } else {
+                        // En cas d'erreur, utiliser le solde stocké dans le congé
+                        afficherCarteConge(conge, container, statut, dateFormat, conge.getSoldeActuel());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // En cas d'erreur, utiliser le solde stocké dans le congé
+                    afficherCarteConge(conge, container, statut, dateFormat, conge.getSoldeActuel());
+                });
+    }
+
+    private void calculerSoldeActuelReel(String userId, int soldeInitial, Conge conge, LinearLayout container, String statut, SimpleDateFormat dateFormat) {
+        // Récupérer tous les congés approuvés de cet employé
+        db.collection("conges")
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("statut", "Approuvé")
+                .get()
+                .addOnCompleteListener(congesTask -> {
+                    int totalJoursPris = 0;
+
+                    if (congesTask.isSuccessful() && congesTask.getResult() != null) {
+                        for (DocumentSnapshot doc : congesTask.getResult().getDocuments()) {
+                            // Ne pas compter le congé actuel s'il est en attente
+                            if (!doc.getId().equals(conge.getId()) || !conge.getStatut().equals("En attente")) {
+                                Integer duree = doc.getLong("duree") != null ? doc.getLong("duree").intValue() : 0;
+                                totalJoursPris += duree;
+                            }
+                        }
+                    }
+
+                    int soldeActuelReel = soldeInitial - totalJoursPris;
+
+                    // Mettre à jour le solde dans l'objet Conge
+                    conge.setSoldeActuel(soldeActuelReel);
+
+                    // Afficher la carte avec le solde actualisé
+                    afficherCarteConge(conge, container, statut, dateFormat, soldeActuelReel);
+                })
+                .addOnFailureListener(e -> {
+                    // En cas d'erreur, utiliser le solde stocké
+                    afficherCarteConge(conge, container, statut, dateFormat, conge.getSoldeActuel());
+                });
+    }
+
+    private void afficherCarteConge(Conge conge, LinearLayout container, String statut, SimpleDateFormat dateFormat, int soldeActuel) {
+        runOnUiThread(() -> {
+            int layoutRes;
+            switch (statut) {
+                case "En attente": layoutRes = R.layout.item_card_congeenttente; break;
+                case "Approuvé": layoutRes = R.layout.item_card_congeapprouve; break;
+                case "Refusé": layoutRes = R.layout.item_card_congerefuse; break;
+                default: layoutRes = R.layout.item_card_congeenttente;
+            }
+
+            View carteView = getLayoutInflater().inflate(layoutRes, null);
+
+            // Remplir les données communes
+            TextView nomConge = carteView.findViewById(R.id.nomConge);
+            TextView departement = carteView.findViewById(R.id.DepartementConge);
+            TextView typeCongeView = carteView.findViewById(R.id.typeConge);
+            TextView datesConge = carteView.findViewById(R.id.datesConge);
+            TextView dureeConge = carteView.findViewById(R.id.DureeConge);
+            TextView motifConge = carteView.findViewById(R.id.MotifConge);
+            TextView soldeActuelText = carteView.findViewById(R.id.soldeActuelText);
+
+            // Utiliser les données réelles du congé, jamais de données d'exemple
+            if (nomConge != null) nomConge.setText(conge.getUserName() != null ? conge.getUserName() : "Nom non disponible");
+            if (departement != null) departement.setText(conge.getUserDepartment() != null ? conge.getUserDepartment() : "Département non disponible");
+            if (typeCongeView != null) typeCongeView.setText(conge.getTypeConge() != null ? conge.getTypeConge() : "Type non disponible");
+            if (datesConge != null) {
+                String dateDebut = conge.getDateDebut() != null ? dateFormat.format(conge.getDateDebut()) : "Date non disponible";
+                String dateFin = conge.getDateFin() != null ? dateFormat.format(conge.getDateFin()) : "Date non disponible";
+                datesConge.setText(dateDebut + " - " + dateFin);
+            }
+            if (dureeConge != null) {
+                dureeConge.setText(conge.getDuree() + " jours");
+            }
+            if (motifConge != null) {
+                motifConge.setText(conge.getMotif() != null ? conge.getMotif() : "Motif non spécifié");
+            }
+            if (soldeActuelText != null) {
+                soldeActuelText.setText(soldeActuel + " jours");
+            }
+
+            // Pour les cartes en attente, ajouter les boutons d'action
+            if (statut.equals("En attente")) {
+                setupActionButtons(carteView, conge);
+            }
+
+            // Ajouter le click listener pour les détails
+            carteView.setOnClickListener(v -> openDetailsConge(conge));
+
+            // Ajouter un espacement entre les cartes
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            layoutParams.setMargins(0, 0, 0, 16); // Espacement de 16dp en bas
+            carteView.setLayoutParams(layoutParams);
+
+            container.addView(carteView);
         });
     }
 
@@ -302,51 +562,6 @@ public class CongesActivity extends AppCompatActivity {
             case "Refusé": return viewCongeRefuse;
             default: return null;
         }
-    }
-
-    private View createCongeCard(Conge conge, String statut, SimpleDateFormat dateFormat) {
-        int layoutRes;
-        switch (statut) {
-            case "En attente": layoutRes = R.layout.item_card_congeenttente; break;
-            case "Approuvé": layoutRes = R.layout.item_card_congeapprouve; break;
-            case "Refusé": layoutRes = R.layout.item_card_congerefuse; break;
-            default: layoutRes = R.layout.item_card_congeenttente;
-        }
-
-        View carteView = getLayoutInflater().inflate(layoutRes, null);
-
-        // Remplir les données communes
-        TextView nomConge = carteView.findViewById(R.id.nomConge);
-        TextView departement = carteView.findViewById(R.id.DepartementConge);
-        TextView typeCongeView = carteView.findViewById(R.id.typeConge);
-        TextView datesConge = carteView.findViewById(R.id.datesConge);
-        TextView dureeConge = carteView.findViewById(R.id.DureeConge);
-        TextView motifConge = carteView.findViewById(R.id.MotifConge);
-
-        if (nomConge != null) nomConge.setText(conge.getUserName() != null ? conge.getUserName() : "Nom non disponible");
-        if (departement != null) departement.setText(conge.getUserDepartment() != null ? conge.getUserDepartment() : "Département non disponible");
-        if (typeCongeView != null) typeCongeView.setText(conge.getTypeConge() != null ? conge.getTypeConge() : "Type non disponible");
-        if (datesConge != null) {
-            String dateDebut = conge.getDateDebut() != null ? dateFormat.format(conge.getDateDebut()) : "Date non disponible";
-            String dateFin = conge.getDateFin() != null ? dateFormat.format(conge.getDateFin()) : "Date non disponible";
-            datesConge.setText(dateDebut + " - " + dateFin);
-        }
-        if (dureeConge != null) {
-            dureeConge.setText(conge.getDuree() + " jours");
-        }
-        if (motifConge != null) {
-            motifConge.setText(conge.getMotif() != null ? conge.getMotif() : "Motif non spécifié");
-        }
-
-        // Pour les cartes en attente, ajouter les boutons d'action
-        if (statut.equals("En attente")) {
-            setupActionButtons(carteView, conge);
-        }
-
-        // Ajouter le click listener pour les détails
-        carteView.setOnClickListener(v -> openDetailsConge(conge));
-
-        return carteView;
     }
 
     private void setupActionButtons(View carteView, Conge conge) {
@@ -405,11 +620,20 @@ public class CongesActivity extends AppCompatActivity {
 
         Log.d(TAG, "Ouverture des détails pour le congé: " + conge.getId());
 
-        DetailsCongeFragment fragment = DetailsCongeFragment.newInstance(conge.getId());
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main, fragment)
-                .addToBackStack(null)
-                .commit();
+        try {
+            DetailsCongeFragment fragment = DetailsCongeFragment.newInstance(conge.getId());
+
+            // Utiliser add() au lieu de replace() pour superposer le fragment
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.main, fragment)
+                    .addToBackStack("details_conge")
+                    .commit();
+
+            Log.d(TAG, "Fragment de détails ajouté avec succès");
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur lors de l'ouverture des détails: " + e.getMessage());
+            Toast.makeText(this, "Erreur lors de l'ouverture des détails", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

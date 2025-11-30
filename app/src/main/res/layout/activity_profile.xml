@@ -553,10 +553,13 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+            android:id="@+id/notificationsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_gravity="top|end">
+            android:layout_gravity="top|end"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="30dp"
@@ -714,7 +717,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:maxWidth="30dp"
-                    android:src="@drawable/profil" />
+                    android:src="@drawable/profil"
+                    app:tint="#4669EB"/>
 
                 <TextView
                     android:id="@+id/textProfile"
@@ -722,9 +726,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Profil"
-                    android:textColor="@color/grey"
+                    android:textColor="#4669EB"
                     android:textSize="13sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

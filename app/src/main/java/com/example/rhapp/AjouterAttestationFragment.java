@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -64,7 +65,7 @@ public class AjouterAttestationFragment extends Fragment {
         });
 
         btnEnvoyer.setOnClickListener(v -> envoyerDemande());
-
+        styliserSpinner();
         return view;
     }
 
@@ -133,4 +134,16 @@ public class AjouterAttestationFragment extends Fragment {
                     Log.e("AJOUT_ATTESTATION", "Erreur recherche employé", e);
                 });
     }
+
+    private void styliserSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getContext(),
+                R.array.type_attestation,
+                R.layout.spinner_dropdown_item  // Utilise notre layout personnalisé
+        );
+        spinnerTypeAttestation.setAdapter(adapter);
+    }
+
+
+
 }
