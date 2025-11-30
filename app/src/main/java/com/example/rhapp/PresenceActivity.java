@@ -160,8 +160,8 @@ public class PresenceActivity extends AppCompatActivity {
 
         iconAccueil = findViewById(R.id.accueil);
         textAccueil = findViewById(R.id.textView3);
-        iconPresence = findViewById(R.id.employes);
-        textPresence = findViewById(R.id.textemployee);
+        iconPresence = findViewById(R.id.iconPresence);
+        textPresence = findViewById(R.id.textPresence);
         iconConges = findViewById(R.id.conge);
         textConges = findViewById(R.id.textconge);
         iconReunions = findViewById(R.id.reunions);
