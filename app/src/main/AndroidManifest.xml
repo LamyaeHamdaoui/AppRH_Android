@@ -13,7 +13,8 @@
         android:theme="@style/Theme.RhApp">
         <activity
             android:name=".ProfileEmployeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name=".ChangePasswordActivity"
@@ -32,11 +33,10 @@
             android:name=".EmployeActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
-
-
         <activity
             android:name=".PresenceActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".AttestationEmployeActivity"
             android:exported="false" />
@@ -72,7 +72,8 @@
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".NotificationsRhActivity"
             android:exported="true" />
