@@ -609,7 +609,7 @@ public class AcceuilRhActivity extends AppCompatActivity {
     /**
      * Gère la déconnexion de l'utilisateur.
      */
-    private void logoutUser() {
+    /*private void logoutUser() {
         try {
             Log.d(TAG, "logoutUser: Déconnexion en cours");
             cleanupListeners();
@@ -623,5 +623,5 @@ public class AcceuilRhActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, "Erreur déconnexion: " + e.getMessage());
         }
-    }
+    }*/
 }
