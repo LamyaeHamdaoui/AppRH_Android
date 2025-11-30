@@ -285,18 +285,25 @@
                     <TextView
                         android:id="@+id/datePresence"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:hint="JJ-MM-AAAA"
                         android:padding="10dp"
                         android:layout_marginStart="30dp"
                         android:textColor="@color/black"
                         android:inputType="text"/>
                 </RelativeLayout>
-
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Département"
+                    android:textColor="@color/grey"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"/>
                 <Spinner
                     android:id="@+id/departement"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="50dp"
                     android:background="@drawable/border"
                     android:padding="4dp"
                     android:layout_marginTop="10dp"
