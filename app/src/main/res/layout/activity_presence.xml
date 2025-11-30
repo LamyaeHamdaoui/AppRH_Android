@@ -18,7 +18,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <!-- ***** header ****** -->
@@ -151,7 +151,7 @@
                         android:padding="6dp" />
 
                     <TextView
-                        android:id="@+id/nbreApprouveConge"
+                        android:id="@+id/nbrePresences"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
@@ -185,13 +185,13 @@
                         android:padding="6dp" />
 
                     <TextView
-                        android:id="@+id/nbreRefuseConge"
-                        android:layout_width="7dp"
+                        android:id="@+id/nbreAbsences"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="7dp"
                         android:text="0"
-                        android:textSize="15sp"
                         android:textStyle="bold"
+                        android:layout_marginTop="7dp"
+                        android:textSize="15sp"
 
                         />
 
@@ -220,7 +220,7 @@
                         android:padding="6dp" />
 
                     <TextView
-                        android:id="@+id/nbreTotalConge"
+                        android:id="@+id/nbreTaux"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
