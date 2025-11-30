@@ -56,12 +56,13 @@ public class EmployeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_employe);
 
         initViews();
+        gererNavigationFooter();
         styliserSpinnerRecherche();
         configurerRecherche();
         configurerFiltreDepartement();
         chargerEmployes();
 
-        gererNavigationFooter();
+
 
         btnAddEmploye.setOnClickListener(v -> ouvrirFragmentAddEmploye());
 
