@@ -194,46 +194,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-            <!-- ******* reunion planifies *** -->
-            <LinearLayout
-                android:id="@+id/reunionPlanifieContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="10dp"
-                android:background="@drawable/border_gris"
-                android:padding="15dp">
-                <!-- reunions -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Réunions à venir"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    />
-            </LinearLayout>
-
-            <!-- les ruenions passees  -->
-            <LinearLayout
-                android:id="@+id/reunionPasseContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="10dp"
-                android:background="@drawable/border_gris"
-                android:padding="15dp">
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Réunions passées"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        />
-
-            </LinearLayout>
-
-            <!--- ******* no reunion  container *******  -->
+            <!--- ******* no reunion  container  *******  -->
             <LinearLayout
                 android:id="@+id/noReunionContainer"
                 android:layout_width="match_parent"
@@ -255,7 +216,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Aucune réunion trouvée"
+                    android:text="Aucune réunion disponible"
                     android:textStyle="bold"
                     android:textSize="15sp"
                     android:textColor="@color/black"
@@ -264,7 +225,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Planifier une nouvelle réunion ..."
+                    android:text="Aucune réunion n’a été programmée pour le moment."
                     android:textSize="13sp"
                     android:textColor="@color/grey"
                     android:layout_gravity="center_horizontal"
@@ -272,6 +233,137 @@
                     />
 
             </LinearLayout>
+
+            <!-- reunions planifié container  -->
+            <LinearLayout
+                android:id="@+id/reunionPlanifieContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:background="@drawable/border_gris"
+                android:visibility="visible"
+
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="92dp"
+                    android:text="Réunions à venir"
+                    android:textSize="18sp"
+                    android:layout_margin="10dp"
+                    />
+
+
+
+            </LinearLayout>
+
+
+            <!--- ******* no reunion  container venirs  *******  -->
+            <LinearLayout
+                android:id="@+id/noReunionContainerVenirs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="18dp"
+                android:visibility="gone"
+                android:background="@drawable/border_gris"
+                android:layout_margin="10dp"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/reunion"
+                    android:layout_marginBottom="10dp"
+                    app:tint="@color/black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Aucune réunion prévue"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text="Votre service n’a rien programmé."
+                    android:textColor="@color/grey"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+
+            <!--- *******  reunion passe  container *******  -->
+            <LinearLayout
+                android:id="@+id/reunionPasseContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/border_gris"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginRight="92dp"
+                    android:text="Réunions passées"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+            <!--- ******* no reunion  container passee  *******  -->
+            <LinearLayout
+                android:id="@+id/noReunionContainerPasse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="18dp"
+                android:visibility="gone"
+                android:background="@drawable/border_gris"
+                android:layout_margin="10dp"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/time"
+                    android:layout_marginBottom="10dp"
+                    app:tint="@color/black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Historique vide"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text="Vous n'avez pas encore eu de réunions."
+                    android:textColor="@color/grey"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+
+
 
         </LinearLayout>
     </ScrollView>

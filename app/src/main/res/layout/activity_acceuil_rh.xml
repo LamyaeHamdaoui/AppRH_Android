@@ -5,21 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".AcceuilRhActivity"
-    android:background="#F5F5F5">
+    tools:context=".AcceuilRhActivity">
+
     <ScrollView
         android:id="@+id/main"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:background="#F5F5F5"
+        >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-            <!--  hadi header section -->
+            <!-- Header Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -27,19 +28,17 @@
                 android:orientation="vertical"
                 android:paddingTop="25dp"
                 android:paddingLeft="25dp"
-                android:paddingBottom="40dp"
-                >
+                android:paddingBottom="40dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tableau de bord RH"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
-                    />
-
+                    android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/id"
+                    android:id="@+id/rhConnecte"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -57,12 +56,9 @@
                     android:textColor="@color/white"
                     android:textSize="13sp" />
 
-
-
             </LinearLayout>
 
-
-
+            <!-- Stats Cards Container -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -73,22 +69,19 @@
                 android:padding="15dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
-                app:elevation="8dp">
+                app:elevation="8dp"
 
-                <!-- hada l 1 first row -->
+               >
 
+                <!-- First Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
-
-                    <!-- hadi dyal employee total -->
-
+                    <!-- Total Employees -->
                     <androidx.cardview.widget.CardView
-
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
@@ -96,57 +89,49 @@
                         android:focusable="false"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
-                        >
-
+                        app:cardElevation="4dp">
 
                         <LinearLayout
+                            android:id="@id/employes"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_departement_blue"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="13dp"
-
-                            >
+                            android:paddingVertical="13dp">
 
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/employe_bleu"
-                                app:tint="@color/blue_hover"/>
+                                app:tint="@color/blue_hover" />
 
                             <TextView
-
+                                android:id="@+id/totalEmploye"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="45"
+                                android:layout_marginTop="5dp"
+                                android:text="0"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
-                                android:layout_marginTop="5dp"/>
-
+                                android:textSize="20sp" />
 
                             <TextView
-
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Employés total"
                                 android:gravity="center"
+                                android:text="Employés total"
                                 android:textColor="@color/grey"
-                                android:textSize="13sp"
-
-                                />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
                     </androidx.cardview.widget.CardView>
 
-
+                    <!-- Today's Presence -->
                     <androidx.cardview.widget.CardView
-
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
@@ -154,50 +139,42 @@
                         android:focusable="false"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
-                        >
-
+                        app:cardElevation="4dp">
 
                         <LinearLayout
+                            android:id="@+id/presence"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/border_green"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="15dp"
-
-                            >
+                            android:paddingVertical="15dp">
 
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
+                                android:layout_gravity="center"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/presence"
-                                android:layout_gravity="center"
-                                app:tint="@color/green"
-                                />
+                                app:tint="@color/green" />
 
                             <TextView
-
+                                android:id="@+id/totalPresents"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="45"
+                                android:layout_marginTop="5dp"
+                                android:text="0"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
-                                android:layout_marginTop="5dp"/>
-
+                                android:textSize="20sp" />
 
                             <TextView
-
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Présents aujourd'hui"
                                 android:gravity="center"
+                                android:text="Présents aujourd'hui"
                                 android:textColor="@color/grey"
-                                android:textSize="13sp"
-
-                                />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
@@ -205,19 +182,15 @@
 
                 </LinearLayout>
 
-
+                <!-- Second Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
-
-                    <!-- hadi dyal employee total -->
-
+                    <!-- Pending Leaves -->
                     <androidx.cardview.widget.CardView
-
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
@@ -225,58 +198,50 @@
                         android:focusable="false"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
-                        >
-
+                        app:cardElevation="4dp">
 
                         <LinearLayout
+                            android:id="@+id/conges"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/border_orangelight"
                             android:backgroundTint="@color/orange_light2"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="13dp"
-
-                            >
+                            android:paddingVertical="13dp">
 
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/conge"
-                                app:tint="@color/orange"/>
+                                app:tint="@color/orange" />
 
                             <TextView
-
+                                android:id="@+id/congeEnAttente"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="45"
+                                android:layout_marginTop="5dp"
+                                android:text="0"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
-                                android:layout_marginTop="5dp"/>
-
+                                android:textSize="20sp" />
 
                             <TextView
-
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Congés en attente"
                                 android:gravity="center"
+                                android:text="Congés en attente"
                                 android:textColor="@color/grey"
-                                android:textSize="13sp"
-
-                                />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
                     </androidx.cardview.widget.CardView>
 
-
+                    <!-- Certificates -->
                     <androidx.cardview.widget.CardView
-
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
@@ -284,9 +249,7 @@
                         android:focusable="false"
                         android:foreground="?android:attr/selectableItemBackground"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
-                        >
-
+                        app:cardElevation="4dp">
 
                         <LinearLayout
                             android:id="@+id/attestation"
@@ -295,40 +258,33 @@
                             android:background="@color/purple_light"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="15dp"
-
-                            >
+                            android:paddingVertical="15dp">
 
                             <ImageView
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
+                                android:layout_gravity="center"
                                 android:scaleType="centerInside"
                                 android:src="@drawable/doc24"
-                                android:layout_gravity="center"
-                                app:tint="#800080"
-                                />
+                                app:tint="#800080" />
 
                             <TextView
-
+                                android:id="@+id/attestationEnAttente"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="45"
+                                android:layout_marginTop="5dp"
+                                android:text="0"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
-                                android:layout_marginTop="5dp"/>
-
+                                android:textSize="20sp" />
 
                             <TextView
-
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Attestations"
                                 android:gravity="center"
+                                android:text="Attestations"
                                 android:textColor="@color/grey"
-                                android:textSize="13sp"
-
-                                />
+                                android:textSize="13sp" />
 
                         </LinearLayout>
 
@@ -336,28 +292,30 @@
 
                 </LinearLayout>
 
-
             </LinearLayout>
 
-
-            <!-- hada l second row -->
+            <!-- Quick Actions -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:text="Actions rapides"
-                android:layout_marginBottom="5dp"
-                android:textSize="15sp"
-                android:layout_marginTop="10dp"/>
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginLeft="5dp"/>
+
+            <!-- First Quick Actions Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="2"
+                >
 
-                <!-- hadi dyal employee total -->
+                <!-- Employee Management -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -366,41 +324,61 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
-                    <LinearLayout
 
+                    <LinearLayout
+                        android:id="@+id/actionPresence"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="10dp">
+
+
 
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:padding="10dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="12dp"
+                            android:background="@drawable/bg_rectangle_blue"
+                            android:padding="10dp"
                             android:scaleType="centerInside"
-                            android:src="@drawable/employe_bleu"
-                            app:tint="@color/white"
-                            android:background="@drawable/bleuaction"
-                            />
+                            android:src="@drawable/presence"
+                            app:tint="@color/white" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Gestion employés"
                             android:gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:text="Présences"
                             android:textColor="@color/black"
-                            android:textSize="15sp"
-                            android:layout_marginTop="10dp"/>
+                            android:textSize="15sp" />
+
                     </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/notifPresence"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="top|end"
+                            android:layout_marginTop="-1dp"
+                            android:layout_marginEnd="-1dp"
+                            android:background="@drawable/notification_badge"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:visibility="gone" />
+
+
                 </androidx.cardview.widget.CardView>
 
+                <!-- Validate Leaves -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -409,78 +387,68 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        >
-                        <LinearLayout
 
+                        <LinearLayout
+                            android:id="@+id/ActionConge"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@color/white"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="10dp">
+
                             <ImageView
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:padding="10dp"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="12dp"
-                                android:scaleType="centerInside"
                                 android:background="@drawable/calendrierborder"
+                                android:padding="10dp"
+                                android:scaleType="centerInside"
                                 android:src="@drawable/calendrierblanc" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text=" Valider congés"
                                 android:gravity="center"
-                                android:textColor="@color/black"
-                                android:textSize="15sp"
                                 android:layout_marginTop="10dp"
-                                />
+                                android:text=" Valider congés"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
+
                         </LinearLayout>
+
                         <TextView
-                            android:id="@+id/congeb"
+                            android:id="@+id/notifConge"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="top|end"
-                            android:layout_marginTop="-2dp"
-                            android:layout_marginEnd="-2dp"
-
-                            android:background="@drawable/notification_badge"                   android:gravity="center"
-                            android:text="5"
+                            android:layout_marginTop="-1dp"
+                            android:layout_marginEnd="-1dp"
+                            android:background="@drawable/notification_badge"
+                            android:gravity="center"
+                            android:text="0"
                             android:textColor="@color/white"
-                            android:textSize="11sp"
-                            android:visibility="visible"/>
+                            android:textSize="13sp"
+                            android:visibility="gone" />
 
-                        <TextView
-                            android:id="@+id/congev"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="top|end"
-                            android:layout_marginTop="-2dp"
-                            android:layout_marginEnd="-2dp"
 
-                            android:background="@drawable/notification_badge"                   android:gravity="center"
-                            android:text="5"
-                            android:textColor="@color/white"
-                            android:textSize="11sp"
-                            android:visibility="visible"/>
-                    </FrameLayout>
                 </androidx.cardview.widget.CardView>
+
             </LinearLayout>
 
+            <!-- Second Quick Actions Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="2"
+                >
 
+                <!-- Certificates -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -489,57 +457,58 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        >
-                        <LinearLayout
 
+
+                        <LinearLayout
+                            android:id="@+id/actionAttestation"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@color/white"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="10dp">
 
                             <ImageView
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:padding="10dp"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="12dp"
-                                android:scaleType="centerInside"
                                 android:background="@drawable/docborder"
+                                android:padding="10dp"
+                                android:scaleType="centerInside"
                                 android:src="@drawable/document" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Attestation"
                                 android:gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:text="Attestation"
                                 android:textColor="@color/black"
-                                android:textSize="15sp"
-                                android:layout_marginTop="10dp" />
+                                android:textSize="15sp" />
+
                         </LinearLayout>
+
                         <TextView
-                            android:id="@+id/attesrh"
+                            android:id="@+id/notifAttestation"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="top|end"
-                            android:layout_marginTop="-2dp"
-                            android:layout_marginEnd="-2dp"
-
-                            android:background="@drawable/notification_badge"                   android:gravity="center"
-                            android:text="2"
+                            android:layout_marginTop="-1dp"
+                            android:layout_marginEnd="-1dp"
+                            android:background="@drawable/notification_badge"
+                            android:gravity="center"
+                            android:text="0"
                             android:textColor="@color/white"
-                            android:textSize="11sp"
-                            android:visibility="visible"/>
-                    </FrameLayout>
+                            android:textSize="13sp"
+                            android:visibility="gone" />
+
                 </androidx.cardview.widget.CardView>
 
+                <!-- Meetings -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -548,39 +517,56 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
 
-                    <LinearLayout
 
+
+                    <LinearLayout
+                        android:id="@+id/actionReunions"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@color/white"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="10dp">
 
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:padding="10dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="12dp"
+                            android:background="@drawable/bg_orange_hover"
+                            android:padding="10dp"
                             android:scaleType="centerInside"
-                            android:src="@drawable/remot"
-                            android:background="@drawable/bg_orange_hover"/>
+                            android:src="@drawable/remot" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Réunions"
                             android:gravity="center"
+                            android:layout_marginTop="10dp"
+                            android:text="Réunions"
                             android:textColor="@color/black"
-                            android:textSize="15sp"
-                            android:layout_marginTop="10dp" />
+                            android:textSize="15sp" />
+
                     </LinearLayout>
+                    <TextView
+                        android:id="@+id/notifReunion"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="-1dp"
+                        android:layout_marginEnd="-1dp"
+                        android:background="@drawable/notification_badge"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+
                 </androidx.cardview.widget.CardView>
+
             </LinearLayout>
 
-
-
+            <!-- Alert Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -588,8 +574,9 @@
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/cartedevoir"
                 android:orientation="vertical"
-                android:padding="16dp">
-                <!-- 1 er ligne-->
+                android:padding="16dp"
+                android:visibility="gone">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -601,33 +588,27 @@
                         android:layout_height="20dp"
                         android:layout_marginEnd="10dp"
                         android:src="@drawable/alerticon"
-                        android:tint="#FF6B6B"
-                        tools:ignore="UseAppTint" />
+                        app:tint="#FF6B6B" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+
 
                         <TextView
-                            android:id="@+id/idPresence"
+                            android:id="@+id/absenceNonJustifie"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3"
-
+                            android:text="0"
                             android:textSize="18sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
+                            android:layout_marginStart="4dp"
                             android:text="absences non justifiées"
                             android:textColor="#333333"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:layout_weight="2"/>
 
-                    </LinearLayout>
+
 
                     <TextView
                         android:layout_width="60dp"
@@ -636,13 +617,12 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:gravity="center"
-
                         android:text="Voir"
                         android:textColor="#A3232B"
                         android:textSize="12sp" />
 
                 </LinearLayout>
-                <!-- 2 eme ligne -->
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -652,457 +632,164 @@
                     android:textColor="#666666"
                     android:textSize="12sp" />
 
-
             </LinearLayout>
 
-
-
-
-            <LinearLayout
+            <!-- Recent Activities -->
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/cotearrondi"
+                android:layout_marginTop="15dp"
+                android:layout_marginHorizontal="10dp"
                 android:padding="16dp"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                android:background="@drawable/border_gris"
+
+                >
+
                     <ImageView
+                        android:id="@+id/zigzag"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_margin="5dp"
                         android:src="@drawable/zigzag"
-                        />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent" />
+
+
+
                     <TextView
+                        android:id="@+id/activitesRecentes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Activités récentes"
-                        android:textSize="16sp"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
+                        android:textSize="16sp"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/black"
+                        app:layout_constraintStart_toEndOf="@+id/zigzag"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                <TextView
+                    android:id="@+id/aucuneActiviteText"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/recentborder1"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-                    <!-- 1 er ligne-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                    android:text="Aucune nouvelle activité pour le moment"
+                    android:textSize="13sp"
+                    android:layout_margin="10dp"
+                    android:textColor="@color/grey"
+                    app:layout_constraintTop_toBottomOf="@id/activitesRecentes"
+                    android:layout_gravity="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginEnd="12dp"
-                            android:src="@drawable/orangecalendar"
-
-                            tools:ignore="UseAppTint" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:text="Marie Dupont a demandé un congé"
-                                android:textColor="#333333"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
-
-
-                    </LinearLayout>
-                    <!-- 2 eme ligne -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="38dp"
-                        android:layout_marginTop="0dp"
-                        android:text="Il y'a 2h"
-                        android:textColor="#666666"
-                        android:textSize="14sp" />
-
-
-                </LinearLayout>
+                  />
 
                 <LinearLayout
+                    android:id="@+id/activitesRecentesContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/recentborder1"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toBottomOf="@+id/zigzag"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical"
-                    android:padding="8dp">
-                    <!-- 1 er ligne-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginEnd="12dp"
-                            android:src="@drawable/docpurple"
-
-                            tools:ignore="UseAppTint" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:text="Pierre Martin demande une attestation de travail"
-                                android:textColor="#333333"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
+                    />
 
 
 
-                    </LinearLayout>
-                    <!-- 2 eme ligne -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="38dp"
-                        android:layout_marginTop="0dp"
-                        android:text="Il y'a 3h"
-                        android:textColor="#666666"
-                        android:textSize="14sp" />
 
 
-                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-
-                    android:background="@drawable/recentborder1"
-                    android:orientation="vertical"
-                    android:padding="8dp">
-                    <!-- 1 er ligne-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginEnd="12dp"
-                            android:src="@drawable/alerticon"
-
-                            tools:ignore="UseAppTint" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="4dp"
-                                android:text="3 absences non justifiées aujourd'hui"
-                                android:textColor="#333333"
-                                android:textSize="16sp" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-                    <!-- 2 eme ligne -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="38dp"
-                        android:layout_marginTop="0dp"
-                        android:text="Il ya 5 h"
-                        android:textColor="#666666"
-                        android:textSize="14sp" />
-
-
-                </LinearLayout>
-
-            </LinearLayout>
+            <!-- Department Stats -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="0dp"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
 
-                android:layout_marginTop="16dp">
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@color/white"
                         android:orientation="vertical"
-                        android:padding="20dp"
-                        android:background="@color/white">
+                        android:padding="20dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
                             android:text="Taux de présence par département"
-                            android:textSize="18sp"
-                            android:layout_marginBottom="16dp"/>
-                        <!-- nta3 devloppemnet-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginBottom="12dp">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Développement"
-                                    tools:ignore="Suspicious0dp" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="95%"
-                                    android:textSize="16sp"
-                                    android:textColor="#2599FB"
-                                    />
-                            </LinearLayout>
+                            android:textSize="18sp" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="8dp"
-                                android:layout_marginTop="4dp"
-                                android:background="#E0E0E0"
-                                android:orientation="horizontal">
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="95"
-                                    android:background="#2599FB"
-                                    />
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="5"
-                                    android:background="#E0E0E0"
-                                    />
-                            </LinearLayout>
-                        </LinearLayout>
+                        <!-- Réutilise le même layout pour chaque statistique -->
+                        <include
+                            android:id="@+id/statDev"
+                            layout="@layout/item_statistique" />
 
+                        <include
+                            android:id="@+id/statMarketing"
+                            layout="@layout/item_statistique" />
 
-                        <!-- marketing-->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginBottom="12dp">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Marketing"
-                                    tools:ignore="Suspicious0dp" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="88%"
-                                    android:textSize="16sp"
-                                    android:textColor="#79280E"
-                                    />
-                            </LinearLayout>
+                        <include
+                            android:id="@+id/statSales"
+                            layout="@layout/item_statistique" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="8dp"
-                                android:layout_marginTop="4dp"
-                                android:background="#E0E0E0"
-                                android:orientation="horizontal">
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="88"
-                                    android:background="#79280E"
-                                    />
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="12"
-                                    android:background="#E0E0E0"
-                                    />
-                            </LinearLayout>
-                        </LinearLayout>
+                        <include
+                            android:id="@+id/statSport"
+                            layout="@layout/item_statistique" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginBottom="12dp">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Ventes"
-                                    tools:ignore="Suspicious0dp" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="70%"
-                                    android:textSize="16sp"
-                                    android:textColor="#FF7A00"
-                                    />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="8dp"
-                                android:layout_marginTop="4dp"
-                                android:background="#E0E0E0"
-                                android:orientation="horizontal">
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="70"
-                                    android:background="#FF7A00"
-                                    />
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="30"
-                                    android:background="#E0E0E0"
-                                    />
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginBottom="12dp">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Sport"
-                                    tools:ignore="Suspicious0dp" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="45"
-                                    android:textSize="16sp"
-                                    android:textColor="#B4BAFF"
-                                    />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="8dp"
-                                android:layout_marginTop="4dp"
-                                android:background="#E0E0E0"
-                                android:orientation="horizontal">
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="45"
-                                    android:background="#B4BAFF"
-                                    />
-                                <View
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="55"
-                                    android:background="#E0E0E0"
-                                    />
-                            </LinearLayout>
-                        </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
-            </LinearLayout>=
+
+            </LinearLayout>
+
+
         </LinearLayout>
+
     </ScrollView>
+
+    <!-- Notification Bell -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- - BELL NOTIFICATION -->
         <RelativeLayout
             android:id="@+id/relative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-          android:layout_alignParentTop="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="2dp"
+            android:padding="8dp">
 
-            >
-
-            <ImageView android:layout_width="30dp"
+            <ImageView
+                android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/bell"
                 android:layout_gravity="right"
                 android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/bell" />
 
-            <TextView android:layout_width="25dp"
+            <TextView
+                android:layout_width="25dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="17dp"
                 android:layout_marginTop="7dp"
+                android:layout_marginEnd="17dp"
                 android:background="@drawable/notification_border"
                 android:backgroundTint="@color/red"
                 android:text="0"
-                android:textSize="13sp"
-                android:textStyle="bold"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textAlignment="center" />
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
         </RelativeLayout>
 
+        <!-- Bottom Navigation -->
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
@@ -1126,7 +813,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/home"
-                    app:tint="#4669EB"/>
+                    app:tint="#4669EB" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1135,8 +822,8 @@
                     android:text="Accueil"
                     android:textColor="#4669EB"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -1148,8 +835,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:orientation="vertical"
-                tools:ignore="MissingPrefix">
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/employes"
@@ -1166,6 +852,7 @@
                     android:textColor="@color/grey"
                     android:textSize="13sp"
                     android:textStyle="bold" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -1193,6 +880,7 @@
                     android:textColor="@color/grey"
                     android:textSize="13sp"
                     android:textStyle="bold" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -1220,6 +908,7 @@
                     android:textColor="@color/grey"
                     android:textSize="13sp"
                     android:textStyle="bold" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -1247,7 +936,11 @@
                     android:textColor="@color/grey"
                     android:textSize="13sp"
                     android:textStyle="bold" />
+
             </LinearLayout>
+
         </LinearLayout>
+
     </RelativeLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
