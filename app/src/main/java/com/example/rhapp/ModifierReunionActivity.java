@@ -27,7 +27,6 @@ public class ModifierReunionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_modifier_reunion);
 
 
-
         EditText titreReunion = findViewById(R.id.titrereunion);
         EditText dateReunion = findViewById(R.id.dateReunion);
         EditText heureReunion = findViewById(R.id.heureReunion);
@@ -46,17 +45,14 @@ public class ModifierReunionActivity extends AppCompatActivity {
         });
 
 
-
-
         Intent intent = getIntent();
         String reunionId = intent.getStringExtra("reunionId");
         String titre = intent.getStringExtra("titre");
         String date = intent.getStringExtra("date");
         String time = intent.getStringExtra("time");
         String lieu = intent.getStringExtra("lieu");
-        String departement= intent.getStringExtra("departement");
+        String departement = intent.getStringExtra("departement");
         String description = intent.getStringExtra("description");
-
 
 
         titreReunion.setText(titre);
@@ -84,11 +80,27 @@ public class ModifierReunionActivity extends AppCompatActivity {
                 String departement = departementReunion.getSelectedItem().toString();
                 String description = descriptionReunion.getText().toString().trim();
 
-                //  Créer un objet de type Reunion (avec les champs saisies)
-                // Reunion reunion = new Reunion(titre, date, heure, lieu, departement, description);
+                // Vérification des champs obligatoires
+                if (titre.isEmpty() || date.isEmpty() || heure.isEmpty() || lieu.isEmpty() || description.isEmpty() || departement.equals("Sélectionnez un département")) {
+                    Toast.makeText(ModifierReunionActivity.this, "Tous les champs sont obligatoires !", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                //  Envoyer directement cet objet à Firebase
-                db.collection("Reunions")
+                // Vérification format date (jj/mm/aaaa)
+                if (!date.matches("^\\d{2}/\\d{2}/\\d{4}$")) {
+                    Toast.makeText(ModifierReunionActivity.this, "Date invalide ! Format attendu : jj/mm/aaaa", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Vérification format heure (HH:mm)
+                if (!heure.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
+                    Toast.makeText(ModifierReunionActivity.this, "Heure invalide ! Format attendu : HH:mm", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Mise à jour de la réunion dans Firestore
+                FirebaseFirestore.getInstance()
+                        .collection("Reunions")
                         .document(reunionId)
                         .update(
                                 "titre", titre,
@@ -99,19 +111,17 @@ public class ModifierReunionActivity extends AppCompatActivity {
                                 "description", description
                         )
                         .addOnSuccessListener(documentReference -> {
-                            Toast.makeText(ModifierReunionActivity.this, " Modification réussie !", Toast.LENGTH_SHORT).show();
-                            finish(); // retourne à l’activité précédente
-
+                            Toast.makeText(ModifierReunionActivity.this, "Modification réussie !", Toast.LENGTH_SHORT).show();
+                            finish();
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(ModifierReunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
             }
-
         });
     }
 
-}
+    }
 
 
 
