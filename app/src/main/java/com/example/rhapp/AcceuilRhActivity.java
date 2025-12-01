@@ -128,7 +128,7 @@ public class AcceuilRhActivity extends AppCompatActivity {
             if (totalEmploye != null) totalEmploye.setText("0");
             if (totalPresents != null) totalPresents.setText("0");
             if (attestationEnAttente != null) attestationEnAttente.setText("0");
-            if (rhConnecte != null) rhConnecte.setText("Chargement...");
+            //if (rhConnecte != null) rhConnecte.setText("Chargement...");
 
             // Cacher tous les badges de notification au démarrage
             if (notifPresence != null) notifPresence.setVisibility(View.GONE);
@@ -621,5 +621,6 @@ public class AcceuilRhActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, "Erreur déconnexion: " + e.getMessage());
         }
-    }*/
+    }
+    */
 }
