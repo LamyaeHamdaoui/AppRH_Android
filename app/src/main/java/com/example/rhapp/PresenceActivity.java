@@ -46,7 +46,7 @@ import java.util.Locale;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PresenceActivity extends AppCompatActivity {
+public class PresenceActivity extends AppCompatActivity implements JustifyAbsenceFragment.JustificationListener{
 
     // --- Constantes de Persistance de l'État de Présence ---
     private static final String PREF_NAME = "PresencePrefs";
@@ -272,6 +272,18 @@ public class PresenceActivity extends AppCompatActivity {
                     }
                 });
     }
+    // Dans PresenceActivity.java
+
+    @Override
+    public void onAbsenceJustified(String justificationDetails) {
+        savePresenceToFirebase("absent_justifie", justificationDetails, "Justification envoyée");
+
+        // 2. Enregistrement de la notification RH
+        String message = "Demande de justification d'absence reçue : " + justificationDetails.substring(0, Math.min(justificationDetails.length(), 40)) + "...";
+        saveNotificationForRh("absence_justifie", message, userId);
+
+        Toast.makeText(this, "Justification enregistrée et RH notifiés.", Toast.LENGTH_LONG).show();
+    }
 
     /**
      * Met à jour les TextView de statistiques avec les données calculées.
@@ -314,7 +326,6 @@ public class PresenceActivity extends AppCompatActivity {
         Timestamp nowTimestamp = Timestamp.now();
 
         // Créer un Map si le modèle History ne gère pas le Timestamp, sinon utiliser toObject()
-        // Puisque votre modèle History n'a pas de champ Timestamp, utilisons un Map pour l'ajouter lors de la sauvegarde:
         Map<String, Object> data = new HashMap<>();
         data.put("date", rawDate);
         data.put("status", status);
@@ -326,17 +337,69 @@ public class PresenceActivity extends AppCompatActivity {
         historyCollection
                 .document(rawDate)
                 .set(data) // Utilisation du Map pour inclure Timestamp
-                .addOnSuccessListener(aVoid -> {
+                .addOnSuccessListener(aVoid -> { // DEBUT du bloc success
                     Toast.makeText(this, "Présence enregistrée dans l'historique.", Toast.LENGTH_SHORT).show();
+                    // Recharger l'historique pour mise à jour immédiate de l'UI
                     loadHistoryFromFirestoreForPreviousWeek();
-                    loadMonthlyStatistics(); // Mettre à jour les statistiques après l'enregistrement
-                })
+                    loadMonthlyStatistics();
+
+                    // NOUVEAU : Enregistrer l'alerte pour les RH
+                    String displayTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                    String message = "Présence marquée par l'employé ID " + userId + " à " + displayTime;
+                    saveNotificationForRh("presence_marked", message, userId);
+                }) // FIN DU BLOC success - CORRIGÉ
                 .addOnFailureListener(e -> {
                     Log.e("PresenceActivity", "Erreur de sauvegarde Firestore: " + e.getMessage());
                     Toast.makeText(this, "Erreur de sauvegarde : " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
+    public void onAbsenceJustified(String justificationType, String justificationDetails) {
+        // 1. Sauvegarde dans l'historique de l'employé
+        // Le statut doit être "absent_justifie"
+        savePresenceToFirebase("absent_justifie", justificationDetails, justificationType);
 
+        // Note: savePresenceToFirebase va appeler loadHistory et loadMonthlyStats.
+
+        // 2. Enregistrement de la notification RH (si non géré dans savePresenceToFirebase)
+        // *Puisque savePresenceToFirebase ne gère que le statut 'present', nous l'appelons ici :*
+
+        String message = "Demande de justification d'absence reçue (" + justificationType + ") pour l'employé ID " + userId;
+        saveNotificationForRh("absence_justifie", message, userId);
+
+        Toast.makeText(this, "Justification envoyée. Les RH ont été notifiés.", Toast.LENGTH_LONG).show();
+
+        // Fermer le fragment après l'action
+        getSupportFragmentManager().popBackStack();
+    }
+/**
+ * Enregistre une alerte dans la collection centrale "RhNotificationsFeed"
+ * pour informer le service RH d'une action de l'employé.
+ */
+        private void saveNotificationForRh(String type, String message, String employeeId) {
+            if (db == null) return;
+
+            // Collection centralisée que tous les RH liront
+            CollectionReference rhAlerts = db.collection("RhNotificationsFeed");
+
+            Map<String, Object> notificationData = new HashMap<>();
+            notificationData.put("type", type); // ex: "presence_marked" ou "absence_justifie"
+            notificationData.put("message", message);
+            notificationData.put("emitterId", employeeId);
+            notificationData.put("timestamp", Timestamp.now());
+            notificationData.put("isRead", false); // Pour le suivi de lecture par les RH
+
+            rhAlerts.add(notificationData)
+                    .addOnSuccessListener(documentReference -> {
+                        Log.i("RH_NOTIF", "Alerte RH enregistrée: " + type);
+                        // ATTENTION : L'envoi de la notification push (FCM) doit être géré
+                        // par une Cloud Function qui écoute cette collection.
+                        // La logique d'envoi push n'est PAS ici.
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("RH_NOTIF", "Erreur enregistrement alerte RH: " + e.getMessage());
+                        Toast.makeText(this, "Erreur d'enregistrement RH: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
     // ---------- CHARGER L'HISTORIQUE (Semaine précédente) ----------
     // ---------- CHARGER L'HISTORIQUE (5 jours ouvrables précédents) ----------
     private void loadHistoryFromFirestoreForPreviousWeek() {

@@ -549,7 +549,7 @@ public class AcceuilRhActivity extends AppCompatActivity {
         setNavigationListener(R.id.actionAttestation, AttestationsActivity.class);
         setNavigationListener(R.id.employes, EmployeActivity.class);
         setNavigationListener(R.id.presence, PresenceActivity.class);
-        setNavigationListener(R.id.actionPresence, PresenceActivity.class);
+        setNavigationListener(R.id.actionPresence, PresenceRhActivity.class);
         setNavigationListener(R.id.conges, CongesActivity.class);
         setNavigationListener(R.id.ActionConge, CongesActivity.class);
     }
