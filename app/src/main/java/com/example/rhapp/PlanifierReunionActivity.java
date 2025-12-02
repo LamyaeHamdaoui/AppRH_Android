@@ -61,8 +61,28 @@ public class PlanifierReunionActivity extends AppCompatActivity {
             String departement = departementReunion.getSelectedItem().toString();
             String description = descriptionReunion.getText().toString().trim();
 
+            // Vérifier que tous les champs sont remplis
+            if (titre.isEmpty() || date.isEmpty() || heure.isEmpty() || lieu.isEmpty() || description.isEmpty() || departement.equals("Sélectionnez un département")) {
+                Toast.makeText(this, "Tous les champs sont obligatoires !", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Vérifier le format de la date : par exemple "dd/MM/yyyy"
+            if (!date.matches("^\\d{2}/\\d{2}/\\d{4}$")) {
+                Toast.makeText(this, "Date invalide ! Format attendu : jj/mm/aaaa", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Vérifier le format de l'heure : par exemple "HH:mm"
+            if (!heure.matches("^([01]\\d|2[0-3]):([0-5]\\d)$")) {
+                Toast.makeText(this, "Heure invalide ! Format attendu : HH:mm", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Si tout est correct, créer la réunion
             creerReunionAvecLeader(titre, date, heure, lieu, departement, description);
         });
+
 
 
 

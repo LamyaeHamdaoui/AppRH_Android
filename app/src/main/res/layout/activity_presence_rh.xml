@@ -243,7 +243,7 @@
                             android:id="@+id/nombreTaux"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="93.3%"
+                            android:text="0.0%"
                             android:textColor="@color/green"
                             android:textStyle="bold"
                             android:textSize="14sp"
@@ -370,8 +370,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="visible"
-                android:padding="10dp"
-                android:layout_margin="10dp" />
+                android:padding="5dp"
+                android:layout_margin="5dp" />
 
         </LinearLayout>
     </ScrollView>
