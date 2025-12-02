@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -11,17 +12,15 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_anchorGravity="center"
         android:id="@+id/scrollView2"
-        app:layout_anchor="@+id/scrollView2"
-        android:layout_marginBottom="80dp">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginBottom="70dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- ***** header ****** -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +45,6 @@
                     android:layout_marginTop="10dp" />
             </LinearLayout>
 
-            <!--- ****** Sous header ****** -->
             <LinearLayout
                 android:id="@+id/presence_action_container"
                 android:layout_width="match_parent"
@@ -57,10 +55,7 @@
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
                 android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-
-
-                >
+                android:paddingRight="25dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -124,7 +119,6 @@
 
             </LinearLayout>
 
-            <!-- *** barre attente refuse approuve *** -->
             <LinearLayout
                 android:id="@+id/statistiqueMois"
                 android:layout_width="match_parent"
@@ -136,6 +130,7 @@
                 android:paddingBottom="20dp"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -237,8 +232,8 @@
 
                         />
                 </LinearLayout>
-
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/historiqueContainer"
                 android:layout_width="match_parent"
@@ -247,6 +242,8 @@
                 android:padding="15dp"
                 android:background="@drawable/border_gris"
                 android:layout_margin="10dp"
+
+
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -261,7 +258,7 @@
                     android:id="@+id/recyclerViewHistorique"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
+                    android:nestedScrollingEnabled="true"
                     tools:listitem="@layout/item_card_presence"
                     />
             </LinearLayout>
@@ -299,6 +296,7 @@
             android:textAlignment="center"
             />
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
@@ -308,6 +306,7 @@
         android:background="@color/white"
         android:elevation="8dp"
         android:padding="5dp">
+
         <LinearLayout
             android:id="@+id/footerAccueil"
             android:layout_width="0dp"
