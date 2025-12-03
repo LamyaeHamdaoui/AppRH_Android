@@ -1,4 +1,3 @@
-
 <resources>
     <string name="app_name">RhApp</string>
     <!-- Strings used for fragments for navigation -->
@@ -48,7 +47,6 @@
         <item>Congé paternité</item>
         <item>Congé sans solde</item>
     </string-array>
-
 
 
 </resources>
