@@ -52,6 +52,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/posteDepartement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
@@ -180,7 +181,6 @@
             android:orientation="vertical"
             android:padding="16dp"
             android:layout_marginTop="5dp"
-            android:visibility="visible"
             >
             <TextView
                 android:layout_width="match_parent"
@@ -225,7 +225,7 @@
                         android:background="@drawable/bg_rectangle_blue"
                         android:src="@drawable/check24"
                         app:tint="@color/white"
-                        android:padding="8dp"
+                        android:padding="9dp"
                         android:layout_gravity="center"
                         />
 
@@ -246,8 +246,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="top|end"
-                    android:layout_marginTop="-2dp"
-                    android:layout_marginEnd="-2dp"
+                    android:layout_marginTop="-1dp"
+                    android:layout_marginEnd="-1dp"
                     android:background="@drawable/notification_badge"                   android:gravity="center"
                     android:text="0"
                     android:textColor="@color/white"
@@ -303,8 +303,8 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="top|end"
-                        android:layout_marginTop="-2dp"
-                        android:layout_marginEnd="-2dp"
+                        android:layout_marginTop="-1dp"
+                        android:layout_marginEnd="-1dp"
                         android:background="@drawable/notification_badge"                   android:gravity="center"
                         android:text="0"
                         android:textColor="@color/white"
@@ -364,8 +364,8 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_gravity="top|end"
-                            android:layout_marginTop="-2dp"
-                            android:layout_marginEnd="-2dp"
+                            android:layout_marginTop="-1dp"
+                            android:layout_marginEnd="-1dp"
                             android:background="@drawable/notification_badge"                   android:gravity="center"
                             android:text="0"
                             android:textColor="@color/white"
@@ -422,8 +422,8 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="top|end"
-                        android:layout_marginTop="-2dp"
-                        android:layout_marginEnd="-2dp"
+                        android:layout_marginTop="-1dp"
+                        android:layout_marginEnd="-1dp"
                         android:background="@drawable/notification_badge"                   android:gravity="center"
                         android:text="0"
                         android:textColor="@color/white"
@@ -439,10 +439,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/notifRecententesContainer"
+            android:layout_marginTop="16dp"
             android:background="@drawable/cotearrondi"
-            android:padding="16dp"
-            android:layout_marginTop="16dp">
+            android:padding="16dp">
 
             <ImageView
                 android:id="@+id/imageNotif"
@@ -450,30 +449,40 @@
                 android:layout_height="24dp"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/attention"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textNotif"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
                 android:text="Notifications récentes"
                 android:textSize="16sp"
-                app:layout_constraintLeft_toRightOf="@+id/imageNotif"
                 app:layout_constraintBaseline_toTopOf="parent"
-                android:layout_marginLeft="7dp"
-                />
+                app:layout_constraintLeft_toRightOf="@+id/imageNotif" />
 
             <LinearLayout
-                android:id="@+id/notifRecentesContainer"
+                android:id="@+id/notifRecententesContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textNotif" />
+
+            <TextView
+                android:id="@+id/aucuneNotif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aucune nouvelle notification pour le moment"
+                android:textSize="13sp"
+                android:textColor="@color/grey"
                 app:layout_constraintTop_toBottomOf="@+id/textNotif"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
+                android:layout_marginTop="7dp"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
