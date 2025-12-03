@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notificationContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- 1ère ligne -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/notificationIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="12dp"
+            tools:ignore="UseAppTint" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/notificationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="Titre notification"
+                android:textColor="#333333"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 2ème ligne -->
+    <TextView
+        android:id="@+id/notificationSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="0dp"
+        android:text="Sous-titre notification"
+        android:textColor="#666666"
+        android:textSize="14sp" />
+
+</LinearLayout>
