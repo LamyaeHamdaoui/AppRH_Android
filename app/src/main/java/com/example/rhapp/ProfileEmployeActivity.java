@@ -534,11 +534,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     }
 
     private void navigateToHelpSupport() {
-        executorService.execute(() -> {
-            mainHandler.post(() -> {
-                startActivity(new Intent(ProfileEmployeActivity.this, HelpSupportActivity.class));
-            });
-        });
+        startActivity(new Intent(ProfileEmployeActivity.this, HelpSupportActivity.class));
     }
 
     /**
