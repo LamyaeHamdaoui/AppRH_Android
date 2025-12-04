@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -690,16 +691,35 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
             notifRecentesContainer.setVisibility(View.VISIBLE);
 
             LayoutInflater inflater = LayoutInflater.from(this);
-
-            // Pour suivre quelle notification est actuellement sélectionnée
             final int[] selectedPosition = {-1};
+
+            // List pour stocker les drawables originaux par position
+            final List<Drawable> originalBackgrounds = new ArrayList<>();
 
             for (int i = 0; i < notifications.size(); i++) {
                 NotificationItem notif = notifications.get(i);
-                final int position = i; // Position finale pour le click listener
+                final int position = i;
 
                 View notificationView = inflater.inflate(R.layout.layout_notification_item,
                         notifRecentesContainer, false);
+
+                // FORCER LE DESSIN POUR AVOIR LE BACKGROUND
+                notificationView.measure(
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                );
+                notificationView.layout(0, 0,
+                        notificationView.getMeasuredWidth(),
+                        notificationView.getMeasuredHeight());
+
+                // MAINTENANT on peut obtenir le background
+                Drawable originalBackground = notificationView.getBackground();
+                if (originalBackground == null) {
+                    // Si toujours null, utiliser le background par défaut
+                    originalBackground = ContextCompat.getDrawable(this,
+                            R.drawable.border); // C
+                }
+                originalBackgrounds.add(originalBackground);
 
                 ImageView icon = notificationView.findViewById(R.id.notificationIcon);
                 TextView title = notificationView.findViewById(R.id.notificationTitle);
@@ -710,23 +730,20 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     title.setText(notif.title);
                     subtitle.setText(notif.subtitle);
 
-                    // Stocker le drawable original pour le restaurer plus tard
-                    final Drawable originalBackground = notificationView.getBackground();
-
                     // Ajouter le clic
                     notificationView.setOnClickListener(v -> {
-                        Intent intent = null;
-                        int backgroundRes = 0;
-
                         // Réinitialiser le background de l'ancienne notification sélectionnée
-                        if (selectedPosition[0] != -1 && selectedPosition[0] < notifRecentesContainer.getChildCount()) {
+                        if (selectedPosition[0] != -1) {
                             View previousView = notifRecentesContainer.getChildAt(selectedPosition[0]);
-                            if (previousView != null) {
-                                previousView.setBackground(originalBackground);
+                            if (previousView != null && originalBackgrounds.size() > selectedPosition[0]) {
+                                previousView.setBackground(originalBackgrounds.get(selectedPosition[0]));
                             }
                         }
 
                         // Appliquer le nouveau background
+                        int backgroundRes = 0;
+                        Intent intent = null;
+
                         switch (notif.type) {
                             case "conges":
                                 intent = new Intent(this, CongesEmployeActivity.class);
@@ -746,16 +763,18 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                                 break;
                         }
 
-                        // Appliquer le background avec animation
                         if (backgroundRes != 0) {
+                            // Appliquer le nouveau background
                             notificationView.setBackgroundResource(backgroundRes);
                             selectedPosition[0] = position;
 
-                            // Animation de retour après 500ms (si l'utilisateur reste sur l'activité)
-                            new Handler().postDelayed(() -> {
-                                notificationView.setBackground(originalBackground);
-                                selectedPosition[0] = -1;
-                            }, 500);
+                            // Animation de retour après un délai
+                            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                                if (notificationView != null && originalBackgrounds.size() > position) {
+                                    notificationView.setBackground(originalBackgrounds.get(position));
+                                    selectedPosition[0] = -1;
+                                }
+                            }, 300); // Réduit à 300ms pour une meilleure expérience
                         }
 
                         // Lancer l'activité
@@ -774,8 +793,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
             Log.e(TAG, "Erreur displayNotifications: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-    private void navigateToActivity(String type) {
+    }    private void navigateToActivity(String type) {
         Intent intent = null;
 
         switch (type) {
