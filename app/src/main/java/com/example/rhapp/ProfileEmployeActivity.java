@@ -28,11 +28,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-// L'activité implémente l'interface pour recevoir le signal de confirmation du Fragment
 public class ProfileEmployeActivity extends AppCompatActivity implements DeconnecterFragment.LogoutListener {
 
     private static final String TAG = "ProfileEmployeActivity";
-    private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
+    private static final String COLLECTION_EMPLOYEES = "employees";
 
     private TextView userName, userPoste, userDepartment;
     private TextView userEmail, userPosteDetails, userDepartmentDetails;
@@ -104,7 +103,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         }
     }
 
-
     @SuppressLint("WrongViewCast")
     private void initializeViews() {
         // Bloc Profile Card
@@ -142,7 +140,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     }
 
     private void initializeFooterViews() {
-        // Logique pour s'assurer que les enfants existent avant de caster
         if (footerAccueil != null && footerAccueil.getChildCount() > 1) {
             iconAccueil = (ImageView) footerAccueil.getChildAt(0);
             textAccueil = (TextView) footerAccueil.getChildAt(1);
@@ -174,13 +171,9 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     }
 
     private void displayLogoutConfirmation() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        // NOTE: Assurez-vous que la classe DeconnecterFragment existe
-        // DeconnecterFragment deconnecterFragment = new DeconnecterFragment();
-        // deconnecterFragment.show(fragmentManager, "DeconnecterFragmentTag");
-
-        // Temporaire si le fragment n'existe pas:
-        performLogout();
+        // Afficher seulement le fragment de confirmation
+        DeconnecterFragment fragment = new DeconnecterFragment();
+        fragment.show(getSupportFragmentManager(), "logout_dialog");
     }
 
     @Override
@@ -193,7 +186,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         Toast.makeText(this, "Déconnexion réussie.", Toast.LENGTH_SHORT).show();
         navigateToMainActivity();
     }
-
 
     private void setupFooterNavigation() {
         if (footerAccueil != null) {
@@ -215,9 +207,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
 
     private void navigateToPresence() {
         startActivity(new Intent(ProfileEmployeActivity.this, PresenceActivity.class));
-        Toast.makeText(this, "Navigation vers Présence Employé", Toast.LENGTH_SHORT).show();
     }
-
 
     private void setupSettingsClickListeners() {
         LinearLayout modifierProfil = findViewById(R.id.modifier_profil);
@@ -240,13 +230,15 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     }
 
     /**
-     * Charge les données du profil en recherchant par email dans la collection employees.
+     * CORRECTION : Charge les données depuis la collection employees
      */
     private void loadUserProfileDataByEmail(String userEmail) {
         showLoading(true);
         final String searchEmail = userEmail.toLowerCase(Locale.ROOT).trim();
 
-        db.collection(EMPLOYEE_REFERENCE_COLLECTION)
+        Log.d(TAG, "Recherche de l'employé avec email: " + searchEmail);
+
+        db.collection(COLLECTION_EMPLOYEES)
                 .whereEqualTo("email", searchEmail)
                 .limit(1)
                 .get()
@@ -256,20 +248,38 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                     if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
                         DocumentSnapshot employeeSnapshot = task.getResult().getDocuments().get(0);
 
-                        String nom = employeeSnapshot.getString("nom");
-                        String prenom = employeeSnapshot.getString("prenom");
+                        // Récupération des données essentielles seulement
+                        String nomComplet = employeeSnapshot.getString("nomComplet");
                         String email = employeeSnapshot.getString("email");
                         String poste = employeeSnapshot.getString("poste");
                         String departement = employeeSnapshot.getString("departement");
                         String role = employeeSnapshot.getString("role");
                         Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
-                        String photoUrl = employeeSnapshot.getString("photoUrl");
 
-                        displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp, photoUrl);
+                        // Si pas de nomComplet, essayer avec nom + prenom
+                        if (nomComplet == null || nomComplet.isEmpty()) {
+                            String nom = employeeSnapshot.getString("nom");
+                            String prenom = employeeSnapshot.getString("prenom");
+                            if (nom != null && prenom != null) {
+                                nomComplet = prenom + " " + nom;
+                            } else if (prenom != null) {
+                                nomComplet = prenom;
+                            } else if (nom != null) {
+                                nomComplet = nom;
+                            } else {
+                                nomComplet = "Utilisateur";
+                            }
+                        }
+
+                        Log.d(TAG, "Données récupérées - Nom: " + nomComplet);
+
+                        // Appeler sans photoUrl (ou avec null)
+                        displayAllUserData(nomComplet, email, poste, departement,
+                                role, dateEmbaucheTimestamp, null);
 
                     } else {
                         if (task.isSuccessful()) {
-                            Log.w(TAG, "Aucun profil trouvé, affichage des données par défaut.");
+                            Log.w(TAG, "Aucun profil trouvé pour l'email: " + searchEmail);
                         } else {
                             Log.e(TAG, "Erreur lors de la recherche par email:", task.getException());
                         }
@@ -281,32 +291,13 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                     }
                 });
     }
-
-    /**
-     * Affiche les données par défaut quand le profil n'est pas trouvé.
-     */
-    private void showDefaultData() {
-        String email = currentUser != null ? currentUser.getEmail() : "N/A";
-        String displayName = currentUser != null && currentUser.getDisplayName() != null ?
-                currentUser.getDisplayName() : "Utilisateur";
-
-        // IMPORTANT : Si 'nom' et 'prenom' sont null, on passe null ici.
-        // La fonction buildFullName les combinera et la fonction buildInitials utilisera le nom complet comme fallback.
-        displayAllUserData(null, displayName, email, "Poste non défini",
-                "Département non défini", "employe", null, null);
-    }
-
-    /**
-     * Affiche toutes les données utilisateur dans l'UI et gère l'affichage de la photo/initiales.
-     */
-    private void displayAllUserData(String nom, String prenom, String email,
+    private void displayAllUserData(String fullName, String email,
                                     String poste, String departement, String role,
                                     Timestamp dateEmbaucheTimestamp, String photoUrl) {
 
         this.userRole = role;
 
-        // 1. Bloc Card
-        String fullName = buildFullName(nom, prenom);
+        // 1. Bloc Card - Nom et informations
         if (userName != null) userName.setText(fullName);
 
         String departmentDisplay = formatText(departement, "Non défini");
@@ -315,84 +306,56 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         if (userPoste != null) userPoste.setText(posteDisplay);
         if (userDepartment != null) userDepartment.setText(departmentDisplay);
 
-        // LOGIQUE CLÉ : Affichage de la photo ou des initiales
-        if (userProfileImage != null && userInitial != null) {
-            if (photoUrl != null && !photoUrl.isEmpty()) {
-                // 1. Photo disponible : Charger l'image et cacher les initiales
-                userInitial.setVisibility(View.GONE);
-                userProfileImage.setVisibility(View.VISIBLE);
-
-                Glide.with(this)
-                        .load(photoUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.drawable.user)
-                        .error(R.drawable.user)
-                        .into(userProfileImage);
-
-            } else {
-                // 2. Pas de photo : Afficher les initiales et cacher l'ImageView
-                userInitial.setVisibility(View.VISIBLE);
-                // Utiliser INVISIBLE pour potentiellement conserver la mise en page
-                userProfileImage.setVisibility(View.INVISIBLE);
-
-                // ⭐ MODIFICATION : On passe le nom complet (fullName) comme fallback si nom/prenom sont vides
-                String initial = buildInitials(nom, prenom, fullName);
-                userInitial.setText(initial);
-            }
+        // 2. AFFICHAGE DES INITIALES (toujours visible)
+        if (userInitial != null) {
+            String initials = getInitialsFromFullName(fullName);
+            userInitial.setText(initials);
         }
 
-
-        // 2. Bloc Détails
+        // 3. Bloc Détails
         if (userEmail != null) userEmail.setText(formatText(email, "N/A"));
         if (userPosteDetails != null) userPosteDetails.setText(posteDisplay);
         if (userDepartmentDetails != null) userDepartmentDetails.setText(departmentDisplay);
 
-        // 3. Date d'embauche
+        // 4. Date d'embauche
         if (userDateEmbauche != null) {
             String dateEmbauche = formatDateEmbauche(dateEmbaucheTimestamp);
             userDateEmbauche.setText(dateEmbauche);
         }
     }
+    private String getInitialsFromFullName(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) return "??";
 
-    private String buildFullName(String nom, String prenom) {
-        String finalPrenom = prenom != null ? prenom : "";
-        String finalNom = nom != null ? nom : "";
+        String cleanedName = fullName.trim().replaceAll("\\s+", " ");
+        String[] parts = cleanedName.split(" ");
 
-        String fullName = (finalPrenom + " " + finalNom).trim();
-        return fullName.isEmpty() ? "Utilisateur" : fullName;
+        StringBuilder initials = new StringBuilder();
+
+        if (parts.length > 0 && !parts[0].isEmpty()) {
+            initials.append(parts[0].charAt(0));
+        }
+
+        if (parts.length > 1 && !parts[1].isEmpty()) {
+            initials.append(parts[1].charAt(0));
+        }
+
+        if (initials.length() == 0) {
+            return "??";
+        }
+
+        return initials.toString().toUpperCase(Locale.getDefault());
     }
 
     /**
-     * ⭐ NOUVELLE VERSION : Prend un fallback (le nom complet) en troisième paramètre
-     * Gère les initiales en utilisant d'abord nom/prenom séparés, puis le fallback (nom complet).
+     * Affiche les données par défaut
      */
-    private String buildInitials(String nom, String prenom, String fallbackName) {
-        StringBuilder initial = new StringBuilder();
+    private void showDefaultData() {
+        String email = currentUser != null ? currentUser.getEmail() : "N/A";
+        String displayName = currentUser != null && currentUser.getDisplayName() != null ?
+                currentUser.getDisplayName() : "Utilisateur";
 
-        if (nom != null && !nom.trim().isEmpty()) {
-            initial.append(nom.trim().substring(0, 1).toUpperCase(Locale.getDefault()));
-        }
-        if (prenom != null && !prenom.trim().isEmpty()) {
-            initial.append(prenom.trim().substring(0, 1).toUpperCase(Locale.getDefault()));
-        }
-
-        // 2. Si aucune initiale n'a été trouvée (initial.length() == 0),
-        // utiliser le nom complet comme fallback
-        if (initial.length() == 0 && fallbackName != null && !fallbackName.trim().isEmpty()) {
-            String cleanedName = fallbackName.trim().replaceAll("\\s+", " ");
-            String[] parts = cleanedName.split(" ");
-
-            if (parts.length > 0 && !parts[0].isEmpty()) {
-                initial.append(parts[0].substring(0, 1).toUpperCase(Locale.getDefault()));
-            }
-
-            if (parts.length > 1 && !parts[1].isEmpty()) {
-                initial.append(parts[1].substring(0, 1).toUpperCase(Locale.getDefault()));
-            }
-        }
-
-        // 3. Retourner le résultat ou "U"
-        return initial.length() > 0 ? initial.toString() : "U";
+        displayAllUserData(displayName, email, "Poste non défini",
+                "Département non défini", "employe", null, null);
     }
 
     private String formatText(String text, String defaultValue) {
@@ -402,7 +365,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         if ("N/A".equalsIgnoreCase(defaultValue) && text.contains("@")) {
             return text;
         }
-        // Pour les champs comme Poste ou Département, on met la première lettre en majuscule
         String lowerText = text.toLowerCase(Locale.getDefault());
         return lowerText.substring(0, 1).toUpperCase(Locale.getDefault()) + lowerText.substring(1);
     }
@@ -468,7 +430,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     private void navigateToEditProfile() {
         startActivity(new Intent(ProfileEmployeActivity.this, EditProfileActivity.class));
     }
-
 
     private void navigateToNotifications() {
         startActivity(new Intent(ProfileEmployeActivity.this, NotificationsEmployesActivity.class));
