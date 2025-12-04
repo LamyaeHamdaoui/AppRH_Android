@@ -444,7 +444,7 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
     }
 
     private void navigateToNotifications() {
-        startActivity(new Intent(ProfileActivity.this, NotificationsRhActivity.class));
+        startActivity(new Intent(ProfileActivity.this, AcceuilRhActivity.class));
     }
 
     // Navigation vers SecurityActivity
