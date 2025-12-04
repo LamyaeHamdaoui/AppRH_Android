@@ -137,7 +137,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userId = user.getEmail();
-            historyCollection = db.collection("Presence").document(user.getUid()).collection("history");
+            historyCollection = db.collection("PresenceHistory");
         } else {
             Log.w("PresenceActivity", "Utilisateur non authentifié.");
             finish();
@@ -284,9 +284,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         }
         savePresenceToFirebase(
                 userId,
-                "absent_justifie",
-                "Justification envoyée", // Le champ 'details' (court)
-                justificationDetails // Le champ 'justification' (long)
+                "absent_justifie"// Le champ 'justification' (long)
         );
 
         String message = "Demande de justification d'absence reçue : " + justificationDetails.substring(0, Math.min(justificationDetails.length(), 40)) + "...";
@@ -325,26 +323,17 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
 
     // ---------- ENREGISTRER DANS FIRESTORE ----------
     private android.content.Context context;
-    public void savePresenceToFirebase(String userId, String status, String details, String justification) {
+    public void savePresenceToFirebase(String userId, String status) {
         if (userId == null || historyCollection == null) {
             Toast.makeText(context, "Erreur: ID utilisateur ou collection non définie.", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String rawDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        String time = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-
-        // Utilisation du Timestamp pour l'ordre chronologique et les requêtes de plage de dates.
         Timestamp nowTimestamp = Timestamp.now();
 
         // 1. Création des données à enregistrer
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId); // CLÉ CRUCIALE : C'est ici que l'email doit être inséré
-        data.put("date", rawDate);
         data.put("status", status);
-        data.put("details", details);
-        data.put("time", time);
-        data.put("justification", justification);
         data.put("timestamp", nowTimestamp);
 
         // La collection "PresenceHistory" est utilisée. Nous laissons Firestore générer un ID de document unique
@@ -713,28 +702,10 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         presenceActionContainer.addView(presenceCardView);
     }
 
-    private boolean checkIfAlreadyMarkedToday() {
-        SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        String savedTime = prefs.getString(KEY_ARRIVAL_TIME, null);
-
-        if (savedTime == null) return false;
-
-        try {
-            Date arrivalDateTime = dateTimeFormat.parse(savedTime);
-            return isSameDay(arrivalDateTime, new Date());
-        } catch (ParseException e) {
-            Log.e("PresenceActivity", "Erreur de parsing dans la vérification de l'état.", e);
-            return false;
-        }
-    }
-
     private void setupClickListeners() {
         btnMarquerPresence.setOnClickListener(v -> {
-            if (!checkIfAlreadyMarkedToday()) {
                 replacePresenceActionWithCard();
-            } else {
-                Toast.makeText(PresenceActivity.this, "Votre présence est déjà enregistrée pour aujourd'hui.", Toast.LENGTH_SHORT).show();
-            }
+
         });
 
         btnJustifierAbsence.setOnClickListener(v -> showJustifyAbsenceFragment());
@@ -745,36 +716,26 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         iconProfil.setOnClickListener(v -> navigateTo(ProfileEmployeActivity.class));
         notificationsButton.setOnClickListener(v -> navigateTo(NotificationsEmployesActivity.class));
     }
-
     private void replacePresenceActionWithCard() {
         // Vérification que l'ID utilisateur est disponible avant la sauvegarde
         if (userId == null) {
             Toast.makeText(this, "Erreur: Utilisateur non identifié. Impossible d'enregistrer la présence.", Toast.LENGTH_SHORT).show();
             return;
         }
-
         Date now = new Date();
-
-        // Ces lignes semblent gérer l'état local de l'UI
         String fullDateTime = dateTimeFormat.format(now);
         savePresenceState(fullDateTime);
 
         SimpleDateFormat displaySdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         String displayTime = displaySdf.format(now);
         restorePresenceCard(displayTime);
-
         sendPresenceMarkedNotification(displayTime);
-
         savePresenceToFirebase(
                 userId,
-                "present",
-                "Arrivée marquée à " + displayTime,
-                ""
+                "present"
         );
-
-        Toast.makeText(this, "Présence marquée. Les RH ont été notifiés.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Présence marquée.", Toast.LENGTH_LONG).show();
     }
-
     private void showJustifyAbsenceFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
