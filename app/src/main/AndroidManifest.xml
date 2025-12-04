@@ -46,7 +46,8 @@
             android:exported="false" />
         <activity
             android:name=".HelpSupportActivity"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="DuplicateActivity" />
         <activity
             android:name=".CongesEmployeActivity"
             android:exported="false" />
