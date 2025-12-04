@@ -368,6 +368,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                                     if (presenceMarquee) {
                                         etatPrsence.setText("Marquée");
                                         etatPrsence.setTextColor(Color.parseColor("#0FAC71"));
+                                        iconepresence.setImageResource(R.drawable.approuve);
                                         if (notifPresence != null) {
                                             notifPresence.setVisibility(View.GONE);
                                         }
