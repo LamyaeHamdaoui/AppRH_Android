@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/footer"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="70dp"
         android:fillViewport="true"
         android:padding="5dp">
 
@@ -549,36 +549,6 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-    <RelativeLayout
-        android:id="@+id/notificationsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_gravity="top|end">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="right"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/bell" />
-
-        <TextView
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:layout_marginEnd="17dp"
-            android:background="@drawable/notification_border"
-            android:backgroundTint="@color/red"
-            android:text="0"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
