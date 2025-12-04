@@ -275,7 +275,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
 
                         // Appeler sans photoUrl (ou avec null)
                         displayAllUserData(nomComplet.toUpperCase(), email, poste, departement,
-                                role, dateEmbaucheTimestamp, null);
+                                role, dateEmbaucheTimestamp);
 
                     } else {
                         if (task.isSuccessful()) {
@@ -293,7 +293,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     }
     private void displayAllUserData(String fullName, String email,
                                     String poste, String departement, String role,
-                                    Timestamp dateEmbaucheTimestamp, String photoUrl) {
+                                    Timestamp dateEmbaucheTimestamp) {
 
         this.userRole = role;
 
@@ -355,7 +355,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                 currentUser.getDisplayName() : "Utilisateur";
 
         displayAllUserData(displayName, email, "Poste non défini",
-                "Département non défini", "employe", null, null);
+                "Département non défini", "employe", null);
     }
 
     private String formatText(String text, String defaultValue) {
