@@ -22,7 +22,6 @@ public class JustifyAbsenceFragment extends Fragment {
 
     // Interface de Callback
     public interface JustificationListener {
-        // Cette méthode sera implémentée dans PresenceActivity
         void onAbsenceJustified(String justificationDetails);
     }
 
@@ -81,13 +80,11 @@ public class JustifyAbsenceFragment extends Fragment {
             boolean isWorkingDay = dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY;
 
             if (isWorkingDay) {
-                // C'est un jour ouvré (Lundi à Vendredi), on procède à l'envoi.
                 if (listener != null) {
                     // Passer la donnée à l'Activity pour la sauvegarde Firestore/RH
                     listener.onAbsenceJustified(justification);
                 }
 
-                // Retour à l'écran précédent
                 if (getActivity() != null) {
                     getActivity().getSupportFragmentManager().popBackStack();
                 }
@@ -99,11 +96,6 @@ public class JustifyAbsenceFragment extends Fragment {
 
         return view;
     }
-
-    // Cette méthode n'est plus nécessaire car l'Activity gère la persistance Firestore
-    // private void sendJustificationAsNotification(String message) { ... }
-
-    // 3. Détacher le listener
     @Override
     public void onDetach() {
         super.onDetach();
