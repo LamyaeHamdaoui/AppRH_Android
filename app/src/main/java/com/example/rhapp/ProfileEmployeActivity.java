@@ -432,7 +432,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     }
 
     private void navigateToNotifications() {
-        startActivity(new Intent(ProfileEmployeActivity.this, NotificationsEmployesActivity.class));
+        startActivity(new Intent(ProfileEmployeActivity.this, AcceuilEmployeActivity.class));
     }
 
     private void navigateToSecurity() {
