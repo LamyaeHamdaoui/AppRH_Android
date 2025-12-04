@@ -2,6 +2,7 @@ package com.example.rhapp;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -34,40 +35,37 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class PresenceRhActivity extends AppCompatActivity {
-
     private static final String TAG = "PresenceRhActivity";
-
-    // Collections Firestore
     private static final String COLLECTION_USERS = "employees";
     private static final String COLLECTION_PRESENCE = "PresenceHistory";
-
     private FirebaseFirestore db;
     private CollectionReference usersCollection;
-
-    // UI Dashboard
     private TextView nbreTotalTextView;
     private TextView nbrePresentsTextView;
     private TextView nbreAbsentsTextView;
     private TextView nbreJustifiesTextView;
     private TextView nbreTauxTextView;
     private View progressFill;
-
-    // UI Filtre et recherche
     private TextView datePresenceTextView;
     private Spinner departementSpinner;
     private TextView btnTous, btnPresents, btnAbsents;
-    private LinearLayout viewCongeAttenteContainer;
+    private LinearLayout viewCongeAttenteContainer, footerAccueil, footerEmployes, footerConges, footerReunions, footerProfile;
 
     // Variables de Filtre
     private String currentDateRaw;
     private String selectedDepartment = "Tous les départements";
     private String currentStatusFilter = "all";
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presence_rh);
-
+        footerAccueil = findViewById(R.id.footerAccueil);
+        footerEmployes = findViewById(R.id.footerEmployes);
+        footerConges = findViewById(R.id.footerConges);
+        footerReunions = findViewById(R.id.footerReunions);
+        footerProfile = findViewById(R.id.footerProfile);
         db = FirebaseFirestore.getInstance();
 
         // Utiliser la collection 'employees'
@@ -85,7 +83,45 @@ public class PresenceRhActivity extends AppCompatActivity {
 
         // 4. Chargement initial des données
         loadTotalEmployeeCountAndProceed();
+        setupFooterNavigation();
     }
+    private void setupFooterNavigation() {
+        if (footerAccueil != null) {
+            footerAccueil.setOnClickListener(v -> navigateToHome());
+        }
+        if (footerEmployes != null) {
+            footerEmployes.setOnClickListener(v -> navigateToEmployees());
+        }
+        if (footerConges != null) {
+            footerConges.setOnClickListener(v -> navigateToConges());
+        }
+        if (footerReunions != null) {
+            footerReunions.setOnClickListener(v -> navigateToReunions());
+        }
+        if (footerProfile != null) {
+            footerProfile.setOnClickListener(v -> navigateToProfile());
+        }
+    }
+
+    private void navigateToHome() {
+        startActivity(new Intent(PresenceRhActivity.this, AcceuilRhActivity.class));
+    }
+
+    private void navigateToEmployees() {
+        startActivity(new Intent(PresenceRhActivity.this, EmployeActivity.class));
+    }
+    private void navigateToConges() {
+        startActivity(new Intent(PresenceRhActivity.this, CongesActivity.class));
+    }
+
+    private void navigateToReunions() {
+        startActivity(new Intent(PresenceRhActivity.this, reunionActivity.class));
+    }
+
+    private void navigateToProfile() {
+        startActivity(new Intent(PresenceRhActivity.this, ProfileActivity.class));
+    }
+
     private void loadTotalEmployeeCountAndProceed() {
         usersCollection.get().addOnSuccessListener(queryDocumentSnapshots -> {
             int total = queryDocumentSnapshots.size();
@@ -230,7 +266,7 @@ public class PresenceRhActivity extends AppCompatActivity {
         viewCongeAttenteContainer.removeAllViews();
 
         // 1. Récupérer les statuts de présence pour la date sélectionnée
-        db.collection(COLLECTION_PRESENCE)
+        db.collection(COLLECTION_USERS)
                 .whereEqualTo("date", rawDate)
                 .get()
                 .addOnSuccessListener(presenceSnapshots -> {
