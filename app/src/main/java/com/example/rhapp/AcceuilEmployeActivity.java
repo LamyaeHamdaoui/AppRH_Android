@@ -2,6 +2,7 @@ package com.example.rhapp;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -38,6 +39,7 @@ import java.util.concurrent.Executors;
 public class AcceuilEmployeActivity extends AppCompatActivity {
     private static final String TAG = "AcceuilEmployeActivity";
 
+
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
@@ -48,11 +50,13 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private TextView etatPrsence, soldeConge, reunionVenir, notifPresence, notifConge, notifAttestation, notifReunion, employeConnecte, aucuneNotif;
     private TextView posteDepartement;
 
+
     // Écouteurs Firestore
     private ListenerRegistration congesListener;
     private ListenerRegistration attestationsListener;
     private ListenerRegistration reunionsListener;
     private ListenerRegistration presenceListener;
+    private ListenerRegistration employeListener;
 
     // Thread management
     private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
@@ -64,121 +68,56 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private String employeePrenom = "";
     private String employeePoste = "";
     private String employeeDepartement = "";
-    private int soldeCongeValue = 25;
-
-    // Liste pour stocker les notifications
-    private List<NotificationItem> notifications = new ArrayList<>();
-
-    // Classe interne pour représenter une notification
-    private static class NotificationItem {
-        String type; // "CONGE", "ATTESTATION", "REUNION"
-        String title;
-        String subtitle;
-        long timestamp;
-        int iconResId;
-        int backgroundResId;
-        String documentId;
-
-        NotificationItem(String type, String title, String subtitle, long timestamp,
-                         int iconResId, int backgroundResId, String documentId) {
-            this.type = type;
-            this.title = title;
-            this.subtitle = subtitle;
-            this.timestamp = timestamp;
-            this.iconResId = iconResId;
-            this.backgroundResId = backgroundResId;
-            this.documentId = documentId;
-        }
-    }
-
+    private int soldeCongeValue = 0;
+    private ImageView iconepresence;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_acceuil_employe);
 
-        Log.d(TAG, "onCreate: Création de l'activité");
+        Log.d(TAG, "=== DÉBUT onCreate ===");
 
-        // Initialisation des vues
+        initializeFirebase();
         initializeViews();
-        setupClickListeners();
+        setupNavigation();
 
+        // Charger les données de l'employé connecté
+        loadEmployeData();
+
+        // Configurer les écouteurs Firestore
+        setupFirestoreListeners();
+
+        // Charger les notifications
+        loadNotificationsRecentetes();
+    }
+
+    private void initializeFirebase() {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        // Vérifier si l'utilisateur est connecté
         if (currentUser == null) {
             Toast.makeText(this, "Utilisateur non connecté", Toast.LENGTH_SHORT).show();
-            redirectToLogin();
+            finish();
             return;
         }
 
-        Log.d(TAG, "Utilisateur connecté: " + currentUser.getUid() + ", email: " + currentUser.getEmail());
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: Démarrage de l'activité");
-
-        if (currentUser == null) {
-            redirectToLogin();
-            return;
-        }
-
-        // Charger toutes les données
-        loadEmployeeProfileData();
-        setupFirestoreListeners();
-        loadAllNotifications();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Vérifier la présence
-       // checkTodayPresence();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop: Arrêt des écouteurs");
-        cleanupListeners();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: Nettoyage complet");
-        cleanupListeners();
-        if (backgroundExecutor != null && !backgroundExecutor.isShutdown()) {
-            backgroundExecutor.shutdown();
-        }
+        Log.d(TAG, "Utilisateur connecté: " + currentUser.getEmail());
     }
 
     private void initializeViews() {
-        Log.d(TAG, "initializeViews : initialisation des vues");
-
-        // Header views
+        // Header
         employeConnecte = findViewById(R.id.employeConnecte);
         posteDepartement = findViewById(R.id.posteDepartement);
+        iconepresence = findViewById(R.id.iconepresence);
 
-        // Sous header
-        presence = findViewById(R.id.presence);
-        conges = findViewById(R.id.conges);
-        reunions = findViewById(R.id.reunions);
 
-        // Statistiques principales
+        // Cartes statistiques
         etatPrsence = findViewById(R.id.etatPrsence);
         soldeConge = findViewById(R.id.soldeConge);
         reunionVenir = findViewById(R.id.reunionVenir);
 
-        // Notifications badges
-        notifPresence = findViewById(R.id.notifPresence);
-        notifConge = findViewById(R.id.notifConge);
-        notifAttestation = findViewById(R.id.notifAttestation);
-        notifReunion = findViewById(R.id.notifReunion);
 
         // Actions rapides
         actionPresence = findViewById(R.id.actionPresence);
@@ -186,839 +125,717 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         actionReunions = findViewById(R.id.actionReunions);
         attestation = findViewById(R.id.attestation);
 
-        // Container des notifications récentes
+        // Notifications badges
+        notifPresence = findViewById(R.id.notifPresence);
+        notifConge = findViewById(R.id.notifConge);
+        notifAttestation = findViewById(R.id.notifAttestation);
+        notifReunion = findViewById(R.id.notifReunion);
+
+        // Notifications récentes
         notifRecentesContainer = findViewById(R.id.notifRecententesContainer);
         aucuneNotif = findViewById(R.id.aucuneNotif);
 
-        // Footer navigation
+        // Footer
         presencefooter = findViewById(R.id.presencefooter);
         congesfooter = findViewById(R.id.congesfooter);
         reunionsfooter = findViewById(R.id.reunionsfooter);
         profilefooter = findViewById(R.id.profilefooter);
 
-        // Initialiser les badges comme invisibles
-       // if (notifPresence != null) notifPresence.setVisibility(View.GONE);
-       // if (notifConge != null) notifConge.setVisibility(View.GONE);
-       // if (notifAttestation != null) notifAttestation.setVisibility(View.GONE);
-       // if (notifReunion != null) notifReunion.setVisibility(View.GONE);
-
-        // Afficher un message temporaire
-       /* if (employeConnecte != null) {
-            employeConnecte.setText("Chargement...");
-        }*/
+        // Initialiser les badges comme cachés
+        notifPresence.setVisibility(View.GONE);
+        notifConge.setVisibility(View.GONE);
+        notifAttestation.setVisibility(View.GONE);
+        notifReunion.setVisibility(View.GONE);
     }
 
-    private void setupClickListeners() {
-        // Sous header nav
-        if (presence != null) {
-            presence.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, PresenceActivity.class));
-            });
-        }
+    private void setupNavigation() {
+        try {
+            // Actions rapides
+            if (actionPresence != null) {
+                actionPresence.setOnClickListener(v ->
+                        startActivity(new Intent(this, PresenceActivity.class)));
+            }
 
-        if (conges != null) {
-            conges.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, CongesEmployeActivity.class));
-            });
-        }
+            if (actionConge != null) {
+                actionConge.setOnClickListener(v ->
+                        startActivity(new Intent(this, CongesEmployeActivity.class)));
+            }
 
-        if (reunions != null) {
-            reunions.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, ReunionEmployeActivity.class));
-            });
-        }
+            if (actionReunions != null) {
+                actionReunions.setOnClickListener(v ->
+                        startActivity(new Intent(this, ReunionEmployeActivity.class)));
+            }
 
-        // Actions rapides
-        if (actionPresence != null) {
-            actionPresence.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, PresenceActivity.class));
-            });
-        }
+            if (attestation != null) {
+                attestation.setOnClickListener(v ->
+                        startActivity(new Intent(this, AttestationEmployeActivity.class)));
+            }
 
-        if (actionConge != null) {
-            actionConge.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, CongesEmployeActivity.class));
-            });
-        }
+            // Footer navigation
+            findViewById(R.id.iconPresence).setOnClickListener(v ->
+                    startActivity(new Intent(this, PresenceActivity.class)));
 
-        if (actionReunions != null) {
-            actionReunions.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, ReunionEmployeActivity.class));
-            });
-        }
+            findViewById(R.id.conge).setOnClickListener(v ->
+                    startActivity(new Intent(this, CongesEmployeActivity.class)));
 
-        if (attestation != null) {
-            attestation.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, AttestationEmployeActivity.class));
-            });
-        }
+            findViewById(R.id.profil).setOnClickListener(v ->
+                    startActivity(new Intent(this, ProfileEmployeActivity.class)));
 
-        // Footer navigation
-        if (presencefooter != null) {
-            presencefooter.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, PresenceActivity.class));
-            });
-        }
+            // Ajouter la navigation pour les réunions dans le footer
+            LinearLayout reunionsLayout = findViewById(R.id.reunionsfooter);
+            if (reunionsLayout != null) {
+                reunionsLayout.setOnClickListener(v ->
+                        startActivity(new Intent(this, ReunionEmployeActivity.class)));
+            }
 
-        if (congesfooter != null) {
-            congesfooter.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, CongesEmployeActivity.class));
-            });
-        }
-
-        if (reunionsfooter != null) {
-            reunionsfooter.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, ReunionEmployeActivity.class));
-            });
-        }
-
-        if (profilefooter != null) {
-            profilefooter.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilEmployeActivity.this, ProfileEmployeActivity.class));
-            });
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur setupNavigation: " + e.getMessage());
         }
     }
 
-    /**
-     * Charger les données du profil employé
-     */
-    private void loadEmployeeProfileData() {
-        if (currentUser == null || isFinishing()) return;
+    private void loadEmployeData() {
+        if (currentUser == null) return;
 
         String userEmail = currentUser.getEmail();
-        if (userEmail == null || userEmail.isEmpty()) {
-            Log.e(TAG, "Email utilisateur null ou vide");
-            displayDefaultName();
-            return;
-        }
+        Log.d(TAG, "Chargement employé pour email: " + userEmail);
 
-        String searchEmail = userEmail.toLowerCase(Locale.ROOT).trim();
-        Log.d(TAG, "Recherche employé avec email: " + searchEmail);
+        // Chercher l'employé par email (point commun entre User et Employe)
+        backgroundExecutor.execute(() -> {
+            try {
+                // Chercher dans la collection Employes
+                QuerySnapshot querySnapshot = Tasks.await(
+                        db.collection("employees")
+                                .whereEqualTo("email", userEmail)
+                                .limit(1)
+                                .get()
+                );
 
-        db.collection("employees")
-                .whereEqualTo("email", searchEmail)
-                .limit(1)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        DocumentSnapshot employeeDoc = task.getResult().getDocuments().get(0);
-                        employeeId = employeeDoc.getId();
+                if (!querySnapshot.isEmpty()) {
+                    DocumentSnapshot employeDoc = querySnapshot.getDocuments().get(0);
 
-                        // Récupérer les données
-                        employeeNom = employeeDoc.getString("nom") != null ? employeeDoc.getString("nom") : "";
-                        employeePrenom = employeeDoc.getString("prenom") != null ? employeeDoc.getString("prenom") : "";
-                        employeePoste = employeeDoc.getString("poste") != null ? employeeDoc.getString("poste") : "";
-                        employeeDepartement = employeeDoc.getString("departement") != null ? employeeDoc.getString("departement") : "";
+                    if (employeDoc.exists()) {
+                        employeeId = employeDoc.getId();
+                        employeeNom = employeDoc.getString("nom");
+                        employeePrenom = employeDoc.getString("prenom");
+                        employeePoste = employeDoc.getString("poste");
+                        employeeDepartement = employeDoc.getString("departement");
 
-                        // Solde de congés
-                        Long solde = employeeDoc.getLong("soldeConge");
-                        if (solde != null) {
-                            soldeCongeValue = solde.intValue();
-                        }
+                        Long solde = employeDoc.getLong("soldeConge");
+                        soldeCongeValue = solde != null ? solde.intValue() : 0;
 
                         Log.d(TAG, "Employé trouvé: " + employeePrenom + " " + employeeNom);
+                        Log.d(TAG, "Solde congé: " + soldeCongeValue);
 
-                        // Afficher les données
-                        displayEmployeeName();
-                        updatePosteDepartement();
-                        updateSoldeConge();
-
+                        mainHandler.post(() -> {
+                            updateEmployeUI();
+                            // Mettre à jour le badge solde congé
+                            updateSoldeCongeUI();
+                        });
                     } else {
-                        Log.e(TAG, "Employé non trouvé avec email: " + searchEmail);
-                        displayDefaultName();
+                        Log.w(TAG, "Document employé existe mais vide");
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Erreur recherche employé: " + e.getMessage());
-                    displayDefaultName();
-                });
-    }
-
-    /**
-     * Vérifier la présence du jour
-
-    private void checkTodayPresence() {
-        if (employeeId == null || employeeId.isEmpty()) return;
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
-        String today = dateFormat.format(new Date());
-
-        db.collection("presences")
-                .whereEqualTo("employeeId", employeeId)
-                .whereEqualTo("date", today)
-                .limit(1)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        DocumentSnapshot presenceDoc = task.getResult().getDocuments().get(0);
-                        String statut = presenceDoc.getString("statut");
-
-                        if (statut != null) {
-                            updatePresenceDisplay(statut);
-                        }
-                    } else {
-                        // Pas de présence marquée
-                        Calendar calendar = Calendar.getInstance();
-                        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-
-                        if (hour >= 9) {
-                            updatePresenceDisplay("non marqué");
-                        } else {
-                            updatePresenceDisplay("à marquer");
-                        }
-                    }
-                });
-    }*/
-
-    /**
-     * Mettre à jour l'affichage de la présence
-     */
-    private void updatePresenceDisplay(String status) {
-        runOnUiThread(() -> {
-            if (etatPrsence != null && !isFinishing()) {
-                switch (status.toLowerCase()) {
-                    case "présent":
-                    case "present":
-                        etatPrsence.setText("Présent");
-                        etatPrsence.setTextColor(Color.parseColor("#0FAC71"));
-                        break;
-                    case "retard":
-                        etatPrsence.setText("En retard");
-                        etatPrsence.setTextColor(Color.parseColor("#FF9800"));
-                        break;
-                    case "absent":
-                        etatPrsence.setText("Absent");
-                        etatPrsence.setTextColor(Color.parseColor("#F44336"));
-                        break;
-                    case "non marqué":
-                        etatPrsence.setText("Non marqué");
-                        etatPrsence.setTextColor(Color.parseColor("#FF9800"));
-                        break;
-                    default:
-                        etatPrsence.setText("À marquer");
-                        etatPrsence.setTextColor(Color.parseColor("#666666"));
-                        break;
+                } else {
+                    Log.w(TAG, "Aucun employé trouvé pour email: " + userEmail);
+                    // Chercher dans la collection Users comme fallback
+                    loadUserDataAsFallback(userEmail);
                 }
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur chargement employé: " + e.getMessage());
+                e.printStackTrace();
             }
         });
     }
 
-    /**
-     * Configurer les écouteurs Firestore
-     */
-    private void setupFirestoreListeners() {
-        if (currentUser == null || isFinishing()) {
-            return;
+    private void loadUserDataAsFallback(String userEmail) {
+        try {
+            QuerySnapshot querySnapshot = Tasks.await(
+                    db.collection("Users")
+                            .whereEqualTo("email", userEmail)
+                            .limit(1)
+                            .get()
+            );
+
+            if (!querySnapshot.isEmpty()) {
+                DocumentSnapshot userDoc = querySnapshot.getDocuments().get(0);
+
+                employeeNom = userDoc.getString("nom");
+                employeePrenom = userDoc.getString("prenom");
+                employeePoste = "Non défini";
+                employeeDepartement = "Non défini";
+                soldeCongeValue = 0;
+
+                mainHandler.post(() -> {
+                    updateEmployeUI();
+                    updateSoldeCongeUI();
+                });
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur chargement utilisateur fallback: " + e.getMessage());
         }
+    }
 
-        String userId = currentUser.getUid();
-        Log.d(TAG, "Configuration des écouteurs Firestore pour userId: " + userId);
+    private void updateEmployeUI() {
+        try {
+            if (employeConnecte != null) {
+                String nomComplet = employeePrenom + " " + employeeNom;
+                employeConnecte.setText(nomComplet);
+                Log.d(TAG, "Nom employé mis à jour: " + nomComplet);
+            }
 
-        // Nettoyer les anciens listeners
-        cleanupListeners();
+            if (posteDepartement != null) {
+                String posteDept = employeePoste + " • " + employeeDepartement;
+                posteDepartement.setText(posteDept);
+                Log.d(TAG, "Poste/Département mis à jour: " + posteDept);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur updateEmployeUI: " + e.getMessage());
+        }
+    }
 
-        // 1. Écouteur pour les congés en attente
-        congesListener = db.collection("conges")
-                .whereEqualTo("userId", userId)
-                .whereEqualTo("statut", "En attente")
-                .addSnapshotListener((value, error) -> {
+    private void updateSoldeCongeUI() {
+        try {
+            if (soldeConge != null) {
+                soldeConge.setText(soldeCongeValue + " jours");
+                Log.d(TAG, "Solde congé mis à jour: " + soldeCongeValue + " jours");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur updateSoldeCongeUI: " + e.getMessage());
+        }
+    }
+
+    private void setupFirestoreListeners() {
+        Log.d(TAG, "Configuration des écouteurs Firestore");
+        setupPresenceListener();
+        setupReunionsListener();
+        setupCongesListener();
+        setupAttestationsListener();
+        setupEmployeListener(); // Écouter les changements de l'employé
+    }
+
+    private void setupEmployeListener() {
+        if (currentUser == null || employeeId.isEmpty()) return;
+
+        employeListener = db.collection("employees").document(employeeId)
+                .addSnapshotListener((documentSnapshot, error) -> {
                     if (error != null) {
-                        Log.e(TAG, "Erreur écouteur congés: " + error.getMessage());
+                        Log.e(TAG, "Erreur écoute employé: " + error.getMessage());
                         return;
                     }
 
-                    if (isFinishing()) return;
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        backgroundExecutor.execute(() -> {
+                            employeeNom = documentSnapshot.getString("nom");
+                            employeePrenom = documentSnapshot.getString("prenom");
+                            employeePoste = documentSnapshot.getString("poste");
+                            employeeDepartement = documentSnapshot.getString("departement");
 
-                    int count = 0;
-                    if (value != null && !value.isEmpty()) {
-                        count = value.size();
-                        Log.d(TAG, "Congés en attente: " + count);
+                            Long solde = documentSnapshot.getLong("soldeConge");
+                            soldeCongeValue = solde != null ? solde.intValue() : 0;
+
+                            mainHandler.post(() -> {
+                                updateEmployeUI();
+                                updateSoldeCongeUI();
+                            });
+                        });
                     }
-
-                    updateBadge(notifConge, count);
-                    loadAllNotifications();
-                });
-
-        // 2. Écouteur pour les attestations en attente
-        attestationsListener = db.collection("Attestations")
-                .whereEqualTo("employeeId", userId)
-                .whereEqualTo("statut", "en_attente")
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e(TAG, "Erreur écouteur attestations: " + error.getMessage());
-                        return;
-                    }
-
-                    if (isFinishing()) return;
-
-                    int count = 0;
-                    if (value != null && !value.isEmpty()) {
-                        count = value.size();
-                        Log.d(TAG, "Attestations en attente: " + count);
-                    }
-
-                    updateBadge(notifAttestation, count);
-                    loadAllNotifications();
-                });
-
-        // 3. Écouteur pour les réunions
-        reunionsListener = db.collection("Reunions")
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e(TAG, "Erreur écouteur réunions: " + error.getMessage());
-                        return;
-                    }
-
-                    if (isFinishing()) return;
-
-                    int upcomingCount = 0;
-                    if (value != null && !value.isEmpty()) {
-                        for (DocumentSnapshot doc : value.getDocuments()) {
-                            try {
-                                String dateStr = doc.getString("date");
-                                if (isUpcomingReunion(dateStr)) {
-                                    upcomingCount++;
-                                }
-                            } catch (Exception e) {
-                                Log.e(TAG, "Erreur traitement réunion: " + e.getMessage());
-                            }
-                        }
-                        Log.d(TAG, "Réunions à venir: " + upcomingCount);
-                    }
-
-                    updateReunionStats(upcomingCount);
-                    updateBadge(notifReunion, upcomingCount);
-                    loadAllNotifications();
-                });
-
-        // 4. Écouteur pour les présences nécessitant attention
-        presenceListener = db.collection("presences")
-                .whereEqualTo("employeeId", userId)
-                .whereEqualTo("needAttention", true)
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e(TAG, "Erreur écouteur présence: " + error.getMessage());
-                        return;
-                    }
-
-                    if (isFinishing()) return;
-
-                    int count = 0;
-                    if (value != null && !value.isEmpty()) {
-                        count = value.size();
-                        Log.d(TAG, "Notifications présence: " + count);
-                    }
-
-                    updateBadge(notifPresence, count);
                 });
     }
 
-    /**
-     * Charger toutes les notifications
-     */
-    private void loadAllNotifications() {
-        if (isFinishing() || currentUser == null) return;
+    private void setupPresenceListener() {
+        if (currentUser == null) return;
+
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        Log.d(TAG, "Écoute présence pour date: " + today);
+
+        presenceListener = db.collection("Presence")
+                .document(currentUser.getUid())
+                .collection("history")
+                .document(today)
+                .addSnapshotListener((documentSnapshot, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "Erreur écoute présence: " + error.getMessage());
+                        return;
+                    }
+
+                    backgroundExecutor.execute(() -> {
+                        boolean presenceMarquee = documentSnapshot != null &&
+                                documentSnapshot.exists() &&
+                                "present".equals(documentSnapshot.getString("status"));
+
+                        mainHandler.post(() -> {
+                            try {
+                                if (etatPrsence != null) {
+                                    if (presenceMarquee) {
+                                        etatPrsence.setText("Marquée");
+                                        etatPrsence.setTextColor(Color.parseColor("#0FAC71"));
+                                        iconepresence.setImageResource(R.drawable.approuve);
+                                        if (notifPresence != null) {
+                                            notifPresence.setVisibility(View.GONE);
+                                        }
+                                    } else {
+
+                                        etatPrsence.setText("Non marquée");
+                                        etatPrsence.setTextColor(Color.parseColor("#FF0000"));
+                                        iconepresence.setImageResource(R.drawable.refuse);
+
+                                        if (notifPresence != null) {
+                                            notifPresence.setVisibility(View.VISIBLE);
+                                            notifPresence.setText("!");
+                                        }
+                                    }
+                                    Log.d(TAG, "Présence mise à jour: " + (presenceMarquee ? "Marquée" : "Non marquée"));
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Erreur mise à jour présence UI: " + e.getMessage());
+                            }
+                        });
+                    });
+                });
+    }
+
+    private void setupReunionsListener() {
+        Log.d(TAG, "Configuration écouteur réunions");
+
+        reunionsListener = db.collection("Reunions")
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "Erreur écoute réunions: " + error.getMessage());
+                        return;
+                    }
+
+                    backgroundExecutor.execute(() -> {
+                        try {
+                            int reunionsAVenir = 0;
+
+                            if (querySnapshot != null) {
+                                for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                                    String dateStr = doc.getString("date");
+                                    String timeStr = doc.getString("heure");
+
+                                    if (dateStr != null && timeStr != null) {
+                                        int etatDate = compareDate(dateStr, timeStr);
+                                        if (etatDate == 1) { // À venir
+                                            reunionsAVenir++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            final int finalCount = reunionsAVenir;
+                            mainHandler.post(() -> {
+                                try {
+                                    if (reunionVenir != null) {
+                                        reunionVenir.setText(finalCount + " à venir");
+                                    }
+
+                                    if (notifReunion != null) {
+                                        notifReunion.setText(String.valueOf(finalCount));
+                                        notifReunion.setVisibility(finalCount > 0 ? View.VISIBLE : View.GONE);
+                                    }
+                                    Log.d(TAG, "Réunions à venir: " + finalCount);
+                                } catch (Exception e) {
+                                    Log.e(TAG, "Erreur mise à jour réunions UI: " + e.getMessage());
+                                }
+                            });
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "Erreur traitement réunions: " + e.getMessage());
+                        }
+                    });
+                });
+    }
+
+    private void setupCongesListener() {
+        if (currentUser == null) return;
+
+        Log.d(TAG, "Configuration écouteur congés pour userId: " + currentUser.getUid());
+
+        congesListener = db.collection("conges")
+                .whereEqualTo("userId", currentUser.getUid())
+                .whereEqualTo("statut", "En attente")
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "Erreur écoute congés: " + error.getMessage());
+                        return;
+                    }
+
+                    backgroundExecutor.execute(() -> {
+                        int congesEnAttente = querySnapshot != null ? querySnapshot.size() : 0;
+
+                        mainHandler.post(() -> {
+                            try {
+                                if (notifConge != null) {
+                                    notifConge.setText(String.valueOf(congesEnAttente));
+                                    notifConge.setVisibility(congesEnAttente > 0 ? View.VISIBLE : View.GONE);
+                                    Log.d(TAG, "Congés en attente: " + congesEnAttente);
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Erreur mise à jour congés UI: " + e.getMessage());
+                            }
+                        });
+                    });
+                });
+    }
+
+    private void setupAttestationsListener() {
+        if (currentUser == null) return;
+
+        Log.d(TAG, "Configuration écouteur attestations");
+
+        attestationsListener = db.collection("Attestations")
+                .whereEqualTo("employeeId", currentUser.getUid())
+                .whereEqualTo("statut", "en_attente")
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "Erreur écoute attestations: " + error.getMessage());
+                        return;
+                    }
+
+                    backgroundExecutor.execute(() -> {
+                        int attestationsEnAttente = querySnapshot != null ? querySnapshot.size() : 0;
+
+                        mainHandler.post(() -> {
+                            try {
+                                if (notifAttestation != null) {
+                                    notifAttestation.setText(String.valueOf(attestationsEnAttente));
+                                    notifAttestation.setVisibility(attestationsEnAttente > 0 ? View.VISIBLE : View.GONE);
+                                    Log.d(TAG, "Attestations en attente: " + attestationsEnAttente);
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Erreur mise à jour attestations UI: " + e.getMessage());
+                            }
+                        });
+                    });
+                });
+    }
+
+    private int compareDate(String date, String time) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+            Date reunionDate = dateFormat.parse(date + " " + time);
+            Date now = new Date();
+
+            if (reunionDate == null) return -1;
+
+            if (reunionDate.after(now)) return 1; // À venir
+            if (reunionDate.before(now)) return -1; // Passée
+            return 0; // Aujourd'hui
+
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur comparaison date: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    private void loadNotificationsRecentetes() {
+        Log.d(TAG, "Chargement des notifications récentes");
 
         backgroundExecutor.execute(() -> {
             try {
-                List<NotificationItem> allNotifications = new ArrayList<>();
-                long currentTime = System.currentTimeMillis();
+                List<NotificationItem> notifications = new ArrayList<>();
 
-                // 1. Charger les congés récents
-                try {
+                // 1. Congés en attente
+                if (currentUser != null) {
                     QuerySnapshot congesSnapshot = Tasks.await(
                             db.collection("conges")
                                     .whereEqualTo("userId", currentUser.getUid())
+                                    .whereEqualTo("statut", "En attente")
                                     .orderBy("dateDemande", Query.Direction.DESCENDING)
-                                    .limit(10)
+                                    .limit(3)
                                     .get()
                     );
 
-                    if (congesSnapshot != null && !congesSnapshot.isEmpty()) {
-                        for (DocumentSnapshot doc : congesSnapshot.getDocuments()) {
-                            try {
-                                String statut = doc.getString("statut");
-                                String typeConge = doc.getString("typeConge");
-                                Date dateDemande = doc.getDate("dateDemande");
-                                String docId = doc.getId();
+                    for (DocumentSnapshot doc : congesSnapshot.getDocuments()) {
+                        String type = doc.getString("typeConge");
+                        Date dateDemande = doc.getDate("dateDemande");
+                        String date = (dateDemande != null) ?
+                                new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).format(dateDemande) :
+                                "Date inconnue";
 
-                                // Déterminer le background selon le statut
-                                int backgroundResId;
-                                if (statut != null && statut.equals("En attente")) {
-                                    backgroundResId = R.drawable.recentborder; // Orange pour en attente
-                                } else if (statut != null && (statut.equals("Approuvé") || statut.equals("Approuvee"))) {
-                                    backgroundResId = R.drawable.approuve_border; // Vert pour approuvé
-                                } else if (statut != null && (statut.equals("Refusé") || statut.equals("Refusee"))) {
-                                    backgroundResId = R.drawable.border_redlight; // Rouge pour refusé
-                                } else {
-                                    backgroundResId = R.drawable.recentborder2; // Bleu pour autres
-                                }
-
-                                String title = "Demande de congé " + (typeConge != null ? typeConge : "");
-                                String subtitle;
-                                if (statut != null && statut.equals("En attente")) {
-                                    subtitle = "En cours de validation par RH";
-                                } else {
-                                    subtitle = "Statut: " + statut;
-                                }
-
-                                NotificationItem notification = new NotificationItem(
-                                        "CONGE",
-                                        title,
-                                        subtitle,
-                                        dateDemande != null ? dateDemande.getTime() : currentTime,
-                                        getCongeIcon(statut),
-                                        backgroundResId,
-                                        docId
-                                );
-                                allNotifications.add(notification);
-                            } catch (Exception e) {
-                                Log.e(TAG, "Erreur création notification congé: " + e.getMessage());
-                            }
-                        }
+                        notifications.add(new NotificationItem(
+                                "Demande de congé en attente",
+                                "En cours de validation par RH - " + date,
+                                R.drawable.docpurple,
+                                "conges"
+                        ));
                     }
-                } catch (Exception e) {
-                    Log.e(TAG, "Erreur chargement congés: " + e.getMessage());
                 }
 
-                // 2. Charger les attestations récentes
+                // 2. Réunions à venir (les 2 plus proches)
                 try {
-                    QuerySnapshot attestationsSnapshot = Tasks.await(
-                            db.collection("Attestations")
-                                    .whereEqualTo("employeeId", currentUser.getUid())
-                                    .orderBy("dateDemande", Query.Direction.DESCENDING)
-                                    .limit(10)
-                                    .get()
-                    );
+                    // Obtenir la date d'aujourd'hui au format "dd/MM/yyyy"
+                    Calendar cal = Calendar.getInstance();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+                    String today = dateFormat.format(cal.getTime());
 
-                    if (attestationsSnapshot != null && !attestationsSnapshot.isEmpty()) {
-                        for (DocumentSnapshot doc : attestationsSnapshot.getDocuments()) {
-                            try {
-                                String statut = doc.getString("statut");
-                                String typeAttestation = doc.getString("typeAttestation");
-                                Date dateDemande = doc.getDate("dateDemande");
-                                String docId = doc.getId();
-
-                                // Déterminer le background selon le statut
-                                int backgroundResId;
-                                if (statut != null && statut.equals("en_attente")) {
-                                    backgroundResId = R.drawable.recentborder; // Orange pour en attente
-                                } else if (statut != null && (statut.equals("approuvée") || statut.equals("approuvee"))) {
-                                    backgroundResId = R.drawable.approuve_border; // Vert pour approuvé
-                                } else if (statut != null && (statut.equals("refusée") || statut.equals("refusee"))) {
-                                    backgroundResId = R.drawable.border_redlight; // Rouge pour refusé
-                                } else {
-                                    backgroundResId = R.drawable.recentborder2; // Bleu pour autres
-                                }
-
-                                String title = "Demande d'attestation " + (typeAttestation != null ? typeAttestation : "");
-                                String subtitle;
-                                if (statut != null && statut.equals("en_attente")) {
-                                    subtitle = "En cours de validation par RH";
-                                } else {
-                                    subtitle = "Statut: " + statut;
-                                }
-
-                                NotificationItem notification = new NotificationItem(
-                                        "ATTESTATION",
-                                        title,
-                                        subtitle,
-                                        dateDemande != null ? dateDemande.getTime() : currentTime,
-                                        getAttestationIcon(statut),
-                                        backgroundResId,
-                                        docId
-                                );
-                                allNotifications.add(notification);
-                            } catch (Exception e) {
-                                Log.e(TAG, "Erreur création notification attestation: " + e.getMessage());
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "Erreur chargement attestations: " + e.getMessage());
-                }
-
-                // 3. Charger les réunions récentes
-                try {
+                    // Option 1: Récupérer les 2 premières réunions à partir d'aujourd'hui
                     QuerySnapshot reunionsSnapshot = Tasks.await(
                             db.collection("Reunions")
-                                    .orderBy("date", Query.Direction.DESCENDING)
-                                    .limit(10)
+                                    .whereGreaterThanOrEqualTo("date", today) // À partir d'aujourd'hui
+                                    .orderBy("date", Query.Direction.ASCENDING) // Plus proche en premier
+                                    .orderBy("heure", Query.Direction.ASCENDING) // Puis par heure
+                                    .limit(2) // Seulement 2 résultats
                                     .get()
                     );
 
-                    if (reunionsSnapshot != null && !reunionsSnapshot.isEmpty()) {
-                        for (DocumentSnapshot doc : reunionsSnapshot.getDocuments()) {
-                            try {
-                                String titre = doc.getString("titre");
-                                String dateStr = doc.getString("date");
-                                String docId = doc.getId();
+                    for (DocumentSnapshot doc : reunionsSnapshot.getDocuments()) {
+                        String titre = doc.getString("titre");
+                        String date = doc.getString("date");
+                        String heure = doc.getString("heure");
 
-                                // Toujours bleu pour les réunions
-                                int backgroundResId = R.drawable.recentborder2;
-
-                                String title = "Réunion: " + (titre != null ? titre : "");
-                                String subtitle = formatTimeAgo(dateStr);
-
-                                NotificationItem notification = new NotificationItem(
-                                        "REUNION",
-                                        title,
-                                        subtitle,
-                                        currentTime,
-                                        R.drawable.userpurple,
-                                        backgroundResId,
-                                        docId
-                                );
-                                allNotifications.add(notification);
-                            } catch (Exception e) {
-                                Log.e(TAG, "Erreur création notification réunion: " + e.getMessage());
-                            }
+                        if (titre != null && date != null && heure != null) {
+                            notifications.add(new NotificationItem(
+                                    titre,
+                                    "Réunion le " + date + " à " + heure,
+                                    R.drawable.userb,
+                                    "reunion"
+                            ));
                         }
                     }
+
                 } catch (Exception e) {
                     Log.e(TAG, "Erreur chargement réunions: " + e.getMessage());
                 }
+                // 3. Présence non marquée (si après 9h du matin)
+                Calendar cal = Calendar.getInstance();
+                if (cal.get(Calendar.HOUR_OF_DAY) >= 9) {
+                    String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-                // Trier par timestamp (plus récent en premier)
-                Collections.sort(allNotifications, (a1, a2) ->
-                        Long.compare(a2.timestamp, a1.timestamp));
+                    DocumentSnapshot presenceDoc = Tasks.await(
+                            db.collection("Presence")
+                                    .document(currentUser.getUid())
+                                    .collection("history")
+                                    .document(today)
+                                    .get()
+                    );
 
-                // Garder seulement les 5 plus récentes
-                final List<NotificationItem> recent = allNotifications.size() > 5 ?
-                        allNotifications.subList(0, 5) : allNotifications;
+                    if (!presenceDoc.exists() || !"present".equals(presenceDoc.getString("status"))) {
+                        notifications.add(new NotificationItem(
+                                "Présence non marquée",
+                                "N'oubliez pas de marquer votre présence aujourd'hui",
+                                R.drawable.alerticon,
+                                "presence"
+                        ));
+                    }
+                }
+
+                // 4. Attestations en attente
+                if (currentUser != null) {
+                    QuerySnapshot attestationsSnapshot = Tasks.await(
+                            db.collection("Attestations")
+                                    .whereEqualTo("employeeId", currentUser.getUid())
+                                    .whereEqualTo("statut", "en_attente")
+                                    .limit(2)
+                                    .get()
+                    );
+
+                    for (DocumentSnapshot doc : attestationsSnapshot.getDocuments()) {
+                        String type = doc.getString("typeAttestation");
+
+                        notifications.add(new NotificationItem(
+                                "Demande d'attestation en attente",
+                                (type != null ? type : "Attestation") + " - En cours de traitement",
+                                R.drawable.attestation,
+                                "attestation"
+                        ));
+                    }
+                }
+
+                // Trier par date/priorité et limiter à 7
+                Collections.sort(notifications, (n1, n2) -> {
+                    int priority1 = getPriority(n1.type);
+                    int priority2 = getPriority(n2.type);
+                    return Integer.compare(priority2, priority1);
+                });
+
+                final List<NotificationItem> finalNotifications =
+                        notifications.subList(0, Math.min(notifications.size(), 7));
 
                 mainHandler.post(() -> {
-                    if (!isFinishing()) {
-                        notifications.clear();
-                        notifications.addAll(recent);
-                        displayNotifications();
-                    }
+                    displayNotifications(finalNotifications);
+                    Log.d(TAG, "Notifications affichées: " + finalNotifications.size());
                 });
 
             } catch (Exception e) {
-                Log.e(TAG, "Erreur lors de la récupération des notifications: " + e.getMessage());
-                mainHandler.post(() -> {
-                    if (!isFinishing()) {
-                        showNoNotificationsMessage();
-                    }
-                });
+                Log.e(TAG, "Erreur chargement notifications: " + e.getMessage());
+                e.printStackTrace();
             }
         });
     }
 
-    /**
-     * Afficher les notifications dans le layout personnalisé
-     */
-    private void displayNotifications() {
-        runOnUiThread(() -> {
-            if (isFinishing() || notifRecentesContainer == null) return;
+    private int getPriority(String type) {
+        switch (type) {
+            case "presence": return 4;
+            case "conges": return 3;
+            case "reunion": return 2;
+            case "attestation": return 1;
+            default: return 0;
+        }
+    }
+
+    private void displayNotifications(List<NotificationItem> notifications) {
+        try {
+            if (notifRecentesContainer == null || aucuneNotif == null) return;
 
             notifRecentesContainer.removeAllViews();
 
             if (notifications.isEmpty()) {
-                showNoNotificationsMessage();
+                aucuneNotif.setVisibility(View.VISIBLE);
+                notifRecentesContainer.setVisibility(View.GONE);
+                Log.d(TAG, "Aucune notification à afficher");
                 return;
             }
 
-            // Masquer le message "Aucune notification"
-            if (aucuneNotif != null) {
-                aucuneNotif.setVisibility(View.GONE);
-            }
-
-            // S'assurer que le container est visible
+            aucuneNotif.setVisibility(View.GONE);
             notifRecentesContainer.setVisibility(View.VISIBLE);
 
+            LayoutInflater inflater = LayoutInflater.from(this);
+
+            // Pour suivre quelle notification est actuellement sélectionnée
+            final int[] selectedPosition = {-1};
+
             for (int i = 0; i < notifications.size(); i++) {
-                NotificationItem notification = notifications.get(i);
-                try {
-                    // Créer le layout de notification personnalisé
-                    View notificationView = LayoutInflater.from(AcceuilEmployeActivity.this)
-                            .inflate(R.layout.layout_notification_item, notifRecentesContainer, false);
+                NotificationItem notif = notifications.get(i);
+                final int position = i; // Position finale pour le click listener
 
-                    // Appliquer le background selon le type
-                    LinearLayout container = notificationView.findViewById(R.id.notificationContainer);
-                    if (notification.backgroundResId != 0) {
-                        container.setBackgroundResource(notification.backgroundResId);
-                    }
+                View notificationView = inflater.inflate(R.layout.layout_notification_item,
+                        notifRecentesContainer, false);
 
-                    // Configurer l'icône
-                    ImageView icon = notificationView.findViewById(R.id.notificationIcon);
-                    if (icon != null && notification.iconResId != 0) {
-                        icon.setImageResource(notification.iconResId);
-                    }
+                ImageView icon = notificationView.findViewById(R.id.notificationIcon);
+                TextView title = notificationView.findViewById(R.id.notificationTitle);
+                TextView subtitle = notificationView.findViewById(R.id.notificationSubtitle);
 
-                    // Configurer le titre
-                    TextView title = notificationView.findViewById(R.id.notificationTitle);
-                    if (title != null) {
-                        title.setText(notification.title);
-                    }
+                if (icon != null && title != null && subtitle != null) {
+                    icon.setImageResource(notif.iconRes);
+                    title.setText(notif.title);
+                    subtitle.setText(notif.subtitle);
 
-                    // Configurer le sous-titre
-                    TextView subtitle = notificationView.findViewById(R.id.notificationSubtitle);
-                    if (subtitle != null) {
-                        subtitle.setText(notification.subtitle);
-                    }
+                    // Stocker le drawable original pour le restaurer plus tard
+                    final Drawable originalBackground = notificationView.getBackground();
 
-                    // Ajouter un click listener
-                    final int index = i;
+                    // Ajouter le clic
                     notificationView.setOnClickListener(v -> {
-                        if (index < notifications.size()) {
-                            navigateToNotification(notifications.get(index).type);
+                        Intent intent = null;
+                        int backgroundRes = 0;
+
+                        // Réinitialiser le background de l'ancienne notification sélectionnée
+                        if (selectedPosition[0] != -1 && selectedPosition[0] < notifRecentesContainer.getChildCount()) {
+                            View previousView = notifRecentesContainer.getChildAt(selectedPosition[0]);
+                            if (previousView != null) {
+                                previousView.setBackground(originalBackground);
+                            }
+                        }
+
+                        // Appliquer le nouveau background
+                        switch (notif.type) {
+                            case "conges":
+                                intent = new Intent(this, CongesEmployeActivity.class);
+                                backgroundRes = R.drawable.border_orangelight;
+                                break;
+                            case "reunion":
+                                intent = new Intent(this, ReunionEmployeActivity.class);
+                                backgroundRes = R.drawable.border_blue_bg;
+                                break;
+                            case "presence":
+                                intent = new Intent(this, PresenceActivity.class);
+                                backgroundRes = R.drawable.border_redlight;
+                                break;
+                            case "attestation":
+                                intent = new Intent(this, AttestationEmployeActivity.class);
+                                backgroundRes = R.drawable.border_orangelight;
+                                break;
+                        }
+
+                        // Appliquer le background avec animation
+                        if (backgroundRes != 0) {
+                            notificationView.setBackgroundResource(backgroundRes);
+                            selectedPosition[0] = position;
+
+                            // Animation de retour après 500ms (si l'utilisateur reste sur l'activité)
+                            new Handler().postDelayed(() -> {
+                                notificationView.setBackground(originalBackground);
+                                selectedPosition[0] = -1;
+                            }, 500);
+                        }
+
+                        // Lancer l'activité
+                        if (intent != null) {
+                            startActivity(intent);
                         }
                     });
 
-                    // Ajouter la vue au container
                     notifRecentesContainer.addView(notificationView);
-
-                    // Ajouter une marge entre les notifications
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) notificationView.getLayoutParams();
-                    /*if (i < notifications.size() - 1) {
-                        params.bottomMargin = getResources().getDimensionPixelSize(R.dimen.notification_margin);
-                    }*/
-                    notificationView.setLayoutParams(params);
-
-                } catch (Exception e) {
-                    Log.e(TAG, "Erreur création vue notification: " + e.getMessage());
                 }
             }
 
-            // Forcer le re-layout
-            notifRecentesContainer.requestLayout();
-        });
-    }
+            Log.d(TAG, notifications.size() + " notifications affichées");
 
-    private void showNoNotificationsMessage() {
-        runOnUiThread(() -> {
-            if (aucuneNotif != null && notifRecentesContainer != null && !isFinishing()) {
-                aucuneNotif.setVisibility(View.VISIBLE);
-                notifRecentesContainer.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    /**
-     * Formater "Il y'a X" pour les réunions
-     */
-    private String formatTimeAgo(String dateStr) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
-            Date reunionDate = sdf.parse(dateStr);
-
-            if (reunionDate != null) {
-                long diff = System.currentTimeMillis() - reunionDate.getTime();
-                long days = diff / (24 * 60 * 60 * 1000);
-
-                if (days > 0) {
-                    return "Il y'a " + days + " jour" + (days > 1 ? "s" : "");
-                } else {
-                    return "Aujourd'hui";
-                }
-            }
         } catch (Exception e) {
-            Log.e(TAG, "Erreur formatage date: " + e.getMessage());
+            Log.e(TAG, "Erreur displayNotifications: " + e.getMessage());
+            e.printStackTrace();
         }
-        return dateStr != null ? dateStr : "";
     }
-
-    private void navigateToNotification(String type) {
+    private void navigateToActivity(String type) {
         Intent intent = null;
 
         switch (type) {
-            case "CONGE":
+            case "conges":
                 intent = new Intent(this, CongesEmployeActivity.class);
                 break;
-            case "ATTESTATION":
-                intent = new Intent(this, AttestationEmployeActivity.class);
-                break;
-            case "REUNION":
+            case "reunion":
                 intent = new Intent(this, ReunionEmployeActivity.class);
                 break;
-            default:
-                return;
+            case "presence":
+                intent = new Intent(this, PresenceActivity.class);
+                break;
+            case "attestation":
+                intent = new Intent(this, AttestationEmployeActivity.class);
+                break;
         }
 
         if (intent != null) {
             startActivity(intent);
         }
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "=== onResume ===");
 
-    /**
-     * Afficher le nom de l'employé
-     */
-    private void displayEmployeeName() {
-        runOnUiThread(() -> {
-            if (employeConnecte != null && !isFinishing()) {
-                String fullName;
-
-                if (!employeePrenom.isEmpty() && !employeeNom.isEmpty()) {
-                    fullName = employeePrenom + " " + employeeNom.toUpperCase();
-                } else if (!employeeNom.isEmpty()) {
-                    fullName = employeeNom.toUpperCase();
-                } else if (!employeePrenom.isEmpty()) {
-                    fullName = employeePrenom.toUpperCase();
-                } else {
-                    fullName = currentUser != null && currentUser.getDisplayName() != null ?
-                            currentUser.getDisplayName().toUpperCase() : "EMPLOYÉ";
-                }
-
-                employeConnecte.setText(fullName);
-            }
-        });
-    }
-
-    private void displayDefaultName() {
-        runOnUiThread(() -> {
-            if (employeConnecte != null && !isFinishing()) {
-                String defaultName = currentUser != null && currentUser.getDisplayName() != null ?
-                        currentUser.getDisplayName().toUpperCase() : "EMPLOYÉ";
-                employeConnecte.setText(defaultName);
-            }
-        });
-    }
-
-    private void updatePosteDepartement() {
-        runOnUiThread(() -> {
-            if (posteDepartement != null && !isFinishing()) {
-                String posteDept = "";
-
-                if (!employeePoste.isEmpty() && !employeeDepartement.isEmpty()) {
-                    posteDept = employeePoste + " • " + employeeDepartement;
-                } else if (!employeePoste.isEmpty()) {
-                    posteDept = employeePoste;
-                } else if (!employeeDepartement.isEmpty()) {
-                    posteDept = employeeDepartement;
-                }
-
-                if (!posteDept.isEmpty()) {
-                    posteDepartement.setText(posteDept);
-                }
-            }
-        });
-    }
-
-    private void updateSoldeConge() {
-        runOnUiThread(() -> {
-            if (soldeConge != null && !isFinishing()) {
-                soldeConge.setText(soldeCongeValue + " jours");
-                soldeConge.setTextColor(Color.parseColor("#4669EB"));
-            }
-        });
-    }
-
-    private void updateReunionStats(int upcomingCount) {
-        runOnUiThread(() -> {
-            if (reunionVenir != null && !isFinishing()) {
-                reunionVenir.setText(upcomingCount + " à venir");
-                reunionVenir.setTextColor(Color.parseColor("#D000D0"));
-            }
-        });
-    }
-
-    private void updateBadge(TextView badgeView, int count) {
-        if (badgeView != null && !isFinishing()) {
-            runOnUiThread(() -> {
-                if (count > 0) {
-                    badgeView.setText(String.valueOf(count));
-                    badgeView.setVisibility(View.VISIBLE);
-
-                    // Animation du badge
-                    badgeView.setScaleX(0.5f);
-                    badgeView.setScaleY(0.5f);
-                    badgeView.animate()
-                            .scaleX(1f)
-                            .scaleY(1f)
-                            .setDuration(300)
-                            .start();
-                } else {
-                    badgeView.setVisibility(View.GONE);
-                }
-            });
+        // Recharger les données quand l'activité revient au premier plan
+        if (currentUser != null) {
+            loadEmployeData();
+            loadNotificationsRecentetes();
         }
     }
 
-    private boolean isUpcomingReunion(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) {
-            return false;
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "=== onDestroy ===");
 
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
-            Date reunionDate = sdf.parse(dateStr);
-            Date today = new Date();
+        // Nettoyer les écouteurs
+        if (presenceListener != null) presenceListener.remove();
+        if (congesListener != null) congesListener.remove();
+        if (attestationsListener != null) attestationsListener.remove();
+        if (reunionsListener != null) reunionsListener.remove();
+        if (employeListener != null) employeListener.remove();
 
-            if (reunionDate == null) return false;
-
-            SimpleDateFormat dateOnly = new SimpleDateFormat("yyyyMMdd", Locale.FRENCH);
-            String reunionDateStr = dateOnly.format(reunionDate);
-            String todayStr = dateOnly.format(today);
-
-            return reunionDateStr.compareTo(todayStr) >= 0;
-        } catch (Exception e) {
-            Log.e(TAG, "Erreur parsing date réunion: " + e.getMessage());
-            return false;
-        }
+        backgroundExecutor.shutdown();
     }
 
-    private int getCongeIcon(String statut) {
-        if (statut == null) return R.drawable.orangecalendar;
+    // Classe interne pour représenter une notification
+    private static class NotificationItem {
+        String title;
+        String subtitle;
+        int iconRes;
+        String type;
 
-        switch (statut.toLowerCase()) {
-            case "en attente":
-                return R.drawable.orangecalendar;
-            case "approuvé":
-            case "approuvee":
-                return R.drawable.approuve;
-            case "refusé":
-            case "refusee":
-                return R.drawable.refuse;
-            default:
-                return R.drawable.orangecalendar;
-        }
-    }
-
-    private int getAttestationIcon(String statut) {
-        if (statut == null) return R.drawable.docpurple;
-
-        switch (statut.toLowerCase()) {
-         //   case "en_attente":
-              //  return R.drawable.docpurple;
-         //   case "approuvée":
-         //   case "approuvee":
-           //     return R.drawable.greendoc;
-         //   case "refusée":
-        //    case "refusee":
-          //      return R.drawable.reddoc;
-           default:
-                return R.drawable.docpurple;
-        }
-    }
-
-    private void redirectToLogin() {
-        runOnUiThread(() -> {
-            Toast.makeText(this, "Session expirée. Veuillez vous reconnecter.", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        });
-    }
-
-    private void cleanupListeners() {
-        if (congesListener != null) {
-            congesListener.remove();
-            congesListener = null;
-        }
-        if (attestationsListener != null) {
-            attestationsListener.remove();
-            attestationsListener = null;
-        }
-        if (reunionsListener != null) {
-            reunionsListener.remove();
-            reunionsListener = null;
-        }
-        if (presenceListener != null) {
-            presenceListener.remove();
-            presenceListener = null;
+        NotificationItem(String title, String subtitle, int iconRes, String type) {
+            this.title = title;
+            this.subtitle = subtitle;
+            this.iconRes = iconRes;
+            this.type = type;
         }
     }
 }
