@@ -15,7 +15,8 @@
         android:background="@drawable/border_vide"
         android:layout_margin="5dp"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:layout_gravity="center_vertical">
 
         <TextView
             android:id="@+id/title"

@@ -3,49 +3,32 @@ package com.example.rhapp.model;
 import com.google.firebase.Timestamp;
 
 public class History {
-
-    private String date;
+    private String userId;
     private String status;
     private String details;
     private String time;
-    private String justification;
     private Timestamp timestamp;
+    private String date;
 
-    // Constructeur par défaut (obligatoire pour Firestore)
-    public History() {
-    }
+    // Constructeurs
+    public History() {}
 
-    // Constructeur principal
-    public History(String date, String status, String details, String time, String justification, Timestamp timestamp) {
-        this.date = date;
-        this.status = status;
-        this.details = details;
-        this.time = time;
-        this.justification = justification;
-        this.timestamp = timestamp;
-    }
+    // Getters et setters pour tous les champs
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
-    // Getters
-    public String getDate() {
-        return date;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    public String getStatus() {
-        return status;
-    }
+    public String getDetails() { return details; }
+    public void setDetails(String details) { this.details = details; }
 
-    public String getDetails() {
-        return details;
-    }
+    public String getTime() { return time; }
+    public void setTime(String time) { this.time = time; }
 
-    public String getTime() {
-        return time;
-    }
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
+    public Timestamp getTimestamp() { return timestamp; }
+    public void setTimestamp(Timestamp timestamp) { this.timestamp = timestamp; }
 
-    public String getJustification() {
-        return justification;
-    }
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
 }

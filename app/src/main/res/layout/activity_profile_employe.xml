@@ -90,7 +90,7 @@
                             android:layout_gravity="center"
                             android:background="@drawable/bg_circle_blue"
                             android:gravity="center"
-                            android:text="EN"
+                            android:text="NM"
                             android:textColor="@color/white"
                             android:textSize="30sp"
                             android:visibility="visible" />
