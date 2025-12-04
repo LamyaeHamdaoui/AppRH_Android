@@ -274,7 +274,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                         Log.d(TAG, "Données récupérées - Nom: " + nomComplet);
 
                         // Appeler sans photoUrl (ou avec null)
-                        displayAllUserData(nomComplet, email, poste, departement,
+                        displayAllUserData(nomComplet.toUpperCase(), email, poste, departement,
                                 role, dateEmbaucheTimestamp, null);
 
                     } else {
