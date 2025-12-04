@@ -13,7 +13,8 @@
         android:theme="@style/Theme.RhApp">
         <activity
             android:name=".PresenceRhActivity"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".ProfileEmployeActivity"
             android:exported="false"

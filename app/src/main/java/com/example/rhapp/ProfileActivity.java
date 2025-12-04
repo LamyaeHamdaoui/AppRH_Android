@@ -157,7 +157,6 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         footerConges = findViewById(R.id.footerConges);
         footerReunions = findViewById(R.id.footerReunions);
         footerProfil = findViewById(R.id.footerProfil);
-        notificationsButton = findViewById(R.id.notificationsButton);
 
         // Initialisation de la variable de classe securityInterface
         securityInterface = findViewById(R.id.securityInterface);

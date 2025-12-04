@@ -95,7 +95,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
     private TextView textReunions;
     private ImageView iconProfil;
     private TextView textProfil;
-    private RelativeLayout notificationsButton;
 
     // Formats de date
     private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -157,7 +156,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         presenceActionContainer = findViewById(R.id.presence_action_container);
         btnMarquerPresence = findViewById(R.id.btn_marquer_presence);
         btnJustifierAbsence = findViewById(R.id.btn_justifier_absence);
-        notificationsButton = findViewById(R.id.notificationsButton);
         recyclerViewHistorique = findViewById(R.id.recyclerViewHistorique);
         nbrePresencesTextView = findViewById(R.id.nbrePresences);
         nbreAbsencesTextView = findViewById(R.id.nbreAbsences);
@@ -779,7 +777,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         iconConges.setOnClickListener(v -> navigateTo(CongesEmployeActivity.class));
         iconReunions.setOnClickListener(v -> navigateTo(ReunionEmployeActivity.class));
         iconProfil.setOnClickListener(v -> navigateTo(ProfileEmployeActivity.class));
-        notificationsButton.setOnClickListener(v -> navigateTo(NotificationsEmployesActivity.class));
     }
 
     private void replacePresenceActionWithCard() {
