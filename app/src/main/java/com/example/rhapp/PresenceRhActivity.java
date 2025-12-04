@@ -35,23 +35,17 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class PresenceRhActivity extends AppCompatActivity {
-
     private static final String TAG = "PresenceRhActivity";
     private static final String COLLECTION_USERS = "employees";
     private static final String COLLECTION_PRESENCE = "PresenceHistory";
-
     private FirebaseFirestore db;
     private CollectionReference usersCollection;
-
-    // UI Dashboard
     private TextView nbreTotalTextView;
     private TextView nbrePresentsTextView;
     private TextView nbreAbsentsTextView;
     private TextView nbreJustifiesTextView;
     private TextView nbreTauxTextView;
     private View progressFill;
-
-    // UI Filtre et recherche
     private TextView datePresenceTextView;
     private Spinner departementSpinner;
     private TextView btnTous, btnPresents, btnAbsents;
@@ -272,7 +266,7 @@ public class PresenceRhActivity extends AppCompatActivity {
         viewCongeAttenteContainer.removeAllViews();
 
         // 1. Récupérer les statuts de présence pour la date sélectionnée
-        db.collection(COLLECTION_PRESENCE)
+        db.collection(COLLECTION_USERS)
                 .whereEqualTo("date", rawDate)
                 .get()
                 .addOnSuccessListener(presenceSnapshots -> {

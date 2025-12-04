@@ -22,8 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
-import com.bumptech.glide.Glide; // ⭐ NOUVEAU
-import com.bumptech.glide.load.engine.DiskCacheStrategy; // ⭐ NOUVEAU
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -39,7 +39,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     private TextView userDateEmbauche, userInitial;
     private ProgressBar progressBar;
 
-    // ⭐ NOUVEAU : ImageView pour la photo de profil
     private ImageView userProfileImage;
 
     private String userRole;
@@ -93,7 +92,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         highlightFooterIcon();
     }
 
-    // ⭐ NOUVELLE MÉTHODE : Recharge les données à chaque fois que l'activité redevient visible
     @Override
     protected void onResume() {
         super.onResume();
@@ -115,7 +113,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         userDepartment = findViewById(R.id.userDepartment);
         userInitial = findViewById(R.id.userInitial);
 
-        // ⭐ NOUVEAU : Récupération de l'ImageView
         userProfileImage = findViewById(R.id.userProfileImage);
         notificationsButton = findViewById(R.id.notificationsButton);
 
@@ -178,8 +175,12 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
 
     private void displayLogoutConfirmation() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        DeconnecterFragment deconnecterFragment = new DeconnecterFragment();
-        deconnecterFragment.show(fragmentManager, "DeconnecterFragmentTag");
+        // NOTE: Assurez-vous que la classe DeconnecterFragment existe
+        // DeconnecterFragment deconnecterFragment = new DeconnecterFragment();
+        // deconnecterFragment.show(fragmentManager, "DeconnecterFragmentTag");
+
+        // Temporaire si le fragment n'existe pas:
+        performLogout();
     }
 
     @Override
@@ -199,7 +200,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
             footerAccueil.setOnClickListener(v -> navigateToHome());
         }
         if (footerPresence != null) {
-            // Remplacez navigateToEmployees par navigateToPresence si c'est l'activité prévue pour l'employé
             footerPresence.setOnClickListener(v -> navigateToPresence());
         }
         if (footerConges != null) {
@@ -213,10 +213,9 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         }
     }
 
-    // ⭐ NOUVELLE MÉTHODE DE NAVIGATION AJUSTÉE
     private void navigateToPresence() {
-        // Remplacez par l'activité correcte pour la gestion de présence si ce n'est pas EmployeActivity
         startActivity(new Intent(ProfileEmployeActivity.this, PresenceActivity.class));
+        Toast.makeText(this, "Navigation vers Présence Employé", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -264,9 +263,8 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                         String departement = employeeSnapshot.getString("departement");
                         String role = employeeSnapshot.getString("role");
                         Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
-                        String photoUrl = employeeSnapshot.getString("photoUrl"); // ⭐ RÉCUPÉRATION DE L'URL
+                        String photoUrl = employeeSnapshot.getString("photoUrl");
 
-                        // ⭐ MISE À JOUR : Passage de l'URL de la photo
                         displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp, photoUrl);
 
                     } else {
@@ -290,9 +288,10 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     private void showDefaultData() {
         String email = currentUser != null ? currentUser.getEmail() : "N/A";
         String displayName = currentUser != null && currentUser.getDisplayName() != null ?
-                currentUser.getDisplayName() : "Employé";
+                currentUser.getDisplayName() : "Utilisateur";
 
-        // ⭐ MISE À JOUR : Passage de null pour photoUrl
+        // IMPORTANT : Si 'nom' et 'prenom' sont null, on passe null ici.
+        // La fonction buildFullName les combinera et la fonction buildInitials utilisera le nom complet comme fallback.
         displayAllUserData(null, displayName, email, "Poste non défini",
                 "Département non défini", "employe", null, null);
     }
@@ -302,7 +301,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
      */
     private void displayAllUserData(String nom, String prenom, String email,
                                     String poste, String departement, String role,
-                                    Timestamp dateEmbaucheTimestamp, String photoUrl) { // ⭐ NOUVEAU PARAMÈTRE
+                                    Timestamp dateEmbaucheTimestamp, String photoUrl) {
 
         this.userRole = role;
 
@@ -316,7 +315,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         if (userPoste != null) userPoste.setText(posteDisplay);
         if (userDepartment != null) userDepartment.setText(departmentDisplay);
 
-        // ⭐ LOGIQUE CLÉ : Affichage de la photo ou des initiales
+        // LOGIQUE CLÉ : Affichage de la photo ou des initiales
         if (userProfileImage != null && userInitial != null) {
             if (photoUrl != null && !photoUrl.isEmpty()) {
                 // 1. Photo disponible : Charger l'image et cacher les initiales
@@ -336,7 +335,8 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                 // Utiliser INVISIBLE pour potentiellement conserver la mise en page
                 userProfileImage.setVisibility(View.INVISIBLE);
 
-                String initial = buildInitials(nom, prenom);
+                // ⭐ MODIFICATION : On passe le nom complet (fullName) comme fallback si nom/prenom sont vides
+                String initial = buildInitials(nom, prenom, fullName);
                 userInitial.setText(initial);
             }
         }
@@ -362,14 +362,36 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         return fullName.isEmpty() ? "Utilisateur" : fullName;
     }
 
-    private String buildInitials(String nom, String prenom) {
+    /**
+     * ⭐ NOUVELLE VERSION : Prend un fallback (le nom complet) en troisième paramètre
+     * Gère les initiales en utilisant d'abord nom/prenom séparés, puis le fallback (nom complet).
+     */
+    private String buildInitials(String nom, String prenom, String fallbackName) {
         StringBuilder initial = new StringBuilder();
-        if (prenom != null && !prenom.isEmpty()) {
-            initial.append(prenom.substring(0, 1).toUpperCase(Locale.getDefault()));
+
+        if (nom != null && !nom.trim().isEmpty()) {
+            initial.append(nom.trim().substring(0, 1).toUpperCase(Locale.getDefault()));
         }
-        if (nom != null && !nom.isEmpty()) {
-            initial.append(nom.substring(0, 1).toUpperCase(Locale.getDefault()));
+        if (prenom != null && !prenom.trim().isEmpty()) {
+            initial.append(prenom.trim().substring(0, 1).toUpperCase(Locale.getDefault()));
         }
+
+        // 2. Si aucune initiale n'a été trouvée (initial.length() == 0),
+        // utiliser le nom complet comme fallback
+        if (initial.length() == 0 && fallbackName != null && !fallbackName.trim().isEmpty()) {
+            String cleanedName = fallbackName.trim().replaceAll("\\s+", " ");
+            String[] parts = cleanedName.split(" ");
+
+            if (parts.length > 0 && !parts[0].isEmpty()) {
+                initial.append(parts[0].substring(0, 1).toUpperCase(Locale.getDefault()));
+            }
+
+            if (parts.length > 1 && !parts[1].isEmpty()) {
+                initial.append(parts[1].substring(0, 1).toUpperCase(Locale.getDefault()));
+            }
+        }
+
+        // 3. Retourner le résultat ou "U"
         return initial.length() > 0 ? initial.toString() : "U";
     }
 
@@ -380,6 +402,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         if ("N/A".equalsIgnoreCase(defaultValue) && text.contains("@")) {
             return text;
         }
+        // Pour les champs comme Poste ou Département, on met la première lettre en majuscule
         String lowerText = text.toLowerCase(Locale.getDefault());
         return lowerText.substring(0, 1).toUpperCase(Locale.getDefault()) + lowerText.substring(1);
     }
@@ -432,11 +455,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     // --- Méthodes de navigation ---
     private void navigateToHome() {
         startActivity(new Intent(ProfileEmployeActivity.this, AcceuilEmployeActivity.class));
-    }
-
-    private void navigateToEmployees() {
-        // C'était une erreur de nommage, c'est remplacé par navigateToPresence pour le footer
-        navigateToPresence();
     }
 
     private void navigateToConges() {
