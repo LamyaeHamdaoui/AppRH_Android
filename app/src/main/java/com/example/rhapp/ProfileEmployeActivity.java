@@ -127,7 +127,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         userInitial = findViewById(R.id.userInitial);
 
         userProfileImage = findViewById(R.id.userProfileImage);
-        notificationsButton = findViewById(R.id.notificationsButton);
 
         // Bloc Détails
         userEmail = findViewById(R.id.userEmailDetail);
