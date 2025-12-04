@@ -17,9 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -32,7 +30,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class PresenceRhActivity extends AppCompatActivity {
     private static final String TAG = "PresenceRhActivity";
@@ -40,6 +37,7 @@ public class PresenceRhActivity extends AppCompatActivity {
     private static final String COLLECTION_PRESENCE = "PresenceHistory";
     private FirebaseFirestore db;
     private CollectionReference usersCollection;
+    private CollectionReference presenceCollection;
     private TextView nbreTotalTextView;
     private TextView nbrePresentsTextView;
     private TextView nbreAbsentsTextView;
@@ -61,93 +59,37 @@ public class PresenceRhActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_presence_rh);
+
         footerAccueil = findViewById(R.id.footerAccueil);
         footerEmployes = findViewById(R.id.footerEmployes);
         footerConges = findViewById(R.id.footerConges);
         footerReunions = findViewById(R.id.footerReunions);
         footerProfile = findViewById(R.id.footerProfile);
+
         db = FirebaseFirestore.getInstance();
-
-        // Utiliser la collection 'employees'
         usersCollection = db.collection(COLLECTION_USERS);
+        presenceCollection = db.collection(COLLECTION_PRESENCE);
 
-        // 1. Planifier la mise à jour quotidienne (IMPORTANT)
-        scheduleDailyUpdate();
-
-        // 2. Liaison des éléments UI
+        // Liaison des éléments UI
         linkUiElements();
 
-        // 3. Configuration des listeners
+        // Configuration des listeners
         setupClickListeners();
         setupSpinnerListener();
 
-        // 4. Chargement initial des données
-        loadTotalEmployeeCountAndProceed();
+        // Chargement initial des données
+        initializeDateAndDataLoad();
         setupFooterNavigation();
-    }
-    private void setupFooterNavigation() {
-        if (footerAccueil != null) {
-            footerAccueil.setOnClickListener(v -> navigateToHome());
-        }
-        if (footerEmployes != null) {
-            footerEmployes.setOnClickListener(v -> navigateToEmployees());
-        }
-        if (footerConges != null) {
-            footerConges.setOnClickListener(v -> navigateToConges());
-        }
-        if (footerReunions != null) {
-            footerReunions.setOnClickListener(v -> navigateToReunions());
-        }
-        if (footerProfile != null) {
-            footerProfile.setOnClickListener(v -> navigateToProfile());
-        }
-    }
-
-    private void navigateToHome() {
-        startActivity(new Intent(PresenceRhActivity.this, AcceuilRhActivity.class));
-    }
-
-    private void navigateToEmployees() {
-        startActivity(new Intent(PresenceRhActivity.this, EmployeActivity.class));
-    }
-    private void navigateToConges() {
-        startActivity(new Intent(PresenceRhActivity.this, CongesActivity.class));
-    }
-
-    private void navigateToReunions() {
-        startActivity(new Intent(PresenceRhActivity.this, reunionActivity.class));
-    }
-
-    private void navigateToProfile() {
-        startActivity(new Intent(PresenceRhActivity.this, ProfileActivity.class));
-    }
-
-    private void loadTotalEmployeeCountAndProceed() {
-        usersCollection.get().addOnSuccessListener(queryDocumentSnapshots -> {
-            int total = queryDocumentSnapshots.size();
-            nbreTotalTextView.setText(String.valueOf(total));
-
-            // ********* Appel clé : Continuer le chargement *********
-            initializeDateAndDataLoad();
-
-        }).addOnFailureListener(e -> {
-            Log.e(TAG, "Erreur lors du comptage des employés: ", e);
-            nbreTotalTextView.setText("?");
-            initializeDateAndDataLoad();
-        });
     }
 
     private void linkUiElements() {
-        // ... (Liaison des TextViews du dashboard)
         nbreTotalTextView = findViewById(R.id.nbreTotalConge);
         nbrePresentsTextView = findViewById(R.id.nbreApprouveConge);
         nbreAbsentsTextView = findViewById(R.id.nbreRefuseConge);
         nbreJustifiesTextView = findViewById(R.id.nbreAttenteConge);
-
         nbreTauxTextView = findViewById(R.id.nombreTaux);
         progressFill = findViewById(R.id.progressFill);
 
-        // Filtre et recherche
         datePresenceTextView = findViewById(R.id.datePresence);
         departementSpinner = findViewById(R.id.departement);
         btnTous = findViewById(R.id.btnCongeAttente);
@@ -163,24 +105,421 @@ public class PresenceRhActivity extends AppCompatActivity {
         currentDateRaw = rawFormat.format(new Date());
         datePresenceTextView.setText(displayFormat.format(new Date()));
 
-        loadPresenceStatsForDate(currentDateRaw);
-        loadEmployeeListForStatus(currentDateRaw, currentStatusFilter, selectedDepartment);
+        // Charger d'abord le nombre total d'employés
+        loadTotalEmployeeCount();
+    }
+
+    private void loadTotalEmployeeCount() {
+        usersCollection.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            int total = queryDocumentSnapshots.size();
+            Log.d(TAG, "Nombre total d'employés trouvés: " + total);
+            nbreTotalTextView.setText(String.valueOf(total));
+
+            // Une fois le total chargé, charger les statistiques de présence
+            loadPresenceStatsForDate(currentDateRaw);
+            loadEmployeeListForStatus(currentDateRaw, currentStatusFilter, selectedDepartment);
+
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Erreur lors du comptage des employés: ", e);
+            nbreTotalTextView.setText("0");
+            Toast.makeText(PresenceRhActivity.this, "Erreur de chargement des employés", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void loadPresenceStatsForDate(String rawDate) {
+        int totalEmployees = parseTotalEmployees();
+        Log.d(TAG, "Chargement stats pour date: " + rawDate + ", Total employés: " + totalEmployees);
+
+        if (totalEmployees == 0) {
+            Log.w(TAG, "Aucun employé trouvé, impossible de charger les stats");
+            return;
+        }
+
+        // Rechercher les présences pour la date spécifique
+        presenceCollection
+                .whereEqualTo("date", rawDate)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+
+                    Log.d(TAG, "Présences trouvées pour " + rawDate + ": " + queryDocumentSnapshots.size());
+
+                    int presents = 0;
+                    int absentsJustifies = 0;
+                    int conges = 0;
+
+                    // Map pour suivre quels utilisateurs ont enregistré leur présence
+                    Map<String, String> userStatusMap = new HashMap<>();
+
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String userId = doc.getString("userId");
+                        String status = doc.getString("status");
+
+                        if (userId != null && status != null) {
+                            userStatusMap.put(userId, status);
+
+                            if ("present".equals(status)) {
+                                presents++;
+                            } else if ("absent_justifie".equals(status)) {
+                                absentsJustifies++;
+                            } else if ("conge".equals(status)) {
+                                conges++;
+                            }
+                        }
+                    }
+
+                    // Calculer les absents non justifiés
+                    int totalMarked = presents + absentsJustifies + conges;
+                    int absentsNonJustifies = totalEmployees - totalMarked;
+
+                    Log.d(TAG, "Résultats - Présents: " + presents +
+                            ", Absents justifiés: " + absentsJustifies +
+                            ", Congés: " + conges +
+                            ", Absents non justifiés: " + absentsNonJustifies);
+
+                    // Mettre à jour l'UI
+                    int finalPresents = presents;
+                    int finalAbsentsJustifies = absentsJustifies;
+                    int finalConges = conges;
+                    runOnUiThread(() -> {
+                        nbrePresentsTextView.setText(String.valueOf(finalPresents));
+                        nbreAbsentsTextView.setText(String.valueOf(absentsNonJustifies));
+                        nbreJustifiesTextView.setText(String.valueOf(finalAbsentsJustifies + finalConges)); // Total justifiés + congés
+                        updateTauxDePresence(finalPresents, totalEmployees);
+                    });
+
+                }).addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur lors du chargement des statistiques de présence: ", e);
+                    runOnUiThread(() -> {
+                        // En cas d'erreur, afficher 0 pour tout
+                        nbrePresentsTextView.setText("0");
+                        nbreAbsentsTextView.setText("0");
+                        nbreJustifiesTextView.setText("0");
+                        nbreTauxTextView.setText("0.0%");
+                    });
+                });
+    }
+
+    private void loadEmployeeListForStatus(String rawDate, String statusFilter, String departmentFilter) {
+        Log.d(TAG, "Chargement liste employés - Date: " + rawDate +
+                ", Filtre: " + statusFilter +
+                ", Département: " + departmentFilter);
+
+        runOnUiThread(() -> {
+            viewCongeAttenteContainer.removeAllViews();
+        });
+
+        // 1. Récupérer toutes les présences pour la date
+        presenceCollection
+                .whereEqualTo("date", rawDate)
+                .get()
+                .addOnSuccessListener(presenceSnapshots -> {
+
+                    Map<String, String> userIdToStatus = new HashMap<>();
+
+                    for (QueryDocumentSnapshot doc : presenceSnapshots) {
+                        String userId = doc.getString("userId");
+                        String status = doc.getString("status");
+
+                        if (userId != null && status != null) {
+                            userIdToStatus.put(userId, status);
+                            Log.d(TAG, "Présence trouvée - UserId: " + userId + ", Status: " + status);
+                        }
+                    }
+
+                    Log.d(TAG, "Total présences trouvées pour " + rawDate + ": " + userIdToStatus.size());
+
+                    // 2. Construire la requête pour les employés
+                    Query usersQuery = usersCollection;
+
+                    if (!"Tous les départements".equals(departmentFilter)) {
+                        usersQuery = usersQuery.whereEqualTo("departement", departmentFilter);
+                        Log.d(TAG, "Filtrage par département: " + departmentFilter);
+                    }
+
+                    usersQuery.get().addOnSuccessListener(userSnapshots -> {
+
+                        runOnUiThread(() -> {
+                            viewCongeAttenteContainer.removeAllViews();
+
+                            if (userSnapshots.isEmpty()) {
+                                displayNoResultsMessage();
+                                return;
+                            }
+                        });
+
+                        int displayCount = 0;
+
+                        for (QueryDocumentSnapshot userDoc : userSnapshots) {
+                            String userId = userDoc.getId(); // ID du document employé
+                            String userEmail = userDoc.getString("email");
+                            String employeeName = userDoc.getString("nomComplet");
+                            String employeeDepartment = userDoc.getString("departement");
+                            String employeePoste = userDoc.getString("poste");
+
+                            if (employeeName == null) employeeName = "Nom Inconnu";
+                            if (employeeDepartment == null) employeeDepartment = "N/A";
+                            if (employeePoste == null) employeePoste = "Poste Inconnu";
+
+                            Log.d(TAG, "Traitement employé: " + employeeName + " (Email: " + userEmail + ")");
+
+                            // CORRECTION: Déterminer le statut de présence
+                            String presenceStatus = "unmarked";
+
+                            // Chercher d'abord par email (comme dans PresenceActivity)
+                            if (userEmail != null) {
+                                // L'email est stocké comme userId dans PresenceHistory
+                                String statusByEmail = userIdToStatus.get(userEmail);
+                                if (statusByEmail != null) {
+                                    presenceStatus = statusByEmail;
+                                    Log.d(TAG, "Statut trouvé par email: " + presenceStatus);
+                                }
+                            }
+
+                            // Si pas trouvé par email, chercher par ID de document
+                            if ("unmarked".equals(presenceStatus)) {
+                                String statusById = userIdToStatus.get(userId);
+                                if (statusById != null) {
+                                    presenceStatus = statusById;
+                                    Log.d(TAG, "Statut trouvé par ID: " + presenceStatus);
+                                }
+                            }
+
+                            Log.d(TAG, "Statut final pour " + employeeName + ": " + presenceStatus);
+
+                            // Vérifier si l'employé correspond au filtre
+                            boolean shouldDisplay = false;
+
+                            switch (statusFilter) {
+                                case "all":
+                                    shouldDisplay = true;
+                                    break;
+                                case "present":
+                                    if ("present".equals(presenceStatus)) {
+                                        shouldDisplay = true;
+                                    }
+                                    break;
+                                case "absent":
+                                    // Afficher tous les absents (justifiés, non justifiés, congés)
+                                    if ("absent".equals(presenceStatus) ||
+                                            "absent_justifie".equals(presenceStatus) ||
+                                            "conge".equals(presenceStatus) ||
+                                            "unmarked".equals(presenceStatus)) {
+                                        shouldDisplay = true;
+                                    }
+                                    break;
+                            }
+
+                            if (shouldDisplay) {
+                                displayCount++;
+                                addEmployeeCard(employeeName, employeeDepartment, employeePoste, presenceStatus);
+                            }
+                        }
+
+                        final int finalDisplayCount = displayCount;
+                        runOnUiThread(() -> {
+                            if (finalDisplayCount == 0) {
+                                displayNoResultsMessage();
+                            }
+                            Log.d(TAG, "Employés affichés: " + finalDisplayCount + "/" + userSnapshots.size());
+                        });
+
+                    }).addOnFailureListener(e -> {
+                        Log.e(TAG, "Erreur lors du chargement des employés: ", e);
+                        runOnUiThread(() -> {
+                            viewCongeAttenteContainer.removeAllViews();
+                            TextView errorText = new TextView(this);
+                            errorText.setText("Erreur de chargement des employés");
+                            errorText.setGravity(Gravity.CENTER);
+                            errorText.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+                            errorText.setPadding(0, 50, 0, 50);
+                            viewCongeAttenteContainer.addView(errorText);
+                        });
+                    });
+
+                }).addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur lors du chargement des présences: ", e);
+                    runOnUiThread(() -> {
+                        viewCongeAttenteContainer.removeAllViews();
+                        TextView errorText = new TextView(this);
+                        errorText.setText("Erreur de chargement des présences");
+                        errorText.setGravity(Gravity.CENTER);
+                        errorText.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+                        errorText.setPadding(0, 50, 0, 50);
+                        viewCongeAttenteContainer.addView(errorText);
+                    });
+                });
+    }
+
+    private void addEmployeeCard(String name, String department, String poste, String status) {
+        runOnUiThread(() -> {
+            try {
+                LayoutInflater inflater = LayoutInflater.from(this);
+                View cardView = inflater.inflate(R.layout.item_card_presence_rh, viewCongeAttenteContainer, false);
+
+                TextView tvNomComplet = cardView.findViewById(R.id.nomComplet);
+                TextView tvPoste = cardView.findViewById(R.id.poste);
+                TextView tvDepartement = cardView.findViewById(R.id.departement);
+                TextView tvNp = cardView.findViewById(R.id.np);
+
+                // Remplir les données
+                tvNomComplet.setText(name);
+
+                // Afficher le poste avec le statut
+                String displayStatus = formatStatus(status);
+                String posteWithStatus = poste + " - " + displayStatus;
+                tvPoste.setText(posteWithStatus);
+
+                // Colorer le texte du poste selon le statut
+                switch (status) {
+                    case "present":
+                        tvPoste.setTextColor(ContextCompat.getColor(this, R.color.green));
+                        break;
+                    case "absent_justifie":
+                    case "conge":
+                        tvPoste.setTextColor(ContextCompat.getColor(this, R.color.orange));
+                        break;
+                    case "absent":
+                        tvPoste.setTextColor(ContextCompat.getColor(this, R.color.red));
+                        break;
+                    default:
+                        tvPoste.setTextColor(ContextCompat.getColor(this, R.color.grey));
+                        break;
+                }
+
+                // Département
+                tvDepartement.setText(department);
+
+                // Initiales (colorées selon le statut)
+                String initials = getInitials(name);
+                tvNp.setText(initials);
+
+                // Changer la couleur du cercle selon le statut
+                switch (status) {
+                    case "present":
+                        tvNp.setBackgroundResource(R.drawable.bg_circle_blue);
+                        break;
+                    case "absent_justifie":
+                    case "conge":
+                        tvNp.setBackgroundResource(R.drawable.bg_circle_blue);
+                        break;
+                    case "absent":
+                        tvNp.setBackgroundResource(R.drawable.bg_circle_blue);
+                        break;
+                    default:
+                        tvNp.setBackgroundResource(R.drawable.bg_circle_blue);
+                        break;
+                }
+
+                viewCongeAttenteContainer.addView(cardView);
+
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur création carte employé", e);
+            }
+        });
+    }
+
+    private String getInitials(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) return "??";
+
+        String cleanedName = fullName.trim().replaceAll("\\s+", " ");
+        String[] parts = cleanedName.split(" ");
+
+        StringBuilder initials = new StringBuilder();
+
+        if (parts.length > 0 && !parts[0].isEmpty()) {
+            initials.append(parts[0].charAt(0));
+        }
+
+        if (parts.length > 1 && !parts[1].isEmpty()) {
+            initials.append(parts[1].charAt(0));
+        }
+
+        if (initials.length() == 0) {
+            return "??";
+        }
+
+        return initials.toString().toUpperCase(Locale.getDefault());
+    }
+
+    private String formatStatus(String status) {
+        switch (status) {
+            case "present":
+                return "Présent";
+            case "absent_justifie":
+                return "Absence justifiée";
+            case "conge":
+                return "Congé";
+            case "absent":
+                return "Absent";
+            case "unmarked":
+            default:
+                return "Non marqué";
+        }
+    }
+
+    private void displayNoResultsMessage() {
+        runOnUiThread(() -> {
+            TextView tv = new TextView(this);
+            tv.setText("Aucun employé trouvé pour ces critères.");
+            tv.setPadding(15, 30, 15, 30);
+            tv.setTextSize(16f);
+            tv.setGravity(Gravity.CENTER);
+            tv.setTextColor(ContextCompat.getColor(this, R.color.grey));
+            viewCongeAttenteContainer.addView(tv);
+        });
+    }
+
+    private int parseTotalEmployees() {
+        try {
+            String text = nbreTotalTextView.getText().toString();
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private void updateTauxDePresence(int presents, int total) {
+        if (total == 0) {
+            nbreTauxTextView.setText("0.0%");
+            updateProgressBar(0.0);
+            return;
+        }
+
+        double taux = ((double) presents / total) * 100.0;
+        nbreTauxTextView.setText(String.format(Locale.getDefault(), "%.1f%%", taux));
+        updateProgressBar(taux);
+    }
+
+    private void updateProgressBar(double taux) {
+        if (progressFill == null) return;
+
+        progressFill.post(() -> {
+            View container = (View) progressFill.getParent();
+            if (container != null) {
+                int containerWidth = container.getWidth();
+                int newWidth = (int) (containerWidth * (taux / 100.0));
+                ViewGroup.LayoutParams layoutParams = progressFill.getLayoutParams();
+                layoutParams.width = newWidth;
+                progressFill.setLayoutParams(layoutParams);
+            }
+        });
     }
 
     private void setupClickListeners() {
         datePresenceTextView.setOnClickListener(v -> showDatePickerDialog());
 
-        // Listeners pour les boutons de filtre
         btnTous.setOnClickListener(v -> {
             updateTabSelection(btnTous);
             currentStatusFilter = "all";
             loadEmployeeListForStatus(currentDateRaw, currentStatusFilter, selectedDepartment);
         });
+
         btnPresents.setOnClickListener(v -> {
             updateTabSelection(btnPresents);
             currentStatusFilter = "present";
             loadEmployeeListForStatus(currentDateRaw, currentStatusFilter, selectedDepartment);
         });
+
         btnAbsents.setOnClickListener(v -> {
             updateTabSelection(btnAbsents);
             currentStatusFilter = "absent";
@@ -190,10 +529,17 @@ public class PresenceRhActivity extends AppCompatActivity {
         updateTabSelection(btnTous);
     }
 
+    private void updateTabSelection(TextView selectedButton) {
+        btnTous.setBackgroundResource(R.drawable.button_tab_unselected);
+        btnPresents.setBackgroundResource(R.drawable.button_tab_unselected);
+        btnAbsents.setBackgroundResource(R.drawable.button_tab_unselected);
+        selectedButton.setBackgroundResource(R.drawable.button_tab_selected);
+    }
+
     private void setupSpinnerListener() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
-                R.array.departements_recherche, // Assurez-vous que cet array existe
+                R.array.departements_recherche,
                 android.R.layout.simple_spinner_item
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -203,7 +549,9 @@ public class PresenceRhActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedDepartment = parent.getItemAtPosition(position).toString();
+                Log.d(TAG, "Département sélectionné: " + selectedDepartment);
 
+                // Recharger avec le nouveau département
                 loadPresenceStatsForDate(currentDateRaw);
                 loadEmployeeListForStatus(currentDateRaw, currentStatusFilter, selectedDepartment);
             }
@@ -213,254 +561,6 @@ public class PresenceRhActivity extends AppCompatActivity {
                 // Rien à faire
             }
         });
-    }
-
-    private void updateTabSelection(TextView selectedButton) {
-        btnTous.setBackgroundResource(R.drawable.button_tab_unselected);
-        btnPresents.setBackgroundResource(R.drawable.button_tab_unselected);
-        btnAbsents.setBackgroundResource(R.drawable.button_tab_unselected);
-        selectedButton.setBackgroundResource(R.drawable.button_tab_selected);
-    }
-
-    // [omitted scheduleDailyUpdate for brevity, assuming Worker class exists]
-    private void scheduleDailyUpdate() {
-        Calendar midnight = Calendar.getInstance();
-        midnight.setTimeInMillis(System.currentTimeMillis());
-
-        Calendar targetTime = Calendar.getInstance();
-        targetTime.set(Calendar.HOUR_OF_DAY, 0);
-        targetTime.set(Calendar.MINUTE, 5);
-        targetTime.set(Calendar.SECOND, 0);
-        targetTime.set(Calendar.MILLISECOND, 0);
-
-        if (targetTime.before(Calendar.getInstance())) {
-            targetTime.add(Calendar.DAY_OF_YEAR, 1);
-        }
-
-        long delay = targetTime.getTimeInMillis() - System.currentTimeMillis();
-
-        PeriodicWorkRequest repeatedWorkRequest =
-                new PeriodicWorkRequest.Builder(
-                        DailyPresenceUpdateWorker.class,
-                        24,
-                        TimeUnit.HOURS)
-                        .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-                        .addTag("DailyPresenceRecurring")
-                        .build();
-
-        WorkManager.getInstance(getApplicationContext())
-                .enqueueUniquePeriodicWork(
-                        "PresenceDailyUpdate",
-                        ExistingPeriodicWorkPolicy.KEEP,
-                        repeatedWorkRequest);
-
-        Log.i(TAG, "Tâche de mise à jour quotidienne planifiée.");
-    }
-
-
-    // -----------------------------------------------------
-    // PARTIE 4: FILTRAGE ET AFFICHAGE DES EMPLOYÉS (CORRIGÉE pour utiliser l'email)
-    // -----------------------------------------------------
-
-    private void loadEmployeeListForStatus(String rawDate, String statusFilter, String departmentFilter) {
-        viewCongeAttenteContainer.removeAllViews();
-
-        // 1. Récupérer les statuts de présence pour la date sélectionnée
-        db.collection(COLLECTION_USERS)
-                .whereEqualTo("date", rawDate)
-                .get()
-                .addOnSuccessListener(presenceSnapshots -> {
-
-                    // CLE: userId (qui semble être l'email de l'employé dans l'app d'enregistrement) -> VALEUR: status
-                    Map<String, String> userIdToStatus = new HashMap<>();
-
-                    for (QueryDocumentSnapshot doc : presenceSnapshots) {
-                        String status = doc.getString("status");
-                        String userId = doc.getString("userId");
-
-                        if (userId != null) {
-                            // On stocke le statut en utilisant le userId de l'enregistrement de présence
-                            userIdToStatus.put(userId, status);
-                        }
-                    }
-
-                    // 2. Récupérer tous les employés (filtrés par Département si besoin)
-                    Query usersQuery = db.collection(COLLECTION_USERS);
-
-                    if (!"Tous les départements".equals(departmentFilter)) {
-                        usersQuery = usersQuery.whereEqualTo("departement", departmentFilter);
-                    }
-
-                    usersQuery.get().addOnSuccessListener(userSnapshots -> {
-
-                        int displayCount = 0;
-
-                        for (QueryDocumentSnapshot userDoc : userSnapshots) {
-                            // On tente d'utiliser l'email comme clé de jointure, car il est unique et présent dans 'employees'
-                            String employeeIdentifier = userDoc.getString("email");
-
-                            String employeeName = userDoc.getString("nomComplet");
-                            String employeeDepartment = userDoc.getString("departement");
-                            String employeePoste = userDoc.getString("poste");
-
-                            if (employeeName == null) employeeName = "Nom Inconnu";
-                            if (employeeDepartment == null) employeeDepartment = "N/A";
-                            if (employeePoste == null) employeePoste = "Poste Inconnu";
-
-                            // DÉBUT DE LA CORRECTION : Tenter de trouver le statut
-                            String presenceStatus = "unmarked";
-
-                            // Tenter de trouver le statut en utilisant l'identifiant (email) comme clé
-                            if (employeeIdentifier != null) {
-                                String statusByEmail = userIdToStatus.get(employeeIdentifier);
-                                if (statusByEmail != null) {
-                                    presenceStatus = statusByEmail;
-                                }
-                            }
-                            // Si l'email n'a pas marché (mais l'ID du document est utilisé comme userId)
-                            // La vérification de l'ID du document est conservée en dernier recours
-                            if ("unmarked".equals(presenceStatus)) {
-                                String documentId = userDoc.getId(); // L'ID du document est l'ID de l'utilisateur RH
-                                String statusById = userIdToStatus.get(documentId);
-                                if (statusById != null) {
-                                    presenceStatus = statusById;
-                                }
-                            }
-                            // FIN DE LA CORRECTION : Tenter de trouver le statut
-
-                            boolean shouldDisplay = false;
-
-                            // 3. Appliquer le filtre de statut
-                            switch (statusFilter) {
-                                case "all":
-                                    // Affiche tous les employés, quel que soit leur statut
-                                    shouldDisplay = true;
-                                    break;
-                                case "present":
-                                    if ("present".equals(presenceStatus)) {
-                                        shouldDisplay = true;
-                                    }
-                                    break;
-                                case "absent":
-                                    // Affiche tous ceux qui ne sont PAS "present".
-                                    if (!"present".equals(presenceStatus)) {
-                                        shouldDisplay = true;
-                                    }
-                                    break;
-                            }
-
-                            if (shouldDisplay) {
-                                displayCount++;
-
-                                // Appel à la fonction d'affichage de la carte
-                                addEmployeeCard(employeeName, employeeDepartment, employeePoste, presenceStatus);
-                            }
-                        }
-
-                        if (displayCount == 0) {
-                            displayNoResultsMessage();
-                        }
-
-                    }).addOnFailureListener(e -> {
-                        Log.e(TAG, "Erreur lors du chargement des employés: ", e);
-                        Toast.makeText(PresenceRhActivity.this, "Erreur de chargement des employés.", Toast.LENGTH_SHORT).show();
-                    });
-
-                }).addOnFailureListener(e -> {
-                    Log.e(TAG, "Erreur lors du chargement de l'historique de présence: ", e);
-                    Toast.makeText(PresenceRhActivity.this, "Erreur de chargement des présences.", Toast.LENGTH_SHORT).show();
-                });
-    }
-
-    /**
-     * NOUVELLE MÉTHODE: Remplace l'ancien addEmployeeView
-     * Utilise le layout item_card_presence_rh.xml pour l'affichage.
-     */
-    private void addEmployeeCard(String name, String department, String poste, String status) {
-        // 1. Gonfler le layout de la carte
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View cardView = inflater.inflate(R.layout.item_card_presence_rh, viewCongeAttenteContainer, false);
-
-        // 2. Lier les éléments UI de la carte
-        TextView tvNomComplet = cardView.findViewById(R.id.nomComplet);
-        TextView tvPoste = cardView.findViewById(R.id.poste);
-        TextView tvDepartement = cardView.findViewById(R.id.departement);
-        TextView tvNp = cardView.findViewById(R.id.np);
-
-        // 3. Remplir les données
-        tvNomComplet.setText(name);
-        tvPoste.setText(poste);
-        tvDepartement.setText(department);
-
-        // Initiales pour le cercle (Première lettre du nom et première lettre du prénom)
-        String initials = getInitials(name);
-        tvNp.setText(initials);
-
-        // 4. Mettre à jour la couleur du département et gérer le statut de présence
-
-        // Pour des besoins de démonstration, nous mettons le statut dans le poste
-        String displayStatus = formatStatus(status);
-        tvPoste.setText(String.format(Locale.getDefault(), "%s (%s)", poste, displayStatus));
-
-
-        // 5. Ajouter la carte au conteneur
-        viewCongeAttenteContainer.addView(cardView);
-    }
-
-    /**
-     * Fonction utilitaire pour obtenir les initiales.
-     * Prend la première lettre du premier mot et la première lettre du deuxième mot.
-     * Exemple : "ELAAMMARI Oumeyma" -> "EO"
-     */
-    private String getInitials(String fullName) {
-        if (fullName == null || fullName.trim().isEmpty()) return "??";
-
-        // Nettoyer la chaîne et la séparer par des espaces
-        String cleanedName = fullName.trim().replaceAll("\\s+", " ");
-        String[] parts = cleanedName.split(" ");
-
-        StringBuilder initials = new StringBuilder();
-
-        // Récupérer la première lettre du premier mot (Prénom/Nom)
-        if (parts.length > 0 && !parts[0].isEmpty()) {
-            initials.append(parts[0].charAt(0));
-        }
-
-        // Récupérer la première lettre du deuxième mot (Nom/Prénom)
-        if (parts.length > 1 && !parts[1].isEmpty()) {
-            initials.append(parts[1].charAt(0));
-        }
-
-        // Si un seul mot, on garde juste la première lettre
-        if (initials.length() == 0) {
-            return "??";
-        }
-
-        return initials.toString().toUpperCase(Locale.getDefault());
-    }
-
-
-    private void displayNoResultsMessage() {
-        TextView tv = new TextView(this);
-        tv.setText("Aucun résultat trouvé pour cette date et ce filtre.");
-        tv.setPadding(15, 30, 15, 30);
-        tv.setTextSize(16f);
-        tv.setGravity(Gravity.CENTER);
-        viewCongeAttenteContainer.addView(tv);
-    }
-
-    private String formatStatus(String status) {
-        switch (status) {
-            case "present":
-                return "Présent ✅";
-            case "absent_justifie":
-                return "Justifié 🟡";
-            case "absent":
-                return "Absent 🔴";
-            case "unmarked":
-            default:
-                return "Non marqué ⚪";
-        }
     }
 
     private void showDatePickerDialog() {
@@ -489,6 +589,9 @@ public class PresenceRhActivity extends AppCompatActivity {
                     currentDateRaw = rawFormat.format(selectedCal.getTime());
                     datePresenceTextView.setText(displayFormat.format(selectedCal.getTime()));
 
+                    Log.d(TAG, "Date sélectionnée: " + currentDateRaw);
+
+                    // Recharger les données pour la nouvelle date
                     loadPresenceStatsForDate(currentDateRaw);
                     loadEmployeeListForStatus(currentDateRaw, currentStatusFilter, selectedDepartment);
                 },
@@ -496,90 +599,48 @@ public class PresenceRhActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void loadPresenceStatsForDate(String rawDate) {
-
-        int totalEmployees = parseTotalEmployees();
-        if (totalEmployees == 0) return;
-
-        int finalTotalEmployees = totalEmployees;
-        db.collection(COLLECTION_PRESENCE)
-                .whereEqualTo("date", rawDate)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-
-                    int presents = 0;
-                    int absentsJustifies = 0;
-
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        String status = doc.getString("status");
-
-                        if ("present".equals(status)) {
-                            presents++;
-                        }
-                        else if ("absent_justifie".equals(status) || "conge".equals(status)) {
-                            absentsJustifies++;
-                        }
-                    }
-
-                    int totalAbsents = finalTotalEmployees - presents;
-                    int absentsNonJustifies = totalAbsents - absentsJustifies;
-
-                    nbrePresentsTextView.setText(String.valueOf(presents));
-                    nbreAbsentsTextView.setText(String.valueOf(absentsNonJustifies));
-                    nbreJustifiesTextView.setText(String.valueOf(absentsJustifies));
-
-                    updateTauxDePresence(presents, finalTotalEmployees);
-
-                }).addOnFailureListener(e -> {
-                    Log.e(TAG, "Erreur lors du chargement des statistiques de présence: ", e);
-                });
-    }
-
-    private int parseTotalEmployees() {
-        try {
-            return Integer.parseInt(nbreTotalTextView.getText().toString());
-        } catch (NumberFormatException e) {
-            return 0;
+    private void setupFooterNavigation() {
+        if (footerAccueil != null) {
+            footerAccueil.setOnClickListener(v -> navigateToHome());
+        }
+        if (footerEmployes != null) {
+            footerEmployes.setOnClickListener(v -> navigateToEmployees());
+        }
+        if (footerConges != null) {
+            footerConges.setOnClickListener(v -> navigateToConges());
+        }
+        if (footerReunions != null) {
+            footerReunions.setOnClickListener(v -> navigateToReunions());
+        }
+        if (footerProfile != null) {
+            footerProfile.setOnClickListener(v -> navigateToProfile());
         }
     }
 
-    private void updateTauxDePresence(int presents, int total) {
-        if (total == 0) {
-            nbreTauxTextView.setText("0.0%");
-            updateProgressBar(0.0);
-            return;
-        }
-
-        double taux = ((double) presents / total) * 100.0;
-        nbreTauxTextView.setText(String.format(Locale.getDefault(), "%.1f%%", taux));
-        updateProgressBar(taux);
+    private void navigateToHome() {
+        startActivity(new Intent(PresenceRhActivity.this, AcceuilRhActivity.class));
     }
 
-    private void updateProgressBar(double taux) {
-        if (progressFill == null) return;
-        final double finalTaux = taux;
-        ((View) progressFill.getParent()).post(() -> {
-            View container = (View) progressFill.getParent();
-            int containerWidth = container.getWidth();
-            int newWidth = (int) (containerWidth * (finalTaux / 100.0));
-            ViewGroup.LayoutParams layoutParams = progressFill.getLayoutParams();
-            layoutParams.width = newWidth;
-            progressFill.setLayoutParams(layoutParams);
-        });
+    private void navigateToEmployees() {
+        startActivity(new Intent(PresenceRhActivity.this, EmployeActivity.class));
     }
 
-    // Vous devez avoir une classe DailyPresenceUpdateWorker pour que ceci fonctionne
-    @SuppressLint("WorkerHasAPublicModifier")
-    private static class DailyPresenceUpdateWorker extends androidx.work.Worker {
-        public DailyPresenceUpdateWorker(android.content.Context context, androidx.work.WorkerParameters params) {
-            super(context, params);
-        }
+    private void navigateToConges() {
+        startActivity(new Intent(PresenceRhActivity.this, CongesActivity.class));
+    }
 
-        @Override
-        public androidx.work.ListenableWorker.Result doWork() {
-            // Logique de mise à jour quotidienne (par exemple, marquer les non-présents comme "absent")
-            Log.i("DailyWorker", "Tâche quotidienne de présence exécutée.");
-            return androidx.work.ListenableWorker.Result.success();
-        }
+    private void navigateToReunions() {
+        startActivity(new Intent(PresenceRhActivity.this, reunionActivity.class));
+    }
+
+    private void navigateToProfile() {
+        startActivity(new Intent(PresenceRhActivity.this, ProfileActivity.class));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Recharger les données quand l'activité revient au premier plan
+        loadTotalEmployeeCount();
     }
 }

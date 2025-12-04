@@ -75,10 +75,10 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
     private Button btnJustifierAbsence;
     private RecyclerView recyclerViewHistorique;
 
-    // Vues des statistiques mensuelles (NOUVEAU)
-    private TextView nbrePresences;
-    private TextView nbreAbsences;
-    private TextView nbreTaux;
+    // Vues des statistiques mensuelles
+    private TextView nbrePresencesTextView;
+    private TextView nbreAbsencesTextView;
+    private TextView nbreTauxTextView;
 
     // Vues du Footer
     private ImageView iconAccueil;
@@ -88,7 +88,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
     private ImageView iconConges;
     private TextView textConges;
     private ImageView iconReunions;
-    private TextView textReunions, nbrePresencesTextView,  nbreAbsencesTextView, nbreTauxTextView;
+    private TextView textReunions;
     private ImageView iconProfil;
     private TextView textProfil;
     private RelativeLayout notificationsButton;
@@ -126,7 +126,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         }
     }
 
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,13 +137,15 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         if (user != null) {
             userId = user.getEmail();
             historyCollection = db.collection("PresenceHistory");
+            Log.d("PresenceActivity", "Utilisateur authentifié: " + userId);
         } else {
             Log.w("PresenceActivity", "Utilisateur non authentifié.");
+            Toast.makeText(this, "Veuillez vous reconnecter", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // --- 1. Initialisation des Vues ---
+        // Initialisation des Vues
         presenceActionContainer = findViewById(R.id.presence_action_container);
         btnMarquerPresence = findViewById(R.id.btn_marquer_presence);
         btnJustifierAbsence = findViewById(R.id.btn_justifier_absence);
@@ -153,10 +154,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         nbrePresencesTextView = findViewById(R.id.nbrePresences);
         nbreAbsencesTextView = findViewById(R.id.nbreAbsences);
         nbreTauxTextView = findViewById(R.id.nbreTaux);
-        // NOUVEAU: Initialisation des vues des statistiques
-        nbrePresences = findViewById(R.id.nbrePresences);
-        nbreAbsences = findViewById(R.id.nbreAbsences);
-        nbreTaux = findViewById(R.id.nbreTaux);
 
         iconAccueil = findViewById(R.id.accueil);
         textAccueil = findViewById(R.id.textView3);
@@ -184,7 +181,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         // Charger l'historique réel depuis Firestore
         loadHistoryFromFirestoreForPreviousWeek();
 
-        // NOUVEAU: Charger et afficher les statistiques du mois actuel
+        // Charger et afficher les statistiques du mois actuel
         loadMonthlyStatistics();
     }
 
@@ -193,28 +190,14 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         return prefs.getString("gender", "M");
     }
 
-    private void saveUserGender(String gender) {
-        SharedPreferences.Editor editor = getSharedPreferences("UserProfile", Context.MODE_PRIVATE).edit();
-        editor.putString("gender", gender);
-        editor.apply();
-    }
-
-    // ---------- MÉTHODES DE STATISTIQUES MENSUELLES (NOUVEAU) ----------
-
-    /**
-     * Calcule et affiche les statistiques (Présences, Absences, Taux) pour le mois actuel.
-     * Utilise le champ 'timestamp' dans Firestore pour interroger la plage de dates.
-     */
+    // ---------- MÉTHODES DE STATISTIQUES MENSUELLES ----------
     private void loadMonthlyStatistics() {
-        // Vérification de sécurité
         if (userId == null || historyCollection == null) {
             Log.e("STATS", "UserId ou collection non initialisés.");
             return;
         }
 
-        // 1. Définir la plage de dates pour le mois actuel
         Calendar calStart = Calendar.getInstance();
-        // Début du mois (1er jour à 00:00:00.000)
         calStart.set(Calendar.DAY_OF_MONTH, 1);
         calStart.set(Calendar.HOUR_OF_DAY, 0);
         calStart.set(Calendar.MINUTE, 0);
@@ -222,25 +205,18 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         calStart.set(Calendar.MILLISECOND, 0);
 
         Calendar calEnd = Calendar.getInstance();
-        // Fin du mois (dernier jour à 23:59:59.999)
         calEnd.set(Calendar.DAY_OF_MONTH, calEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
         calEnd.set(Calendar.HOUR_OF_DAY, 23);
         calEnd.set(Calendar.MINUTE, 59);
         calEnd.set(Calendar.SECOND, 59);
         calEnd.set(Calendar.MILLISECOND, 999);
 
-        // ⚠️ IMPORTANT : Assurez-vous que l'importation de Timestamp est correcte
-        // com.google.firebase.Timestamp (ou ajustez la conversion si vous n'utilisez pas l'objet Timestamp)
+        Timestamp startOfMonth = new Timestamp(calStart.getTime());
+        Timestamp endOfMonth = new Timestamp(calEnd.getTime());
 
-        // Convertir les dates pour la requête Firestore
-        com.google.firebase.Timestamp startOfMonth = new com.google.firebase.Timestamp(calStart.getTime());
-        com.google.firebase.Timestamp endOfMonth = new com.google.firebase.Timestamp(calEnd.getTime());
-
-        Log.d("STATS_CHECK", "Début de la recherche : " + calStart.getTime().toString());
-        Log.d("STATS_CHECK", "Fin de la recherche : " + calEnd.getTime().toString());
-
-        // 2. Requête Firestore sur le champ 'timestamp'
+        // CORRECTION: Filtrer par utilisateur ET par date
         historyCollection
+                .whereEqualTo("userId", userId)
                 .whereGreaterThanOrEqualTo("timestamp", startOfMonth)
                 .whereLessThanOrEqualTo("timestamp", endOfMonth)
                 .get()
@@ -251,199 +227,223 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String status = document.getString("status");
+                            Log.d("STATS", "Document trouvé - Status: " + status);
 
                             if (status != null) {
-                                // On ne compte que les enregistrements qui représentent un jour entier
                                 if (status.equals("present")) {
                                     totalPresenceDays++;
                                 } else if (status.contains("absent") || status.equals("conge")) {
-                                    // On inclut 'absent', 'absent_justifie' et 'conge'
                                     totalAbsenceDays++;
                                 }
                             }
                         }
 
-                        // 3. Affichage des résultats
+                        Log.d("STATS", "Résultats - Présences: " + totalPresenceDays + ", Absences: " + totalAbsenceDays);
                         updateStatisticsUI(totalPresenceDays, totalAbsenceDays);
 
                     } else {
                         Log.e("PresenceActivity", "Erreur lors du chargement des statistiques: " + task.getException());
-                        updateStatisticsUI(0, 0); // Afficher 0 en cas d'erreur
+                        updateStatisticsUI(0, 0);
                     }
                 });
     }
-    // Dans PresenceActivity.java
 
     @Override
     public void onAbsenceJustified(String justificationDetails) {
-
-        // Vérification que l'ID utilisateur est disponible avant la sauvegarde
         if (userId == null) {
             Toast.makeText(this, "Erreur: Utilisateur non identifié.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        Date now = new Date();
+        String todayDate = dateFormat.format(now);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        String displayTime = timeFormat.format(now);
+
         savePresenceToFirebase(
                 userId,
-                "absent_justifie"// Le champ 'justification' (long)
+                "absent_justifie",
+                justificationDetails,
+                displayTime
         );
 
-        String message = "Demande de justification d'absence reçue : " + justificationDetails.substring(0, Math.min(justificationDetails.length(), 40)) + "...";
-
+        String message = "Demande de justification d'absence reçue : " +
+                justificationDetails.substring(0, Math.min(justificationDetails.length(), 40)) + "...";
         saveNotificationForRh("absence_justifie", message, userId);
 
         Toast.makeText(this, "Justification enregistrée et RH notifiés.", Toast.LENGTH_LONG).show();
     }
 
-    /**
-     * Met à jour les TextView de statistiques avec les données calculées.
-     */
     private void updateStatisticsUI(int presences, int absences) {
         int totalDays = presences + absences;
-        double taux = 0.0;
+        double taux;
 
         if (totalDays > 0) {
-            // Formule pour le Taux de Présence : (Présences / Jours enregistrés) * 100
             taux = ((double) presences / totalDays) * 100;
+        } else {
+            taux = 0.0;
         }
 
-        // Mise à jour des TextViews avec les résultats
-        if (nbrePresencesTextView != null) {
-            nbrePresencesTextView.setText(String.valueOf(presences));
-        }
-        if (nbreAbsencesTextView != null) {
-            nbreAbsencesTextView.setText(String.valueOf(absences));
-        }
-        if (nbreTauxTextView != null) {
-            // Affiche le taux avec 2 décimales et le symbole %
-            nbreTauxTextView.setText(String.format(Locale.getDefault(), "%.2f%%", taux));
-        }
+        runOnUiThread(() -> {
+            if (nbrePresencesTextView != null) {
+                nbrePresencesTextView.setText(String.valueOf(presences));
+            }
+            if (nbreAbsencesTextView != null) {
+                nbreAbsencesTextView.setText(String.valueOf(absences));
+            }
+            if (nbreTauxTextView != null) {
+                nbreTauxTextView.setText(String.format(Locale.getDefault(), "%.2f%%", taux));
+            }
+        });
     }
-
-    // ---------- FIN DES MÉTHODES DE STATISTIQUES MENSUELLES ----------
 
     // ---------- ENREGISTRER DANS FIRESTORE ----------
-    private android.content.Context context;
-    public void savePresenceToFirebase(String userId, String status) {
+    public void savePresenceToFirebase(String userId, String status, String details, String arrivalTime) {
         if (userId == null || historyCollection == null) {
-            Toast.makeText(context, "Erreur: ID utilisateur ou collection non définie.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Erreur: ID utilisateur ou collection non définie.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Récupérer la date d'aujourd'hui
+        String todayDate = dateFormat.format(new Date());
         Timestamp nowTimestamp = Timestamp.now();
 
-        // 1. Création des données à enregistrer
+        // CORRECTION: Créer un ID document unique qui combine userId et date
+        String documentId = userId + "_" + todayDate;
+
         Map<String, Object> data = new HashMap<>();
-        data.put("userId", userId); // CLÉ CRUCIALE : C'est ici que l'email doit être inséré
+        data.put("userId", userId);
         data.put("status", status);
         data.put("timestamp", nowTimestamp);
+        data.put("details", details != null ? details : "Présence marquée");
+        data.put("time", arrivalTime != null ? arrivalTime : "Non spécifié");
+        data.put("date", todayDate);
+        data.put("documentId", documentId); // Pour faciliter les requêtes
 
-        // La collection "PresenceHistory" est utilisée. Nous laissons Firestore générer un ID de document unique
-        // pour éviter d'écraser des enregistrements si un utilisateur marque sa présence plusieurs fois dans la journée.
+        Log.d("SAVE_FIRESTORE", "Sauvegarde pour: " + documentId + " - Status: " + status);
+
+        // CORRECTION: Utiliser le documentId personnalisé
         historyCollection
-                .add(data)
+                .document(documentId)
+                .set(data)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(context, "Présence enregistrée avec succès.", Toast.LENGTH_SHORT).show();
+                    Log.d("PresenceActivity", "Présence enregistrée avec ID: " + documentId);
+                    Toast.makeText(PresenceActivity.this, "Présence enregistrée avec succès.", Toast.LENGTH_SHORT).show();
+
+                    // Rafraîchir l'historique et les statistiques
+                    runOnUiThread(() -> {
+                        loadHistoryFromFirestoreForPreviousWeek();
+                        loadMonthlyStatistics();
+                    });
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("PresenceActivity", "Erreur de sauvegarde Firestore: " + e.getMessage());
-                    Toast.makeText(context, "Erreur de sauvegarde : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e("PresenceActivity", "Erreur de sauvegarde Firestore: " + e.getMessage(), e);
+                    Toast.makeText(PresenceActivity.this, "Erreur de sauvegarde : " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
-/**
- * Enregistre une alerte dans la collection centrale "RhNotificationsFeed"
- * pour informer le service RH d'une action de l'employé.
- */
-        private void saveNotificationForRh(String type, String message, String employeeId) {
-            if (db == null) return;
 
-            // Collection centralisée que tous les RH liront
-            CollectionReference rhAlerts = db.collection("RhNotificationsFeed");
+    private void saveNotificationForRh(String type, String message, String employeeId) {
+        if (db == null) return;
 
-            Map<String, Object> notificationData = new HashMap<>();
-            notificationData.put("type", type); // ex: "presence_marked" ou "absence_justifie"
-            notificationData.put("message", message);
-            notificationData.put("emitterId", employeeId);
-            notificationData.put("timestamp", Timestamp.now());
-            notificationData.put("isRead", false); // Pour le suivi de lecture par les RH
+        CollectionReference rhAlerts = db.collection("RhNotificationsFeed");
 
-            rhAlerts.add(notificationData)
-                    .addOnSuccessListener(documentReference -> {
-                        Log.i("RH_NOTIF", "Alerte RH enregistrée: " + type);
-                        // ATTENTION : L'envoi de la notification push (FCM) doit être géré
-                        // par une Cloud Function qui écoute cette collection.
-                        // La logique d'envoi push n'est PAS ici.
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("RH_NOTIF", "Erreur enregistrement alerte RH: " + e.getMessage());
-                        Toast.makeText(this, "Erreur d'enregistrement RH: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        }
-    // ---------- CHARGER L'HISTORIQUE (Semaine précédente) ----------
-    // ---------- CHARGER L'HISTORIQUE (5 jours ouvrables précédents) ----------
+        Map<String, Object> notificationData = new HashMap<>();
+        notificationData.put("type", type);
+        notificationData.put("message", message);
+        notificationData.put("emitterId", employeeId);
+        notificationData.put("timestamp", Timestamp.now());
+        notificationData.put("isRead", false);
+
+        rhAlerts.add(notificationData)
+                .addOnSuccessListener(documentReference -> {
+                    Log.i("RH_NOTIF", "Alerte RH enregistrée: " + type);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("RH_NOTIF", "Erreur enregistrement alerte RH: " + e.getMessage());
+                });
+    }
+
+    // ---------- CHARGER L'HISTORIQUE ----------
     private void loadHistoryFromFirestoreForPreviousWeek() {
-        if (userId == null || historyCollection == null) return;
+        if (userId == null || historyCollection == null) {
+            Log.e("LOAD_HISTORY", "UserId ou collection null");
+            return;
+        }
 
-        // Vider et peupler l'historique local
+        Log.d("LOAD_HISTORY", "Chargement historique pour: " + userId);
         presenceDays.clear();
-        adapter.notifyDataSetChanged();
 
         List<String> daysRawToFetch = new ArrayList<>();
-
-        // Commence à partir d'aujourd'hui, puis recule jour par jour
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -1); // Commencer hier (pour ne pas inclure aujourd'hui)
+        cal.add(Calendar.DAY_OF_YEAR, -1); // Commencer hier
 
         SimpleDateFormat rawFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
         int daysCount = 0;
 
-        // Boucler en arrière pour trouver 5 jours ouvrés
+        // Récupérer les 5 derniers jours ouvrables
         while (daysCount < 5) {
             int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
-            // Vérifier si c'est Lundi (2) à Vendredi (6)
             if (dayOfWeek != Calendar.SATURDAY && dayOfWeek != Calendar.SUNDAY) {
-
                 String rawDate = rawFormat.format(cal.getTime());
                 daysRawToFetch.add(rawDate);
                 daysCount++;
-
-                // Démarrer immédiatement la requête Firestore pour le jour
                 fetchHistoryForDay(rawDate);
             }
 
-            // Reculer d'un jour pour la prochaine itération
             cal.add(Calendar.DAY_OF_YEAR, -1);
-
-            // Sécurité pour éviter une boucle infinie (max 10 jours vérifiés)
             if (daysRawToFetch.size() > 10) break;
         }
+
+        Log.d("LOAD_HISTORY", "Jours à charger: " + daysRawToFetch.size());
     }
 
-    /**
-     * Nouvelle méthode pour encapsuler la requête Firestore pour un jour unique.
-     */
     private void fetchHistoryForDay(String rawDate) {
         if (userId == null || historyCollection == null) return;
 
+        Log.d("FETCH_DAY", "Recherche pour: " + rawDate + " - User: " + userId);
+
+        // CORRECTION: Rechercher par documentId personnalisé
+        String documentId = userId + "_" + rawDate;
+
         historyCollection
-                .document(rawDate)
+                .document(documentId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    // Traitement de l'historique pour le jour
+                    Log.d("FETCH_DAY", "Document snapshot existe: " + documentSnapshot.exists());
                     handleDayHistory(documentSnapshot, rawDate);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("PresenceActivity", "Erreur lecture Firestore pour date " + rawDate + ": " + e.getMessage());
-                    addAbsentEntry(rawDate, "Erreur de lecture Firestore");
+                    Log.e("FETCH_DAY", "Erreur pour " + rawDate + ": " + e.getMessage());
+                    // Si erreur, essayer l'ancienne méthode de recherche
+                    fallbackFetchForDay(rawDate);
                 });
     }
 
-    /**
-     * Traite la DocumentSnapshot Firestore pour créer ou mettre à jour une entrée PresenceDay.
-     */
+    private void fallbackFetchForDay(String rawDate) {
+        // Méthode de secours: recherche par requête
+        historyCollection
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("date", rawDate)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        handleDayHistory(documentSnapshot, rawDate);
+                    } else {
+                        addAbsentEntry(rawDate, "Pas d'enregistrement");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FETCH_DAY_FALLBACK", "Erreur fallback: " + e.getMessage());
+                    addAbsentEntry(rawDate, "Erreur de lecture");
+                });
+    }
+
     private void handleDayHistory(DocumentSnapshot doc, String rawDate) {
         try {
-            Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(rawDate);
+            Date d = dateFormat.parse(rawDate);
             String displayDay = capitalize(displayDayFormat.format(d));
             String displayDate = displayDateFormat.format(d);
 
@@ -453,12 +453,15 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
                 History history = doc.toObject(History.class);
 
                 if (history != null) {
+                    Log.d("HANDLE_HISTORY", "History trouvé - Status: " + history.getStatus());
                     pd = new PresenceDay(
                             displayDay,
                             displayDate,
                             rawDate,
                             history.getStatus() != null ? history.getStatus() : "absent",
-                            history.getDetails() != null ? history.getDetails() : (history.getStatus().equals("conge") ? "Jour de congé" : "Non spécifié"),
+                            history.getDetails() != null ? history.getDetails() :
+                                    (history.getStatus() != null && history.getStatus().equals("conge") ?
+                                            "Jour de congé" : "Non spécifié"),
                             history.getTime()
                     );
                 } else {
@@ -471,46 +474,46 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
             updatePresenceDaysList(pd);
 
         } catch (Exception e) {
-            Log.e("PresenceActivity", "Erreur mapping doc ou parse date", e);
+            Log.e("PresenceActivity", "Erreur traitement historique", e);
             addAbsentEntry(rawDate, "Erreur de traitement");
         }
     }
 
-    /**
-     * Ajoute une entrée "Absent" à l'historique local.
-     */
     private void addAbsentEntry(String rawDate, String details) {
         try {
-            Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(rawDate);
+            Date d = dateFormat.parse(rawDate);
             String displayDay = capitalize(displayDayFormat.format(d));
             String displayDate = displayDateFormat.format(d);
 
             PresenceDay pd = new PresenceDay(displayDay, displayDate, rawDate, "absent", details, null);
             updatePresenceDaysList(pd);
         } catch (ParseException e) {
-            // Ne devrait pas arriver
+            Log.e("PresenceActivity", "Erreur parsing date", e);
         }
     }
 
-    /**
-     * Ajoute ou remplace l'entrée PresenceDay dans la liste, puis trie et notifie.
-     */
     private void updatePresenceDaysList(PresenceDay pd) {
-        boolean replaced = false;
-        for (int i = 0; i < presenceDays.size(); i++) {
-            if (presenceDays.get(i).rawDate.equals(pd.rawDate)) {
-                presenceDays.set(i, pd);
-                replaced = true;
-                break;
+        Log.d("UPDATE_LIST", "Mise à jour: " + pd.rawDate + " - Status: " + pd.status);
+
+        runOnUiThread(() -> {
+            boolean replaced = false;
+            for (int i = 0; i < presenceDays.size(); i++) {
+                if (presenceDays.get(i).rawDate.equals(pd.rawDate)) {
+                    presenceDays.set(i, pd);
+                    replaced = true;
+                    Log.d("UPDATE_LIST", "Entrée remplacée");
+                    break;
+                }
             }
-        }
-        if (!replaced) presenceDays.add(pd);
+            if (!replaced) {
+                presenceDays.add(pd);
+                Log.d("UPDATE_LIST", "Nouvelle entrée ajoutée");
+            }
 
-        // FIX DU TRI : Tri par rawDate desc (Plus récent -> Plus ancien)
-        // b.rawDate est comparé à a.rawDate pour inverser l'ordre
-        presenceDays.sort((a, b) -> b.rawDate.compareTo(a.rawDate));
-
-        adapter.notifyDataSetChanged();
+            presenceDays.sort((a, b) -> b.rawDate.compareTo(a.rawDate));
+            adapter.notifyDataSetChanged();
+            Log.d("UPDATE_LIST", "Taille finale: " + presenceDays.size());
+        });
     }
 
     // ---------- Utilities ----------
@@ -521,9 +524,8 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         return s.substring(0, 1).toUpperCase(Locale.getDefault()) + s.substring(1);
     }
 
-    // ---------- Adapter (CORRIGÉ) ----------
+    // ---------- Adapter ----------
     private class PresenceHistoryAdapter extends RecyclerView.Adapter<PresenceHistoryAdapter.ViewHolder> {
-
         private final List<PresenceDay> dataSet;
         private final String gender;
 
@@ -534,18 +536,19 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
 
         @NonNull
         @Override
-        public PresenceHistoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_card_presence, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull PresenceHistoryAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             PresenceDay day = dataSet.get(position);
 
-            String statutBadgeText = getGenderSpecificStatusForDisplay(day.status, gender);
+            Log.d("ADAPTER", "Affichage position " + position + ": " + day.rawDate + " - " + day.status);
 
+            String statutBadgeText = getGenderSpecificStatusForDisplay(day.status, gender);
             holder.tvJourDate.setText(day.dayName + " " + day.date);
 
             if (day.status.equals("present") && day.arrivalTime != null) {
@@ -608,9 +611,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         }
     }
 
-    /**
-     * Traduit la clé de statut (stockée) en libellé lisible, accordé au genre.
-     */
     private String getGenderSpecificStatusForDisplay(String statusKey, String gender) {
         if ("present".equals(statusKey)) {
             return "F".equals(gender) ? "Présente" : "Présent";
@@ -622,8 +622,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         return capitalize(statusKey);
     }
 
-    // Reste des méthodes de gestion d'état, de navigation et de notification.
-
+    // ---------- Gestion de l'état de présence ----------
     private void checkAndRestorePresenceState() {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         String savedTime = prefs.getString(KEY_ARRIVAL_TIME, null);
@@ -637,17 +636,17 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
 
                 if (isSameDay(arrivalDateTime, now)) {
                     isPresenceMarked = true;
-                    Log.i("PresenceActivity", "Restoration de l'état de présence marqué.");
+                    Log.i("PresenceActivity", "Restauration de l'état de présence marqué.");
 
                     SimpleDateFormat displaySdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
                     String displayTime = displaySdf.format(arrivalDateTime);
                     restorePresenceCard(displayTime);
                 } else {
-                    Log.i("PresenceActivity", "Minuit est passé, réinitialisation de l'état de présence.");
+                    Log.i("PresenceActivity", "Minuit est passé, réinitialisation.");
                     clearPresenceState();
                 }
             } catch (ParseException e) {
-                Log.e("PresenceActivity", "Erreur lors de l'analyse de l'heure persistante.", e);
+                Log.e("PresenceActivity", "Erreur parsing heure persistante", e);
                 clearPresenceState();
             }
         }
@@ -658,7 +657,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
 
             if (!todayDateString.equals(lastNotifDateString)) {
                 sendUnjustifiedAbsenceNotification();
-
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(KEY_LAST_ABSENCE_NOTIFICATION_DATE, todayDateString);
                 editor.apply();
@@ -669,7 +667,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
     private boolean isSameDay(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(date1);
-
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
 
@@ -690,24 +687,22 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
     }
 
     private void restorePresenceCard(String displayTime) {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View presenceCardView = inflater.inflate(R.layout.item_card_marquer_present, presenceActionContainer, false);
+        runOnUiThread(() -> {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View presenceCardView = inflater.inflate(R.layout.item_card_marquer_present, presenceActionContainer, false);
 
-        TextView tvArrivee = presenceCardView.findViewById(R.id.tv_heure_arrivee);
-        if (tvArrivee != null) {
-            tvArrivee.setText("Arrivée : " + displayTime + " (Enregistrée)");
-        }
+            TextView tvArrivee = presenceCardView.findViewById(R.id.tv_heure_arrivee);
+            if (tvArrivee != null) {
+                tvArrivee.setText("Arrivée : " + displayTime + " (Enregistrée)");
+            }
 
-        presenceActionContainer.removeAllViews();
-        presenceActionContainer.addView(presenceCardView);
+            presenceActionContainer.removeAllViews();
+            presenceActionContainer.addView(presenceCardView);
+        });
     }
 
     private void setupClickListeners() {
-        btnMarquerPresence.setOnClickListener(v -> {
-                replacePresenceActionWithCard();
-
-        });
-
+        btnMarquerPresence.setOnClickListener(v -> replacePresenceActionWithCard());
         btnJustifierAbsence.setOnClickListener(v -> showJustifyAbsenceFragment());
 
         iconAccueil.setOnClickListener(v -> navigateTo(AcceuilEmployeActivity.class));
@@ -716,26 +711,36 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         iconProfil.setOnClickListener(v -> navigateTo(ProfileEmployeActivity.class));
         notificationsButton.setOnClickListener(v -> navigateTo(NotificationsEmployesActivity.class));
     }
+
     private void replacePresenceActionWithCard() {
-        // Vérification que l'ID utilisateur est disponible avant la sauvegarde
         if (userId == null) {
-            Toast.makeText(this, "Erreur: Utilisateur non identifié. Impossible d'enregistrer la présence.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Erreur: Utilisateur non identifié.", Toast.LENGTH_SHORT).show();
             return;
         }
+
         Date now = new Date();
         String fullDateTime = dateTimeFormat.format(now);
         savePresenceState(fullDateTime);
 
         SimpleDateFormat displaySdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         String displayTime = displaySdf.format(now);
-        restorePresenceCard(displayTime);
-        sendPresenceMarkedNotification(displayTime);
+
+        runOnUiThread(() -> {
+            restorePresenceCard(displayTime);
+            Toast.makeText(this, "Présence marquée à " + displayTime, Toast.LENGTH_LONG).show();
+        });
+
+        // Sauvegarder dans Firebase
         savePresenceToFirebase(
                 userId,
-                "present"
+                "present",
+                "Présence marquée manuellement",
+                displayTime
         );
-        Toast.makeText(this, "Présence marquée.", Toast.LENGTH_LONG).show();
+
+        sendPresenceMarkedNotification(displayTime);
     }
+
     private void showJustifyAbsenceFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -751,7 +756,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         Intent intent = new Intent(PresenceActivity.this, destinationClass);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        finish();
     }
 
     private void setupFooterHighlight() {
@@ -779,7 +783,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
     private void sendUnjustifiedAbsenceNotification() {
         recordNotification(
                 "unjustified_absence",
-                "Absence non justifiée détectée à l'ouverture de l'application (pas de présence ni de justification le jour-même).",
+                "Absence non justifiée détectée à l'ouverture de l'application.",
                 "Absence Non Justifiée"
         );
         Toast.makeText(this, "Alerte RH: Absence non justifiée détectée.", Toast.LENGTH_LONG).show();
@@ -791,7 +795,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
 
         try {
             JSONArray historyArray = new JSONArray(existingHistory);
-
             JSONObject newEntry = new JSONObject();
             newEntry.put("type", type);
             newEntry.put("message", message);
@@ -814,10 +817,18 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
             editor.putString(NOTIFICATION_KEY, updatedArray.toString());
             editor.apply();
 
-            Log.d("RH_NOTIF", toastTitle + " enregistrée : " + newEntry.toString());
+            Log.d("RH_NOTIF", toastTitle + " enregistrée");
 
         } catch (Exception e) {
-            Log.e("RH_NOTIF", "Erreur lors de l'enregistrement de la notification JSON", e);
+            Log.e("RH_NOTIF", "Erreur enregistrement notification JSON", e);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Rafraîchir les données quand l'activité revient au premier plan
+        loadHistoryFromFirestoreForPreviousWeek();
+        loadMonthlyStatistics();
     }
 }
