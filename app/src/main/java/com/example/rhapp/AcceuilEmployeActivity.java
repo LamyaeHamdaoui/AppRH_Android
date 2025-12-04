@@ -1,8 +1,10 @@
 package com.example.rhapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -50,7 +52,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private LinearLayout presence, conges, reunions, actionConge, actionPresence, actionReunions, notifRecentesContainer;
     private TextView etatPrsence, soldeConge, reunionVenir, notifPresence, notifConge, notifAttestation, notifReunion, employeConnecte, aucuneNotif;
     private TextView posteDepartement;
-
+    private static final String PREF_NAME = "AcceuilPresencePrefs";
+    private static final String KEY_LAST_DAY = "last_day";
+    private static final String KEY_PRESENCE_MARKED_TODAY = "presence_marked_today";
 
     // Écouteurs Firestore
     private ListenerRegistration congesListener;
@@ -83,6 +87,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         initializeViews();
         setupNavigation();
 
+        // Vérifier et réinitialiser l'état à minuit
+        checkAndResetForNewDay();
+
         // Charger les données de l'employé connecté
         loadEmployeData();
 
@@ -91,6 +98,43 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
         // Charger les notifications
         loadNotificationsRecentetes();
+    }
+    // AJOUTEZ CETTE MÉTHODE POUR VÉRIFIER MINUIT :
+    private void checkAndResetForNewDay() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        String lastDay = prefs.getString(KEY_LAST_DAY, "");
+
+        // Obtenir la date d'aujourd'hui
+        Calendar today = Calendar.getInstance();
+        String todayStr = today.get(Calendar.YEAR) + "-" +
+                (today.get(Calendar.MONTH) + 1) + "-" +
+                today.get(Calendar.DAY_OF_MONTH);
+
+        Log.d(TAG, "Vérification jour: Dernier=" + lastDay + ", Aujourd'hui=" + todayStr);
+
+        if (!lastDay.equals(todayStr)) {
+            // C'est un nouveau jour, réinitialiser l'état de présence
+            Log.d(TAG, "Nouveau jour détecté, réinitialisation...");
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(KEY_LAST_DAY, todayStr);
+            editor.putBoolean(KEY_PRESENCE_MARKED_TODAY, false); // Réinitialiser à non marqué
+            editor.apply();
+
+            // Mettre à jour l'UI immédiatement
+            runOnUiThread(() -> {
+                if (etatPrsence != null) {
+                    etatPrsence.setText("Non marquée");
+                    etatPrsence.setTextColor(Color.parseColor("#666666"));
+                    iconepresence.setImageResource(R.drawable.refuse);
+                    if (notifPresence != null) {
+                        notifPresence.setVisibility(View.GONE);
+                    }
+                }
+            });
+        } else {
+            Log.d(TAG, "Même jour, pas de réinitialisation");
+        }
     }
 
     private void initializeFirebase() {
@@ -359,35 +403,77 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     }
 
                     backgroundExecutor.execute(() -> {
-                        boolean presenceMarquee = documentSnapshot != null &&
+                        // Vérifier si la présence est marquée dans Firestore
+                        boolean presenceMarqueeFirestore = documentSnapshot != null &&
                                 documentSnapshot.exists() &&
                                 "present".equals(documentSnapshot.getString("status"));
 
+                        // Sauvegarder l'état localement
+                        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean(KEY_PRESENCE_MARKED_TODAY, presenceMarqueeFirestore);
+                        editor.apply();
+
+                        // Obtenir l'heure actuelle
+                        Calendar now = Calendar.getInstance();
+                        int currentHour = now.get(Calendar.HOUR_OF_DAY);
+                        int currentMinute = now.get(Calendar.MINUTE);
+
+                        // Calculer en minutes depuis minuit
+                        int totalMinutes = (currentHour * 60) + currentMinute;
+                        int seuil9h = 9 * 60; // 9h00 en minutes
+
+                        // Déterminer l'état à afficher
+                        final String etatText;
+                        final int etatColor;
+                        final int iconResource;
+                        final boolean showNotification;
+
+                        if (presenceMarqueeFirestore) {
+                            // Présence marquée - TOUJOURS vert
+                            etatText = "Marquée";
+                            etatColor = Color.parseColor("#0FAC71"); // Vert
+                            iconResource = R.drawable.approuve;
+                            showNotification = false;
+                        } else {
+                            // Présence non marquée
+                            if (totalMinutes >= seuil9h) {
+                                // Après 9h - rouge avec notification
+                                etatText = "Non marquée";
+                                etatColor = Color.parseColor("#FF0000"); // Rouge
+                                showNotification = true;
+                            } else {
+                                // Avant 9h - gris sans notification
+                                etatText = "Non marquée";
+                                etatColor = Color.parseColor("#666666"); // Gris
+                                showNotification = false;
+                            }
+                            iconResource = R.drawable.refuse;
+                        }
+
+                        // Mettre à jour l'UI sur le thread principal
                         mainHandler.post(() -> {
                             try {
                                 if (etatPrsence != null) {
-                                    if (presenceMarquee) {
-                                        etatPrsence.setText("Marquée");
-                                        etatPrsence.setTextColor(Color.parseColor("#0FAC71"));
-                                        iconepresence.setImageResource(R.drawable.approuve);
-                                        if (notifPresence != null) {
-                                            notifPresence.setVisibility(View.GONE);
-                                        }
-                                    } else {
+                                    etatPrsence.setText(etatText);
+                                    etatPrsence.setTextColor(etatColor);
+                                    iconepresence.setImageResource(iconResource);
 
-                                        etatPrsence.setText("Non marquée");
-                                        etatPrsence.setTextColor(Color.parseColor("#FF0000"));
-                                        iconepresence.setImageResource(R.drawable.refuse);
-
-                                        if (notifPresence != null) {
+                                    if (notifPresence != null) {
+                                        if (showNotification) {
                                             notifPresence.setVisibility(View.VISIBLE);
                                             notifPresence.setText("!");
+                                        } else {
+                                            notifPresence.setVisibility(View.GONE);
                                         }
                                     }
-                                    Log.d(TAG, "Présence mise à jour: " + (presenceMarquee ? "Marquée" : "Non marquée"));
                                 }
+
+                                Log.d(TAG, String.format("Présence: %s (Heure: %02d:%02d, Firestore: %s)",
+                                        etatText, currentHour, currentMinute, presenceMarqueeFirestore));
+
                             } catch (Exception e) {
-                                Log.e(TAG, "Erreur mise à jour présence UI: " + e.getMessage());
+                                Log.e(TAG, "Erreur UI présence: " + e.getMessage());
                             }
                         });
                     });
@@ -407,6 +493,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     backgroundExecutor.execute(() -> {
                         try {
                             int reunionsAVenir = 0;
+                            Date aujourdhui = new Date();
 
                             if (querySnapshot != null) {
                                 for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
@@ -414,9 +501,19 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                                     String timeStr = doc.getString("heure");
 
                                     if (dateStr != null && timeStr != null) {
-                                        int etatDate = compareDate(dateStr, timeStr);
-                                        if (etatDate == 1) { // À venir
-                                            reunionsAVenir++;
+                                        try {
+                                            // Convertir la string en Date
+                                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                                            Date reunionDateTime = sdf.parse(dateStr + " " + timeStr);
+
+                                            // Comparer avec maintenant
+                                            if (reunionDateTime != null && reunionDateTime.after(aujourdhui)) {
+                                                reunionsAVenir++;
+                                                Log.d(TAG, "Réunion à venir trouvée: " +
+                                                        doc.getString("titre") + " le " + dateStr);
+                                            }
+                                        } catch (Exception e) {
+                                            Log.e(TAG, "Erreur parsing date: " + dateStr + " " + timeStr);
                                         }
                                     }
                                 }
@@ -441,18 +538,19 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
                         } catch (Exception e) {
                             Log.e(TAG, "Erreur traitement réunions: " + e.getMessage());
+                            e.printStackTrace();
                         }
                     });
                 });
     }
-
     private void setupCongesListener() {
         if (currentUser == null) return;
-
+        String userEmail = currentUser.getEmail();
         Log.d(TAG, "Configuration écouteur congés pour userId: " + currentUser.getUid());
 
+        // CORRECTION : Chercher directement dans la collection conges
         congesListener = db.collection("conges")
-                .whereEqualTo("userId", currentUser.getUid())
+                .whereEqualTo("userEmail", userEmail)
                 .whereEqualTo("statut", "En attente")
                 .addSnapshotListener((querySnapshot, error) -> {
                     if (error != null) {
@@ -462,6 +560,16 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
                     backgroundExecutor.execute(() -> {
                         int congesEnAttente = querySnapshot != null ? querySnapshot.size() : 0;
+
+                        // DEBUG
+                        Log.d(TAG, "Congés trouvés: " + congesEnAttente);
+                        if (querySnapshot != null) {
+                            for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                                Log.d(TAG, "Congé doc: " + doc.getId() +
+                                        ", type: " + doc.getString("typeConge") +
+                                        ", typeCongé: " + doc.getString("typeCongé"));
+                            }
+                        }
 
                         mainHandler.post(() -> {
                             try {
@@ -512,6 +620,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
     private int compareDate(String date, String time) {
         try {
+            // Format de vos dates: "07/11/2025" et heure: "11:15"
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
             Date reunionDate = dateFormat.parse(date + " " + time);
             Date now = new Date();
@@ -520,145 +629,309 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
             if (reunionDate.after(now)) return 1; // À venir
             if (reunionDate.before(now)) return -1; // Passée
-            return 0; // Aujourd'hui
+            return 0; // Maintenant (peu probable)
 
         } catch (Exception e) {
             Log.e(TAG, "Erreur comparaison date: " + e.getMessage());
             return -1;
         }
     }
+// Dans AcceuilEmployeActivity.java, modifiez la méthode loadNotificationsRecentetes()
 
     private void loadNotificationsRecentetes() {
-        Log.d(TAG, "Chargement des notifications récentes");
+
+        Log.d(TAG, "=== DÉBUT loadNotificationsRecentetes ===");
+        Log.d(TAG, "User ID: " + (currentUser != null ? currentUser.getUid() : "null"));
+        Log.d(TAG, "User Email: " + (currentUser != null ? currentUser.getEmail() : "null"));
+        if (currentUser == null) {
+            Log.e(TAG, "Utilisateur non connecté");
+            return;
+        }
+        final String userId = currentUser.getUid();
+        final String userEmail = currentUser.getEmail();
+
+        Log.d(TAG, "User ID pour requêtes: " + userId);
+
 
         backgroundExecutor.execute(() -> {
             try {
                 List<NotificationItem> notifications = new ArrayList<>();
+                Log.d(TAG, "Début du chargement des notifications");
 
-                // 1. Congés en attente
-                if (currentUser != null) {
-                    QuerySnapshot congesSnapshot = Tasks.await(
-                            db.collection("conges")
-                                    .whereEqualTo("userId", currentUser.getUid())
-                                    .whereEqualTo("statut", "En attente")
-                                    .orderBy("dateDemande", Query.Direction.DESCENDING)
-                                    .limit(3)
-                                    .get()
-                    );
 
-                    for (DocumentSnapshot doc : congesSnapshot.getDocuments()) {
-                        String type = doc.getString("typeConge");
-                        Date dateDemande = doc.getDate("dateDemande");
-                        String date = (dateDemande != null) ?
-                                new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).format(dateDemande) :
-                                "Date inconnue";
-
-                        notifications.add(new NotificationItem(
-                                "Demande de congé en attente",
-                                "En cours de validation par RH - " + date,
-                                R.drawable.docpurple,
-                                "conges"
-                        ));
-                    }
-                }
-
-                // 2. Réunions à venir (les 2 plus proches)
-                try {
-                    // Obtenir la date d'aujourd'hui au format "dd/MM/yyyy"
-                    Calendar cal = Calendar.getInstance();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
-                    String today = dateFormat.format(cal.getTime());
-
-                    // Option 1: Récupérer les 2 premières réunions à partir d'aujourd'hui
-                    QuerySnapshot reunionsSnapshot = Tasks.await(
-                            db.collection("Reunions")
-                                    .whereGreaterThanOrEqualTo("date", today) // À partir d'aujourd'hui
-                                    .orderBy("date", Query.Direction.ASCENDING) // Plus proche en premier
-                                    .orderBy("heure", Query.Direction.ASCENDING) // Puis par heure
-                                    .limit(2) // Seulement 2 résultats
-                                    .get()
-                    );
-
-                    for (DocumentSnapshot doc : reunionsSnapshot.getDocuments()) {
-                        String titre = doc.getString("titre");
-                        String date = doc.getString("date");
-                        String heure = doc.getString("heure");
-
-                        if (titre != null && date != null && heure != null) {
-                            notifications.add(new NotificationItem(
-                                    titre,
-                                    "Réunion le " + date + " à " + heure,
-                                    R.drawable.userb,
-                                    "reunion"
-                            ));
-                        }
-                    }
-
-                } catch (Exception e) {
-                    Log.e(TAG, "Erreur chargement réunions: " + e.getMessage());
-                }
-                // 3. Présence non marquée (si après 9h du matin)
+                // 1. VÉRIFIER SI ON EST APRÈS 9H ET PRÉSENCE NON MARQUÉE
                 Calendar cal = Calendar.getInstance();
-                if (cal.get(Calendar.HOUR_OF_DAY) >= 9) {
+                int currentHour = cal.get(Calendar.HOUR_OF_DAY);
+                int currentMinute = cal.get(Calendar.MINUTE);
+                int totalMinutes = (currentHour * 60) + currentMinute;
+
+                if (totalMinutes >= (9 * 60)) { // Après 9h
+                    // Vérifier dans Firestore
                     String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
-                    DocumentSnapshot presenceDoc = Tasks.await(
-                            db.collection("Presence")
-                                    .document(currentUser.getUid())
-                                    .collection("history")
-                                    .document(today)
-                                    .get()
-                    );
+                    try {
+                        DocumentSnapshot presenceDoc = Tasks.await(
+                                db.collection("Presence")
+                                        .document(userId)
+                                        .collection("history")
+                                        .document(today)
+                                        .get()
+                        );
 
-                    if (!presenceDoc.exists() || !"present".equals(presenceDoc.getString("status"))) {
-                        notifications.add(new NotificationItem(
-                                "Présence non marquée",
-                                "N'oubliez pas de marquer votre présence aujourd'hui",
-                                R.drawable.alerticon,
-                                "presence"
-                        ));
+                        boolean presenceMarqueeFirestore = presenceDoc.exists() &&
+                                "present".equals(presenceDoc.getString("status"));
+
+                        // Vérifier aussi dans les préférences locales
+                        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+                        boolean presenceMarqueeLocal = prefs.getBoolean(KEY_PRESENCE_MARKED_TODAY, false);
+
+                        // Si ni Firestore ni local n'indiquent la présence marquée
+                        if (!presenceMarqueeFirestore && !presenceMarqueeLocal) {
+                            notifications.add(new NotificationItem(
+                                    "⚠Présence non marquée",
+                                    "N'oubliez pas de marquez votre présence",
+                                    R.drawable.alerticon,
+                                    "presence"
+                            ));
+                            Log.d(TAG, "Notification présence ajoutée (après 9h)");
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, "Erreur vérification présence: " + e.getMessage());
                     }
                 }
 
-                // 4. Attestations en attente
-                if (currentUser != null) {
-                    QuerySnapshot attestationsSnapshot = Tasks.await(
-                            db.collection("Attestations")
-                                    .whereEqualTo("employeeId", currentUser.getUid())
-                                    .whereEqualTo("statut", "en_attente")
+                // 2. CHARGER CONGÉS EN ATTENTE - CORRIGÉ
+                // 2. CHARGER CONGÉS EN ATTENTE - AVEC PLUS DE LOGS
+                try {
+                    Log.d(TAG, "Tentative de chargement des congés...");
+                    Log.d(TAG, "Collection: conges, userId: " + userId + ", statut: En attente");
+
+                    QuerySnapshot congesSnapshot = Tasks.await(
+                            db.collection("conges")
+                                    .whereEqualTo("userEmail", userEmail)
+                                    .whereEqualTo("statut", "En attente")
+                                    .orderBy("dateDemande", Query.Direction.DESCENDING)
                                     .limit(2)
                                     .get()
                     );
 
-                    for (DocumentSnapshot doc : attestationsSnapshot.getDocuments()) {
-                        String type = doc.getString("typeAttestation");
+                    Log.d(TAG, "Congés snapshot obtenu, size: " + (congesSnapshot != null ? congesSnapshot.size() : "null"));
 
-                        notifications.add(new NotificationItem(
-                                "Demande d'attestation en attente",
-                                (type != null ? type : "Attestation") + " - En cours de traitement",
-                                R.drawable.attestation,
-                                "attestation"
-                        ));
+                    if (congesSnapshot != null && !congesSnapshot.isEmpty()) {
+                        Log.d(TAG, "Nombre de congés trouvés: " + congesSnapshot.size());
+
+                        for (DocumentSnapshot doc : congesSnapshot.getDocuments()) {
+                            String docId = doc.getId();
+                            String typeConge = doc.getString("typeConge");
+                            String typeCongé = doc.getString("typeCongé");
+                            String statut = doc.getString("statut");
+                            Object userIdDoc = doc.get("userId");
+
+                            Log.d(TAG, "Document congé trouvé:");
+                            Log.d(TAG, "  - ID: " + docId);
+                            Log.d(TAG, "  - typeConge: " + typeConge);
+                            Log.d(TAG, "  - typeCongé: " + typeCongé);
+                            Log.d(TAG, "  - statut: " + statut);
+                            Log.d(TAG, "  - userId dans doc: " + userIdDoc);
+                            Log.d(TAG, "  - userId attendu: " + userId);
+
+                            // ESSAYER LES DEUX NOMS DE CHAMPS POSSIBLES
+                            String type = typeConge;
+                            if (type == null || type.isEmpty()) {
+                                type = typeCongé; // Avec accent
+                            }
+                            if (type == null) type = "Congé";
+
+                            com.google.firebase.Timestamp timestamp = doc.getTimestamp("dateDemande");
+                            String date = (timestamp != null) ?
+                                    new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).format(timestamp.toDate()) :
+                                    "Date inconnue";
+
+                            notifications.add(new NotificationItem(
+                                    "Congé en attente",
+                                    type + " - Demandé le " + date,
+                                    R.drawable.docpurple,
+                                    "conges"
+                            ));
+
+                            Log.d(TAG, "Notification congé ajoutée: " + type + " - " + date);
+                        }
+                    } else {
+                        Log.d(TAG, "Aucun congé trouvé pour cet utilisateur");
+                        // TEST: Vérifier tous les congés sans filtre
+                        try {
+                            QuerySnapshot allConges = Tasks.await(
+                                    db.collection("conges").limit(5).get()
+                            );
+                            Log.d(TAG, "Tous les congés (premiers 5): " + allConges.size());
+                            for (DocumentSnapshot doc : allConges.getDocuments()) {
+                                Log.d(TAG, "Congé disponible - ID: " + doc.getId() +
+                                        ", userId: " + doc.getString("userId") +
+                                        ", statut: " + doc.getString("statut"));
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Erreur test tous les congés: " + e.getMessage());
+                        }
                     }
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Erreur chargement congés: " + e.getMessage());
+                    e.printStackTrace();
                 }
 
-                // Trier par date/priorité et limiter à 7
+                Log.d(TAG, "Notifications après congés: " + notifications.size());
+
+                // 3. CHARGER ATTESTATIONS EN ATTENTE
+                try {
+                    // Essayer les deux champs possibles
+                    QuerySnapshot attestationsSnapshot = null;
+
+                    try {
+                        attestationsSnapshot = Tasks.await(
+                                db.collection("Attestations")
+                                        .whereEqualTo("employeId", userId)
+                                        .whereEqualTo("statut", "en_attente")
+                                        .limit(2)
+                                        .get()
+                        );
+                    } catch (Exception e) {
+                        Log.d(TAG, "Essai avec employeId échoué: " + e.getMessage());
+                    }
+
+                    if (attestationsSnapshot == null || attestationsSnapshot.isEmpty()) {
+                        try {
+                            attestationsSnapshot = Tasks.await(
+                                    db.collection("Attestations")
+                                            .whereEqualTo("employeeId", userId)
+                                            .whereEqualTo("statut", "en_attente")
+                                            .limit(2)
+                                            .get()
+                            );
+                        } catch (Exception e) {
+                            Log.d(TAG, "Essai avec employeeId échoué: " + e.getMessage());
+                        }
+                    }
+
+                    if (attestationsSnapshot != null) {
+                        for (DocumentSnapshot doc : attestationsSnapshot.getDocuments()) {
+                            String type = doc.getString("typeAttestation");
+                            com.google.firebase.Timestamp timestamp = doc.getTimestamp("dateDemande");
+                            String date = (timestamp != null) ?
+                                    new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).format(timestamp.toDate()) :
+                                    "Date inconnue";
+
+                            notifications.add(new NotificationItem(
+                                    "Attestation en attente",
+                                    (type != null ? type : "Attestation") + " - " + date,
+                                    R.drawable.attestation,
+                                    "attestation"
+                            ));
+                        }
+                        Log.d(TAG, "Attestations chargées: " + attestationsSnapshot.size());
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Erreur chargement attestations: " + e.getMessage());
+                }
+
+                // 4. CHARGER RÉUNIONS À VENIR - CORRIGÉ POUR STRING DATE
+
+                // 4. CHARGER RÉUNIONS À VENIR - AVEC PLUS DE LOGS
+                // 4. CHARGER RÉUNIONS À VENIR - CORRIGÉ
+                try {
+                    QuerySnapshot reunionsSnapshot = Tasks.await(
+                            db.collection("Reunions")
+                                    .get()
+                    );
+
+                    List<ReunionNotification> reunionsList = new ArrayList<>();
+                    Date aujourdhui = new Date();
+
+                    Log.d(TAG, "Nombre total de réunions: " + (reunionsSnapshot != null ? reunionsSnapshot.size() : 0));
+
+                    if (reunionsSnapshot != null && !reunionsSnapshot.isEmpty()) {
+                        for (DocumentSnapshot doc : reunionsSnapshot.getDocuments()) {
+                            String dateStr = doc.getString("date");
+                            String timeStr = doc.getString("heure");
+                            String titre = doc.getString("titre");
+                            String lieu = doc.getString("lieu");
+
+                            if (dateStr != null && timeStr != null && titre != null) {
+                                try {
+                                    // Convertir "07/11/2025 11:15" en Date
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRENCH);
+                                    Date dateReunion = sdf.parse(dateStr + " " + timeStr);
+
+                                    Log.d(TAG, "Vérification réunion: " + titre + " - " + dateStr + " " + timeStr);
+                                    Log.d(TAG, "Date parsée: " + dateReunion + ", après aujourd'hui? " +
+                                            (dateReunion != null ? dateReunion.after(aujourdhui) : "null"));
+
+                                    if (dateReunion != null && dateReunion.after(aujourdhui)) {
+                                        reunionsList.add(new ReunionNotification(
+                                                titre,
+                                                dateStr,
+                                                timeStr,
+                                                lieu != null ? lieu : "",
+                                                dateReunion
+                                        ));
+                                        Log.d(TAG, "Réunion à venir DÉTECTÉE: " + titre);
+                                    }
+                                } catch (ParseException e) {
+                                    Log.e(TAG, "Erreur parsing date réunion: " + dateStr + " " + timeStr + " - " + e.getMessage());
+                                }
+                            }
+                        }
+                    }
+
+                    Log.d(TAG, "Réunions à venir trouvées: " + reunionsList.size());
+
+                    // Trier par date (les plus proches en premier)
+                    Collections.sort(reunionsList, (r1, r2) -> r1.date.compareTo(r2.date));
+
+                    int limit = Math.min(2, reunionsList.size());
+                    for (int i = 0; i < limit; i++) {
+                        ReunionNotification reunion = reunionsList.get(i);
+                        String lieuText = (!reunion.lieu.isEmpty()) ? " à " + reunion.lieu : "";
+
+                        notifications.add(new NotificationItem(
+                                "Réunion à venir",
+                                reunion.titre + " - " + reunion.dateStr + " " + reunion.heure + lieuText,
+                                R.drawable.userb,
+                                "reunion"
+                        ));
+                        Log.d(TAG, "Réunion AJOUTÉE aux notifications: " + reunion.titre);
+                    }
+                    Log.d(TAG, "Réunions ajoutées aux notifications: " + limit);
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Erreur chargement réunions: " + e.getMessage());
+                    e.printStackTrace();
+                }
+
+                Log.d(TAG, "Total notifications avant tri: " + notifications.size());
+
+                // Trier les notifications par priorité
                 Collections.sort(notifications, (n1, n2) -> {
-                    int priority1 = getPriority(n1.type);
-                    int priority2 = getPriority(n2.type);
-                    return Integer.compare(priority2, priority1);
+                    int p1 = getPriority(n1.type);
+                    int p2 = getPriority(n2.type);
+                    return Integer.compare(p2, p1);
                 });
 
+
+                // Limiter à 7 notifications
                 final List<NotificationItem> finalNotifications =
                         notifications.subList(0, Math.min(notifications.size(), 7));
 
+                Log.d(TAG, "Total notifications final: " + finalNotifications.size());
+
+                // Afficher sur le thread principal
                 mainHandler.post(() -> {
                     displayNotifications(finalNotifications);
-                    Log.d(TAG, "Notifications affichées: " + finalNotifications.size());
+                    Log.d(TAG, "=== FIN loadNotificationsRecentetes ===");
+                    Log.d(TAG, "Total notifications affichées: " + finalNotifications.size());
                 });
 
             } catch (Exception e) {
-                Log.e(TAG, "Erreur chargement notifications: " + e.getMessage());
+                Log.e(TAG, "Erreur générale notifications: " + e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -666,15 +939,22 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
     private int getPriority(String type) {
         switch (type) {
-            case "presence": return 4;
-            case "conges": return 3;
-            case "reunion": return 2;
-            case "attestation": return 1;
+            case "presence": return 100; // Priorité MAXIMUM
+            case "conges": return 80;
+            case "attestation": return 60;
+            case "reunion": return 40;
             default: return 0;
         }
     }
 
     private void displayNotifications(List<NotificationItem> notifications) {
+        Log.d(TAG, "=== DÉBUT displayNotifications ===");
+        Log.d(TAG, "Nombre de notifications reçues: " + notifications.size());
+
+        for (int i = 0; i < notifications.size(); i++) {
+            NotificationItem notif = notifications.get(i);
+            Log.d(TAG, "Notification " + i + ": " + notif.title + " - " + notif.subtitle + " (type: " + notif.type + ")");
+        }
         try {
             if (notifRecentesContainer == null || aucuneNotif == null) return;
 
@@ -793,7 +1073,8 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
             Log.e(TAG, "Erreur displayNotifications: " + e.getMessage());
             e.printStackTrace();
         }
-    }    private void navigateToActivity(String type) {
+    }
+    private void navigateToActivity(String type) {
         Intent intent = null;
 
         switch (type) {
@@ -815,17 +1096,39 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+    private static class ReunionNotification {
+        String titre;
+        String dateStr;
+        String heure;
+        String lieu;
+        Date date;
+
+        ReunionNotification(String titre, String dateStr, String heure, String lieu, Date date) {
+            this.titre = titre;
+            this.dateStr = dateStr;
+            this.heure = heure;
+            this.lieu = lieu;
+            this.date = date;
+        }
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "=== onResume ===");
 
-        // Recharger les données quand l'activité revient au premier plan
+        // Vérifier si c'est un nouveau jour
+        checkAndResetForNewDay();
+
+        // Recharger les données
         if (currentUser != null) {
             loadEmployeData();
             loadNotificationsRecentetes();
         }
     }
+
+
 
     @Override
     protected void onDestroy() {
