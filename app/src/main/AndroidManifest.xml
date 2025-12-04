@@ -11,9 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
-        <uses-permission android:name="android.permission.INTERNET"
-            tools:ignore="ManifestOrder" />
-        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
         <activity
             android:name=".PresenceRhActivity"
             android:exported="false" />
