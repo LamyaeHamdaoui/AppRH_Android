@@ -101,6 +101,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private final SimpleDateFormat displayDayFormat = new SimpleDateFormat("EEEE", new Locale("fr", "FR"));
     private final SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    private final SimpleDateFormat monthYearFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
 
     // Firestore
     private FirebaseFirestore db;
@@ -205,66 +206,109 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         return prefs.getString("gender", "M");
     }
 
-    // ---------- MÉTHODES DE STATISTIQUES MENSUELLES ----------
+    // ---------- MÉTHODES DE STATISTIQUES MENSUELLES CORRIGÉES ----------
     private void loadMonthlyStatistics() {
         if (userId == null || historyCollection == null) {
             Log.e("STATS", "UserId ou collection non initialisés.");
+            updateStatisticsUI(0, 0);
             return;
         }
 
         executorService.execute(() -> {
             try {
-                Calendar calStart = Calendar.getInstance();
-                calStart.set(Calendar.DAY_OF_MONTH, 1);
-                calStart.set(Calendar.HOUR_OF_DAY, 0);
-                calStart.set(Calendar.MINUTE, 0);
-                calStart.set(Calendar.SECOND, 0);
-                calStart.set(Calendar.MILLISECOND, 0);
+                // Obtenir le mois et l'année courants
+                Calendar cal = Calendar.getInstance();
+                int currentYear = cal.get(Calendar.YEAR);
+                int currentMonth = cal.get(Calendar.MONTH); // Janvier = 0, Décembre = 11
 
-                Calendar calEnd = Calendar.getInstance();
-                calEnd.set(Calendar.DAY_OF_MONTH, calEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
-                calEnd.set(Calendar.HOUR_OF_DAY, 23);
-                calEnd.set(Calendar.MINUTE, 59);
-                calEnd.set(Calendar.SECOND, 59);
-                calEnd.set(Calendar.MILLISECOND, 999);
+                // Construire le préfixe du mois (ex: "2025-12-")
+                String monthPrefix = String.format(Locale.getDefault(), "%04d-%02d-", currentYear, currentMonth + 1);
 
-                Timestamp startOfMonth = new Timestamp(calStart.getTime());
-                Timestamp endOfMonth = new Timestamp(calEnd.getTime());
+                Log.d("STATS", "=== DÉBUT STATISTIQUES ===");
+                Log.d("STATS", "UserId: " + userId);
+                Log.d("STATS", "Période recherchée: " + monthPrefix);
+                Log.d("STATS", "Mois: " + (currentMonth + 1) + "/" + currentYear);
 
-                // CORRECTION: Filtrer par utilisateur ET par date
+                // Rechercher tous les documents de l'utilisateur
                 historyCollection
                         .whereEqualTo("userId", userId)
-                        .whereGreaterThanOrEqualTo("timestamp", startOfMonth)
-                        .whereLessThanOrEqualTo("timestamp", endOfMonth)
                         .get()
                         .addOnCompleteListener(task -> {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                int totalPresenceDays = 0;
-                                int totalAbsenceDays = 0;
+                            if (task.isSuccessful()) {
+                                int totalDocuments = task.getResult().size();
+                                Log.d("STATS", "Nombre total de documents trouvés: " + totalDocuments);
 
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    String status = document.getString("status");
-                                    Log.d("STATS", "Document trouvé - Status: " + status);
+                                if (totalDocuments == 0) {
+                                    Log.w("STATS", "Aucun document trouvé pour cet utilisateur");
+                                    updateStatisticsUI(0, 0);
+                                    return;
+                                }
 
-                                    if (status != null) {
-                                        if (status.equals("present")) {
-                                            totalPresenceDays++;
-                                        } else if (status.contains("absent") || status.equals("conge")) {
-                                            totalAbsenceDays++;
+                                int monthPresences = 0;
+                                int monthAbsences = 0;
+                                int totalProcessed = 0;
+
+                                // Parcourir tous les documents
+                                for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    try {
+                                        totalProcessed++;
+
+                                        // Extraire les champs
+                                        String docDate = doc.getString("date");
+                                        String docStatus = doc.getString("status");
+
+                                        // Log détaillé pour les premiers documents
+                                        if (totalProcessed <= 3) {
+                                            Log.d("STATS_DETAIL", "Document #" + totalProcessed + " - ID: " + doc.getId());
+                                            Log.d("STATS_DETAIL", "  Date: " + docDate);
+                                            Log.d("STATS_DETAIL", "  Status: " + docStatus);
                                         }
+
+                                        // Vérifier si le document appartient au mois courant
+                                        if (docDate != null && docDate.startsWith(monthPrefix)) {
+                                            if (docStatus != null) {
+                                                String statusLower = docStatus.toLowerCase(Locale.getDefault());
+
+                                                if (statusLower.contains("present") ||
+                                                        statusLower.contains("présent") ||
+                                                        statusLower.equals("p")) {
+                                                    monthPresences++;
+                                                    Log.d("STATS", "  ✅ Présence comptée pour: " + docDate);
+                                                } else if (statusLower.contains("absent") ||
+                                                        statusLower.contains("conge") ||
+                                                        statusLower.contains("congé") ||
+                                                        statusLower.equals("a")) {
+                                                    monthAbsences++;
+                                                    Log.d("STATS", "  ❌ Absence comptée pour: " + docDate);
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        Log.e("STATS", "Erreur traitement document #" + totalProcessed + ": " + e.getMessage());
                                     }
                                 }
 
-                                Log.d("STATS", "Résultats - Présences: " + totalPresenceDays + ", Absences: " + totalAbsenceDays);
-                                updateStatisticsUI(totalPresenceDays, totalAbsenceDays);
+                                // Afficher les résultats
+                                Log.d("STATS", "=== RÉSULTATS FINAUX ===");
+                                Log.d("STATS", "Documents traités: " + totalProcessed);
+                                Log.d("STATS", "Présences ce mois: " + monthPresences);
+                                Log.d("STATS", "Absences ce mois: " + monthAbsences);
+                                Log.d("STATS", "Total jours (mois): " + (monthPresences + monthAbsences));
+
+                                updateStatisticsUI(monthPresences, monthAbsences);
 
                             } else {
-                                Log.e("PresenceActivity", "Erreur lors du chargement des statistiques: " + task.getException());
+                                Log.e("STATS", "ERREUR Firestore: ", task.getException());
                                 updateStatisticsUI(0, 0);
                             }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("STATS", "Échec requête Firestore: ", e);
+                            updateStatisticsUI(0, 0);
                         });
             } catch (Exception e) {
-                Log.e("PresenceActivity", "Erreur dans loadMonthlyStatistics: ", e);
+                Log.e("STATS", "Exception dans loadMonthlyStatistics: ", e);
+                mainHandler.post(() -> updateStatisticsUI(0, 0));
             }
         });
     }
@@ -322,8 +366,10 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
                 nbreAbsencesTextView.setText(String.valueOf(absences));
             }
             if (nbreTauxTextView != null) {
-                nbreTauxTextView.setText(String.format(Locale.getDefault(), "%.2f%%", taux));
+                nbreTauxTextView.setText(String.format(Locale.getDefault(), "%.1f%%", taux));
             }
+
+            Log.d("STATS_UI", "UI mise à jour - Présences: " + presences + ", Absences: " + absences + ", Taux: " + String.format(Locale.getDefault(), "%.1f%%", taux));
         });
     }
 
@@ -369,7 +415,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
                             // Rafraîchir l'historique et les statistiques
                             runOnUiThread(() -> {
                                 loadHistoryFromFirestoreForPreviousWeek();
-                                loadMonthlyStatistics();
+                                loadMonthlyStatistics(); // Recharger les stats après enregistrement
                             });
                         })
                         .addOnFailureListener(e -> {
@@ -909,11 +955,39 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
                 Thread.sleep(500); // Petit délai pour éviter les conflits
                 runOnUiThread(() -> {
                     loadHistoryFromFirestoreForPreviousWeek();
-                    loadMonthlyStatistics();
+                    loadMonthlyStatistics(); // Recharger aussi les stats
                 });
             } catch (InterruptedException e) {
                 Log.e("PresenceActivity", "Erreur délai onResume: ", e);
             }
         });
+    }
+
+    // Méthode de débogage pour vérifier les données Firestore
+    private void debugFirestoreData() {
+        if (userId == null || historyCollection == null) return;
+
+        historyCollection
+                .whereEqualTo("userId", userId)
+                .limit(10)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("DEBUG", "=== DONNÉES FIRESTORE ===");
+                        int count = 0;
+                        for (QueryDocumentSnapshot doc : task.getResult()) {
+                            count++;
+                            Log.d("DEBUG", "Document #" + count);
+                            Log.d("DEBUG", "  ID: " + doc.getId());
+                            Log.d("DEBUG", "  Date: " + doc.get("date"));
+                            Log.d("DEBUG", "  Status: " + doc.get("status"));
+                            Log.d("DEBUG", "  UserId: " + doc.get("userId"));
+                            Log.d("DEBUG", "---");
+                        }
+                        Log.d("DEBUG", "Total documents: " + count);
+                    } else {
+                        Log.e("DEBUG", "Erreur récupération données: ", task.getException());
+                    }
+                });
     }
 }
