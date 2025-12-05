@@ -93,17 +93,6 @@ public class ReunionEmployeActivity extends AppCompatActivity {
         });
 
 
-        // ********************************** Notifications ********************
-
-        RelativeLayout notifications = findViewById(R.id.notifications);
-
-        notifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ReunionEmployeActivity.this, NotificationsEmployesActivity.class));
-            }
-        });
-
         // ************************************* Afficher les cards view des reuinons a venir **************************
 
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);

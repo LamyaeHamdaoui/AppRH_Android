@@ -21,31 +21,32 @@
             android:orientation="vertical">
 
             <!-- ***** header ****** -->
+
+            <!-- **** planifier reunion ****-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_header_blue"
                 android:layout_margin="10dp"
+                android:background="@drawable/bg_header_blue"
+                android:orientation="vertical"
                 android:padding="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Gestion des réunions"
-                    android:textSize="30sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="30sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="Planification et organisation"
-                    android:textSize="15sp"
                     android:textColor="@color/white"
-                    android:layout_marginTop="10dp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- **** planifier reunion ****-->
             <Button
                 android:id="@+id/btnPlanifierReunion"
                 android:layout_width="match_parent"
@@ -381,33 +382,7 @@
 
 
 
-    <RelativeLayout
-        android:id="@+id/notifications"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="top|end">
-        <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/bell"
-            android:layout_gravity="right"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"/>
-        <TextView
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="17dp"
-            android:layout_marginTop="7dp"
-            android:background="@drawable/notification_border"
-            android:backgroundTint="@color/red"
-            android:text="0"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            />
-    </RelativeLayout>
+
 
 
     <LinearLayout
