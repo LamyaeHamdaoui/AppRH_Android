@@ -9,28 +9,24 @@
     android:background="#F5F5F5"
     >
 <ScrollView
-
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
-    android:paddingHorizontal="10dp"
-    android:paddingTop="10dp"
     tools:context=".AcceuilEmployeActivity"
-    android:paddingBottom="80dp">
+    android:paddingBottom="70dp">
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="35dp">
         <!--  hadi header section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_header_blue"
             android:orientation="vertical"
-            android:paddingTop="25dp"
-            android:paddingLeft="25dp"
-            android:paddingBottom="40dp"
+            android:layout_margin="10dp"
+            android:padding="30dp"
             >
                 <TextView
                     android:layout_width="wrap_content"

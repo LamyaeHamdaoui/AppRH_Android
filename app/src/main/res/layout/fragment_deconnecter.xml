@@ -8,6 +8,7 @@
     android:gravity="center"
     android:padding="16dp"
     android:background="@drawable/border_vide"
+    app:backgroundTint="@null"
     tools:context=".DeconnecterFragment">
 
     <TextView

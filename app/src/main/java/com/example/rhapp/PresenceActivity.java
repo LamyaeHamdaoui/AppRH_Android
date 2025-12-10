@@ -275,6 +275,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
                                                     monthPresences++;
                                                     Log.d("STATS", "  ✅ Présence comptée pour: " + docDate);
                                                 } else if (statusLower.contains("absent") ||
+                                                        statusLower.contains("absent_justifie") ||
                                                         statusLower.contains("conge") ||
                                                         statusLower.contains("congé") ||
                                                         statusLower.equals("a")) {
@@ -862,13 +863,8 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
 
     private void showJustifyAbsenceFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         JustifyAbsenceFragment fragment = new JustifyAbsenceFragment();
-
-        fragmentTransaction.replace(R.id.main, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragment.show(fragmentManager, "JustifyAbsence");
     }
 
     private void navigateTo(Class<?> destinationClass) {
