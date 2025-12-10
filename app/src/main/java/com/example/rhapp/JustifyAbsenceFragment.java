@@ -13,12 +13,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class JustifyAbsenceFragment extends Fragment {
+public class JustifyAbsenceFragment extends DialogFragment {
 
     // Interface de Callback
     public interface JustificationListener {
