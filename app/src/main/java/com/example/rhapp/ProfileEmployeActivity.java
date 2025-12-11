@@ -496,7 +496,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     private void navigateToConges() {
         executorService.execute(() -> {
             mainHandler.post(() -> {
-                startActivity(new Intent(ProfileEmployeActivity.this, CongesActivity.class));
+                startActivity(new Intent(ProfileEmployeActivity.this, CongesEmployeActivity.class));
             });
         });
     }
