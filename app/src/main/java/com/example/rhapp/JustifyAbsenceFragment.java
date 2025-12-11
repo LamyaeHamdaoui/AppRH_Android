@@ -59,10 +59,6 @@ public class JustifyAbsenceFragment extends DialogFragment {
         // Initialisation des vues
         justificationInput = view.findViewById(R.id.justificationInput);
         btnEnvoyer = view.findViewById(R.id.btnEnvoyer);
-        // ... (autres vues)
-
-        // 2. Configuration du Listener (envoi via le callback)
-        // Dans JustifyAbsenceFragment.java
 
         btnEnvoyer.setOnClickListener(v -> {
             String justification = justificationInput.getText().toString().trim();
@@ -84,6 +80,7 @@ public class JustifyAbsenceFragment extends DialogFragment {
                 if (listener != null) {
                     // Passer la donnée à l'Activity pour la sauvegarde Firestore/RH
                     listener.onAbsenceJustified(justification);
+                    dismiss();
                 }
 
                 if (getActivity() != null) {
