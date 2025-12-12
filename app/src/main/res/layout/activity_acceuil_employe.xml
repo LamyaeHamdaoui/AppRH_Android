@@ -13,7 +13,7 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     tools:context=".AcceuilEmployeActivity"
-    android:paddingBottom="70dp">
+    android:paddingBottom="100dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,10 +42,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="CHAHLAL Ikram"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/posteDepartement"
@@ -53,9 +54,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:layout_marginBottom="15dp"
-                android:text="Développeur Senior • Développement"
+                android:text=""
                 android:textColor="@color/white"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:visibility="visible"/>
 
 
 
@@ -99,7 +101,7 @@
                         android:id="@+id/etatPrsence"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Marquée"
+                        android:text=""
                         android:textColor="#0FAC71"
                         android:textSize="14sp"
                         android:layout_marginTop="4dp"/>
@@ -132,7 +134,7 @@
                         android:id="@+id/soldeConge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="25 jours"
+                        android:text=""
                         android:textColor="@color/blue"
                         android:textSize="14sp"
                         android:layout_marginTop="4dp"/>
@@ -165,7 +167,7 @@
                         android:id="@+id/reunionVenir"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2 à venir"
+                        android:text=""
                         android:textSize="14sp"
                         android:textColor="#D000D0"
                         android:layout_marginTop="4dp"/>
@@ -443,7 +445,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@drawable/cotearrondi"
-            android:padding="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="20dp">
 
             <ImageView
                 android:id="@+id/imageNotif"
