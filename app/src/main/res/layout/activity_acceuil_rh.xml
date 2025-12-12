@@ -12,7 +12,9 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
+        android:paddingHorizontal="15dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="100dp"
         android:background="#F5F5F5"
         >
 
@@ -43,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="CHAHLAL Ikram"
+                    android:text="Responsable"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -569,6 +571,7 @@
 
             <!-- Alert Card -->
             <LinearLayout
+                android:id="@+id/alertCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -576,7 +579,8 @@
                 android:background="@drawable/cartedevoir"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_margin="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -612,7 +616,8 @@
 
 
                     <TextView
-                        android:layout_width="60dp"
+                        android:id="@+id/btnVoirAbsences"
+                    android:layout_width="60dp"
                         android:layout_height="28dp"
                         android:background="@drawable/btnvoir"
                         android:clickable="true"
@@ -623,6 +628,7 @@
                         android:textSize="12sp" />
 
                 </LinearLayout>
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -755,42 +761,11 @@
 
     </ScrollView>
 
-    <!-- Notification Bell -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/relative"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="2dp"
-            android:padding="8dp">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="right"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/bell" />
-
-            <TextView
-                android:layout_width="25dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="17dp"
-                android:background="@drawable/notification_border"
-                android:backgroundTint="@color/red"
-                android:text="0"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-
-        </RelativeLayout>
 
         <!-- Bottom Navigation -->
         <LinearLayout
