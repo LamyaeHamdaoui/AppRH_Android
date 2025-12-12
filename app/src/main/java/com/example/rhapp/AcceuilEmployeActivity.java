@@ -861,7 +861,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
                 notifications.add(new NotificationItem(
                         "Réunion à venir",
-                        reunion.titre + " - " + reunion.dateStr + " " + reunion.heure + lieuText,
+                        reunion.titre + "\n programmé le " + reunion.dateStr + " " + reunion.heure + lieuText,
                         R.drawable.userb,
                         "reunion"
                 ));
@@ -893,7 +893,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
                     notifications.add(new NotificationItem(
                             "Attestation en attente",
-                            (type != null ? type : "Attestation") + " - " + date,
+                            (type != null ? type : "Attestation") + "\nDemandée le " + date,
                             R.drawable.attestation,
                             "attestation"
                     ));
