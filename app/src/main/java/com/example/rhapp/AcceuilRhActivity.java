@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,7 +21,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,12 +47,15 @@ public class AcceuilRhActivity extends AppCompatActivity {
     private ListenerRegistration userListener;
     private ListenerRegistration activitesCongesListener;
     private ListenerRegistration activitesAttestationsListener;
+    private ListenerRegistration presenceStatsListener;
 
     // TextViews pour les statistiques
     private TextView congeEnAttente, totalPresents, totalEmploye, attestationEnAttente;
     private TextView notifPresence, notifConge, notifAttestation, notifReunion;
     private TextView rhConnecte;
+    private TextView absenceNonJustifie;
     private LinearLayout activitesRecentesContainer;
+    private LinearLayout alertCard;
 
     // Executor pour les opérations en arrière-plan
     private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
@@ -109,6 +119,7 @@ public class AcceuilRhActivity extends AppCompatActivity {
         totalPresents = findViewById(R.id.totalPresents);
         attestationEnAttente = findViewById(R.id.attestationEnAttente);
         rhConnecte = findViewById(R.id.rhConnecte);
+        absenceNonJustifie = findViewById(R.id.absenceNonJustifie);
 
         // Initialiser les badges de notification
         notifPresence = findViewById(R.id.notifPresence);
@@ -119,6 +130,9 @@ public class AcceuilRhActivity extends AppCompatActivity {
         // Initialiser le conteneur d'activités récentes
         activitesRecentesContainer = findViewById(R.id.activitesRecentesContainer);
         aucuneActiviteText = findViewById(R.id.aucuneActiviteText);
+
+        // Initialiser la carte d'alerte
+        alertCard = findViewById(R.id.alertCard);
     }
 
     private void setDefaultValues() {
@@ -128,7 +142,7 @@ public class AcceuilRhActivity extends AppCompatActivity {
             if (totalEmploye != null) totalEmploye.setText("0");
             if (totalPresents != null) totalPresents.setText("0");
             if (attestationEnAttente != null) attestationEnAttente.setText("0");
-            //if (rhConnecte != null) rhConnecte.setText("Chargement...");
+            if (absenceNonJustifie != null) absenceNonJustifie.setText("0");
 
             // Cacher tous les badges de notification au démarrage
             if (notifPresence != null) notifPresence.setVisibility(View.GONE);
@@ -139,6 +153,11 @@ public class AcceuilRhActivity extends AppCompatActivity {
             // Afficher le message "Aucune activité" par défaut
             if (aucuneActiviteText != null) {
                 aucuneActiviteText.setVisibility(View.VISIBLE);
+            }
+
+            // Cacher la carte d'alerte par défaut
+            if (alertCard != null) {
+                alertCard.setVisibility(View.GONE);
             }
         });
     }
@@ -152,7 +171,275 @@ public class AcceuilRhActivity extends AppCompatActivity {
             setupAttestationsListener();
             setupReunionsListener();
             setupEmployesListener();
+            setupPresenceStatsListener();
         });
+    }
+
+    private void setupPresenceStatsListener() {
+        Log.d(TAG, "setupPresenceStatsListener: Configuration écouteur statistiques présence");
+
+        // Obtenir la date d'aujourd'hui au format yyyy-MM-dd
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String todayDate = sdf.format(new Date());
+
+        presenceStatsListener = db.collection("PresenceHistory")
+                .whereEqualTo("date", todayDate)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "Erreur présence stats: " + error.getMessage());
+                        return;
+                    }
+
+                    // Charger le nombre total d'employés d'abord
+                    db.collection("employees").get().addOnSuccessListener(employeeSnapshots -> {
+                        int totalEmployees = employeeSnapshots != null ? employeeSnapshots.size() : 0;
+
+                        // Compter les présents
+                        int presents = 0;
+                        int absentsJustifies = 0;
+                        int conges = 0;
+
+                        if (value != null && !value.isEmpty()) {
+                            for (DocumentSnapshot doc : value.getDocuments()) {
+                                String status = doc.getString("status");
+                                if ("present".equals(status)) {
+                                    presents++;
+                                } else if ("absent_justifie".equals(status)) {
+                                    absentsJustifies++;
+                                } else if ("conge".equals(status)) {
+                                    conges++;
+                                }
+                            }
+                        }
+
+                        // Calculer les absents non justifiés
+                        int totalMarked = presents + absentsJustifies + conges;
+                        int absentsNonJustifies = Math.max(0, totalEmployees - totalMarked);
+
+                        Log.d(TAG, "Statistiques présence - Total: " + totalEmployees +
+                                ", Présents: " + presents +
+                                ", Absents non justifiés: " + absentsNonJustifies);
+
+                        // Mettre à jour les statistiques
+                        updatePresenceStats(totalEmployees, presents, absentsNonJustifies);
+                        updateDepartmentStats(todayDate);
+
+                    }).addOnFailureListener(e -> {
+                        Log.e(TAG, "Erreur chargement employés: " + e.getMessage());
+                    });
+                });
+    }
+
+    private void updatePresenceStats(int totalEmployees, int presents, int absentsNonJustifies) {
+        runOnUiThread(() -> {
+            try {
+                // Mettre à jour le nombre de présents
+                if (totalPresents != null) {
+                    totalPresents.setText(String.valueOf(presents));
+                }
+
+                // Mettre à jour le nombre d'absences non justifiées
+                if (absenceNonJustifie != null) {
+                    absenceNonJustifie.setText(String.valueOf(absentsNonJustifies));
+                }
+
+                // Afficher/masquer la carte d'alerte selon le nombre d'absences
+                if (alertCard != null) {
+                    if (absentsNonJustifies > 0) {
+                        alertCard.setVisibility(View.VISIBLE);
+
+                        // Ajouter un écouteur sur le bouton "Voir"
+                        View btnVoir = alertCard.findViewById(R.id.btnVoirAbsences);
+                        if (btnVoir == null) {
+                            // Si le bouton n'a pas d'ID spécifique, trouver le TextView "Voir"
+                            LinearLayout parentLayout = (LinearLayout) alertCard.getChildAt(0);
+                            for (int i = 0; i < parentLayout.getChildCount(); i++) {
+                                View child = parentLayout.getChildAt(i);
+                                if (child instanceof TextView) {
+                                    TextView textView = (TextView) child;
+                                    if ("Voir".equals(textView.getText().toString())) {
+                                        btnVoir = textView;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (btnVoir != null) {
+                            btnVoir.setOnClickListener(v -> {
+                                // Naviguer vers l'activité des présences
+                                startActivity(new Intent(AcceuilRhActivity.this, PresenceRhActivity.class));
+                            });
+                        }
+                    } else {
+                        alertCard.setVisibility(View.GONE);
+                    }
+                }
+
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur updatePresenceStats: " + e.getMessage());
+            }
+        });
+    }
+
+    private void updateDepartmentStats(String todayDate) {
+        // Récupérer tous les employés
+        db.collection("employees").get().addOnSuccessListener(employeeSnapshots -> {
+            if (employeeSnapshots == null || employeeSnapshots.isEmpty()) {
+                Log.d(TAG, "Aucun employé trouvé pour les statistiques par département");
+                return;
+            }
+
+            // Map pour stocker les statistiques par département
+            Map<String, DepartmentStats> statsMap = new HashMap<>();
+
+            // Initialiser les statistiques pour chaque département
+            for (DocumentSnapshot employeeDoc : employeeSnapshots.getDocuments()) {
+                String departement = employeeDoc.getString("departement");
+                if (departement != null && !departement.isEmpty()) {
+                    if (!statsMap.containsKey(departement)) {
+                        statsMap.put(departement, new DepartmentStats(departement));
+                    }
+                    statsMap.get(departement).totalEmployees++;
+                }
+            }
+
+            // Récupérer les présences pour aujourd'hui
+            db.collection("PresenceHistory")
+                    .whereEqualTo("date", todayDate)
+                    .get()
+                    .addOnSuccessListener(presenceSnapshots -> {
+                        if (presenceSnapshots != null && !presenceSnapshots.isEmpty()) {
+                            for (DocumentSnapshot presenceDoc : presenceSnapshots.getDocuments()) {
+                                String userId = presenceDoc.getString("userId");
+                                String status = presenceDoc.getString("status");
+
+                                if ("present".equals(status) && userId != null) {
+                                    // Trouver l'employé correspondant
+                                    for (DocumentSnapshot employeeDoc : employeeSnapshots.getDocuments()) {
+                                        String employeeEmail = employeeDoc.getString("email");
+                                        String employeeId = employeeDoc.getId();
+
+                                        // Vérifier par email ou par ID
+                                        if (userId.equals(employeeEmail) || userId.equals(employeeId)) {
+                                            String departement = employeeDoc.getString("departement");
+                                            if (departement != null && statsMap.containsKey(departement)) {
+                                                statsMap.get(departement).presents++;
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Mettre à jour l'UI avec les statistiques
+                        runOnUiThread(() -> {
+                            updateDepartmentStatsUI(statsMap);
+                        });
+
+                    }).addOnFailureListener(e -> {
+                        Log.e(TAG, "Erreur chargement présences pour stats département: " + e.getMessage());
+                    });
+
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Erreur chargement employés pour stats département: " + e.getMessage());
+        });
+    }
+
+    // Classe pour stocker les statistiques par département
+    private static class DepartmentStats {
+        String name;
+        int totalEmployees;
+        int presents;
+
+        DepartmentStats(String name) {
+            this.name = name;
+            this.totalEmployees = 0;
+            this.presents = 0;
+        }
+
+        double getPresenceRate() {
+            if (totalEmployees == 0) return 0.0;
+            return (double) presents / totalEmployees * 100.0;
+        }
+    }
+
+    private void updateDepartmentStatsUI(Map<String, DepartmentStats> statsMap) {
+        try {
+            // IDs des vues de statistiques dans votre XML
+            String[] statIds = {"statDev", "statMarketing", "statSales", "statSport"};
+            int index = 0;
+
+            // Parcourir les départements et mettre à jour les vues
+            for (Map.Entry<String, DepartmentStats> entry : statsMap.entrySet()) {
+                if (index >= statIds.length) break;
+
+                DepartmentStats stats = entry.getValue();
+                int viewId = getResources().getIdentifier(statIds[index], "id", getPackageName());
+                LinearLayout statView = findViewById(viewId);
+
+                if (statView != null) {
+                    TextView tvTitle = statView.findViewById(R.id.tvTitle);
+                    TextView tvPercent = statView.findViewById(R.id.tvPercent);
+                    View barFilled = statView.findViewById(R.id.barFilled);
+                    View barEmpty = statView.findViewById(R.id.barEmpty);
+
+                    if (tvTitle != null) {
+                        tvTitle.setText(stats.name);
+                    }
+
+                    double rate = stats.getPresenceRate();
+                    if (tvPercent != null) {
+                        tvPercent.setText(String.format(Locale.getDefault(), "%.1f%%", rate));
+                    }
+
+                    // Définir la couleur de la barre en fonction du taux
+                    int barColor;
+                    if (rate >= 80) {
+                        barColor = ContextCompat.getColor(this, R.color.green);
+                    } else if (rate >= 60) {
+                        barColor = ContextCompat.getColor(this, R.color.orange);
+                    } else {
+                        barColor = ContextCompat.getColor(this, R.color.red);
+                    }
+
+                    if (barFilled != null) {
+                        barFilled.setBackgroundColor(barColor);
+
+                        // Calculer la largeur de la barre
+                        statView.post(() -> {
+                            int totalWidth = statView.getWidth();
+                            if (totalWidth > 0) {
+                                int filledWidth = (int) (totalWidth * (rate / 100.0));
+
+                                ViewGroup.LayoutParams filledParams = barFilled.getLayoutParams();
+                                filledParams.width = filledWidth;
+                                barFilled.setLayoutParams(filledParams);
+
+                                ViewGroup.LayoutParams emptyParams = barEmpty.getLayoutParams();
+                                emptyParams.width = totalWidth - filledWidth;
+                                barEmpty.setLayoutParams(emptyParams);
+                            }
+                        });
+                    }
+                }
+
+                index++;
+            }
+
+            // Si moins de départements que de vues, cacher les vues inutilisées
+            for (int i = index; i < statIds.length; i++) {
+                int viewId = getResources().getIdentifier(statIds[i], "id", getPackageName());
+                LinearLayout statView = findViewById(viewId);
+                if (statView != null) {
+                    statView.setVisibility(View.GONE);
+                }
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur updateDepartmentStatsUI: " + e.getMessage());
+        }
     }
 
     private void setupActivitesListener() {
@@ -199,7 +486,7 @@ public class AcceuilRhActivity extends AppCompatActivity {
                 });
     }
 
-    private void processActivitesConges(java.util.List<DocumentSnapshot> documents) {
+    private void processActivitesConges(List<DocumentSnapshot> documents) {
         runOnUiThread(() -> {
             for (DocumentSnapshot doc : documents) {
                 try {
@@ -220,7 +507,7 @@ public class AcceuilRhActivity extends AppCompatActivity {
         });
     }
 
-    private void processActivitesAttestations(java.util.List<DocumentSnapshot> documents) {
+    private void processActivitesAttestations(List<DocumentSnapshot> documents) {
         runOnUiThread(() -> {
             for (DocumentSnapshot doc : documents) {
                 try {
@@ -552,6 +839,13 @@ public class AcceuilRhActivity extends AppCompatActivity {
         setNavigationListener(R.id.actionPresence, PresenceRhActivity.class);
         setNavigationListener(R.id.conges, CongesActivity.class);
         setNavigationListener(R.id.ActionConge, CongesActivity.class);
+
+        // Ajouter l'écouteur pour la carte d'alerte
+        if (alertCard != null) {
+            alertCard.setOnClickListener(v -> {
+                startActivity(new Intent(AcceuilRhActivity.this, PresenceRhActivity.class));
+            });
+        }
     }
 
     private void setNavigationListener(int viewId, Class<?> destination) {
@@ -599,28 +893,12 @@ public class AcceuilRhActivity extends AppCompatActivity {
                 activitesAttestationsListener.remove();
                 activitesAttestationsListener = null;
             }
+            if (presenceStatsListener != null) {
+                presenceStatsListener.remove();
+                presenceStatsListener = null;
+            }
         } catch (Exception e) {
             Log.e(TAG, "Erreur nettoyage listeners: " + e.getMessage());
         }
     }
-
-    /**
-     * Gère la déconnexion de l'utilisateur.
-     */
-    /*private void logoutUser() {
-        try {
-            Log.d(TAG, "logoutUser: Déconnexion en cours");
-            cleanupListeners();
-            mAuth.signOut();
-            Toast.makeText(this, "Déconnexion réussie.", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(AcceuilRhActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        } catch (Exception e) {
-            Log.e(TAG, "Erreur déconnexion: " + e.getMessage());
-        }
-    }
-    */
 }

@@ -780,7 +780,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 List<NotificationItem> allNotifications = new ArrayList<>();
                 String userEmail = currentUser.getEmail();
 
-                // 1. Vérifier présence (limiter à 1)
+                // 1. Vérifier présence (limiter à 1) - PRIORITAIRE
                 checkPresenceForNotification(userEmail, allNotifications);
 
                 // 2. Récupérer les congés (limiter à 2 par type)
@@ -792,15 +792,20 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 // 4. Récupérer les attestations (limiter à 2 par type)
                 loadAttestationsForNotificationsLimited(allNotifications);
 
-                // Trier toutes les notifications par date (les plus récentes d'abord)
+                // TRI : Présence en PREMIER, puis les autres par date
                 Collections.sort(allNotifications, (n1, n2) -> {
-                    // 1. La présence est toujours en premier
-                    if ("presence".equals(n1.type)) return -1;
-                    if ("presence".equals(n2.type)) return 1;
+                    // 1. La présence est TOUJOURS en premier
+                    if ("presence".equals(n1.type) && !"presence".equals(n2.type)) {
+                        return -1; // n1 (présence) avant n2
+                    }
+                    if (!"presence".equals(n1.type) && "presence".equals(n2.type)) {
+                        return 1; // n2 (présence) avant n1
+                    }
 
                     // 2. Pour les autres, trier par date (plus récent d'abord)
                     return n2.date.compareTo(n1.date);
                 });
+
                 // Limiter à 7 notifications les plus récentes au total
                 final List<NotificationItem> finalNotifications =
                         allNotifications.subList(0, Math.min(allNotifications.size(), 7));
@@ -812,7 +817,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 mainHandler.post(() -> displayNotifications(finalNotifications));
 
                 Log.d(TAG, "Notifications mises à jour: " + finalNotifications.size() +
-                        " (triées par date, 2 max par type)");
+                        " (présence prioritaire, 2 max par type)");
 
             } catch (Exception e) {
                 Log.e(TAG, "Erreur mise à jour notifications: " + e.getMessage());
@@ -994,7 +999,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         }
     }
 
-    // Modifier checkPresenceForNotification pour qu'elle retourne max 1 notification
+    // Notification de présence (limitée à 1, PRIORITAIRE)
     private void checkPresenceForNotification(String userEmail, List<NotificationItem> notifications) {
         Calendar cal = Calendar.getInstance();
         int currentHour = cal.get(Calendar.HOUR_OF_DAY);
@@ -1024,15 +1029,21 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 boolean presenceMarqueeLocal = prefs.getBoolean(KEY_PRESENCE_MARKED_TODAY, false);
 
                 if (!presenceMarqueeFirestore && !presenceMarqueeLocal) {
-                    // Utiliser la date actuelle pour la notification de présence
+                    // Date très récente pour que la présence soit en premier
+                    Calendar now = Calendar.getInstance();
+                    now.add(Calendar.MINUTE, -1); // 1 minute dans le passé
+                    Date recentDate = now.getTime();
+
                     notifications.add(new NotificationItem(
                             "Présence non marquée !",
                             "N'oubliez pas de marquer votre présence",
                             R.drawable.alerticon,
                             "presence",
                             null,
-                            new Date() // Date actuelle
+                            recentDate
                     ));
+
+                    Log.d(TAG, "Notification présence ajoutée (PRIORITAIRE)");
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Erreur vérification présence: " + e.getMessage());
@@ -1106,8 +1117,17 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     }
                 }
 
-                // Trier les notifications du cache par date (les plus récentes d'abord)
-                Collections.sort(notificationList, (n1, n2) -> n2.date.compareTo(n1.date));
+                // Trier les notifications du cache avec priorité pour présence
+                Collections.sort(notificationList, (n1, n2) -> {
+                    // Présence en premier même dans le cache
+                    if ("presence".equals(n1.type) && !"presence".equals(n2.type)) {
+                        return -1;
+                    }
+                    if (!"presence".equals(n1.type) && "presence".equals(n2.type)) {
+                        return 1;
+                    }
+                    return n2.date.compareTo(n1.date);
+                });
 
                 // Prendre seulement les 7 plus récentes même du cache
                 final List<NotificationItem> finalList =
