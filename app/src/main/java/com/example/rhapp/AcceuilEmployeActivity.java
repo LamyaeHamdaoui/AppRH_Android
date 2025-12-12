@@ -1001,15 +1001,15 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private int getHighlightBackground(String type) {
         switch (type) {
             case "presence":
-                return R.drawable.border_redlight; // Rouge foncé pour effet clic
+                return R.drawable.border_redlight;
             case "conges":
-                return R.drawable.border_green; // Orange foncé
+                return R.drawable.border_green;
             case "reunion":
-                return R.drawable.border_blue_bg; // Bleu foncé
+                return R.drawable.border_7jours;
             case "attestation":
-                return R.drawable.border_icon_purple; // Vert foncé
+                return R.drawable.border_icon_purple;
             default:
-                return R.drawable.border_gris; // Gris foncé
+                return R.drawable.border_gris;
         }
     }
 
