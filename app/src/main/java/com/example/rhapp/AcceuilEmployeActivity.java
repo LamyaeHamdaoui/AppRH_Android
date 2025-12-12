@@ -5,8 +5,6 @@ import static android.view.View.VISIBLE;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.ParseException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,6 +54,8 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private static final String KEY_LAST_DAY = "last_day";
     private static final String KEY_PRESENCE_MARKED_TODAY = "presence_marked_today";
     private static final String KEY_EMPLOYEE_CACHE = "employee_cache";
+    private static final String KEY_NOTIFICATIONS_CACHE = "notifications_cache";
+    private static final String KEY_NOTIFICATIONS_TIMESTAMP = "notifications_timestamp";
 
     // Écouteurs Firestore TEMPS RÉEL
     private ListenerRegistration congesListener;
@@ -64,11 +63,15 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private ListenerRegistration reunionsListener;
     private ListenerRegistration presenceListener;
     private ListenerRegistration employeListener;
-    private ListenerRegistration notificationsListener; // Nouvel écouteur pour notifications
 
     // Thread management
     private final ExecutorService backgroundExecutor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    // Debouncing pour éviter les rechargements trop fréquents
+    private final Handler debounceHandler = new Handler(Looper.getMainLooper());
+    private static final long DEBOUNCE_DELAY = 2000; // 2 secondes
+    private Runnable debouncedUpdateTask;
 
     // Données de l'employé
     private String employeeId = "";
@@ -78,6 +81,42 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private String employeeDepartement = "";
     private int soldeCongeValue = 0;
     private ImageView iconepresence;
+
+    // Classe NotificationItem INTERNE
+    private static class NotificationItem {
+        String title;
+        String subtitle;
+        int iconRes;
+        String type;
+        String statut;
+        Date date;
+
+        NotificationItem(String title, String subtitle, int iconRes, String type, String statut, Date date) {
+            this.title = title;
+            this.subtitle = subtitle;
+            this.iconRes = iconRes;
+            this.type = type;
+            this.statut = statut;
+            this.date = date;
+        }
+    }
+
+    // Classe ReunionNotification INTERNE
+    private static class ReunionNotification {
+        String titre;
+        String dateStr;
+        String heure;
+        String lieu;
+        Date date;
+
+        ReunionNotification(String titre, String dateStr, String heure, String lieu, Date date) {
+            this.titre = titre;
+            this.dateStr = dateStr;
+            this.heure = heure;
+            this.lieu = lieu;
+            this.date = date;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +135,11 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
         // Afficher les données en cache IMMÉDIATEMENT
         loadCachedData();
+        loadCachedNotifications();
 
         // Configurer TOUS les écouteurs Firestore temps réel
         setupAllRealtimeListeners();
+        testFirestoreDataStructure();
     }
 
     private void loadCachedData() {
@@ -119,7 +160,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     updateEmployeUI();
                     updateSoldeCongeUI();
                 });
-                Log.d(TAG, "Données affichées depuis le cache");
+                Log.d(TAG, "Données employé affichées depuis le cache");
             }
         } else {
             // Afficher un message temporaire si pas de cache
@@ -140,7 +181,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         editor.putString(KEY_EMPLOYEE_CACHE, cacheData);
         editor.apply();
 
-        Log.d(TAG, "Données sauvegardées en cache");
+        Log.d(TAG, "Données employé sauvegardées en cache");
     }
 
     private void checkAndResetForNewDay() {
@@ -289,9 +330,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
         // 5. Écouteur attestations (pour badge)
         setupAttestationsListener();
-
-        // 6. Écouteur notifications (pour les notifications récentes)
-        setupNotificationsListener();
     }
 
     private void setupEmployeListener() {
@@ -357,6 +395,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                         });
 
                         Log.d(TAG, "Données employé mises à jour en temps réel");
+
+                        // Déclencher une mise à jour des notifications avec délai
+                        scheduleNotificationsUpdate();
                     }
                 });
     }
@@ -503,6 +544,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                                 Log.e(TAG, "Erreur UI présence: " + e.getMessage());
                             }
                         });
+
+                        // Déclencher une mise à jour des notifications
+                        scheduleNotificationsUpdate();
                     });
                 });
     }
@@ -556,6 +600,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                                 Log.e(TAG, "Erreur mise à jour réunions UI: " + e.getMessage());
                             }
                         });
+
+                        // Déclencher une mise à jour des notifications
+                        scheduleNotificationsUpdate();
                     });
                 });
     }
@@ -565,6 +612,8 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         String userEmail = currentUser.getEmail();
 
         Log.d(TAG, "Démarrage écouteur temps réel congés pour: " + userEmail);
+        Log.d(TAG, "UID utilisateur: " + currentUser.getUid());
+        Log.d(TAG, "Email utilisateur: " + userEmail);
 
         congesListener = db.collection("conges")
                 .whereEqualTo("userEmail", userEmail)
@@ -572,21 +621,41 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 .addSnapshotListener((querySnapshot, error) -> {
                     if (error != null) {
                         Log.e(TAG, "Erreur écoute congés: " + error.getMessage());
+                        Log.e(TAG, "Détails erreur: ", error);
                         return;
                     }
 
+                    // DEBUG: Vérifiez ce qui est retourné
+                    if (querySnapshot != null) {
+                        Log.d(TAG, "QuerySnapshot reçu - taille: " + querySnapshot.size());
+                        Log.d(TAG, "Metadata: " + querySnapshot.getMetadata());
+
+                        for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                            Log.d(TAG, "Document trouvé: ID=" + doc.getId() +
+                                    ", statut=" + doc.getString("statut") +
+                                    ", userEmail=" + doc.getString("userEmail"));
+                        }
+                    } else {
+                        Log.d(TAG, "QuerySnapshot est null pour les congés");
+                    }
+
                     int congesEnAttente = querySnapshot != null ? querySnapshot.size() : 0;
+                    Log.d(TAG, "Congés en attente calculés: " + congesEnAttente);
 
                     mainHandler.post(() -> {
                         try {
                             if (notifConge != null) {
                                 notifConge.setText(String.valueOf(congesEnAttente));
                                 notifConge.setVisibility(congesEnAttente > 0 ? VISIBLE : View.GONE);
+                                Log.d(TAG, "UI Badge congés mis à jour: " + congesEnAttente);
                             }
                         } catch (Exception e) {
-                            Log.e(TAG, "Erreur mise à jour congés UI: " + e.getMessage());
+                            Log.e(TAG, "Erreur mise à jour congés UI: " + e.getMessage(), e);
                         }
                     });
+
+                    // Déclencher une mise à jour des notifications
+                    scheduleNotificationsUpdate();
                 });
     }
 
@@ -594,6 +663,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         if (currentUser == null) return;
 
         Log.d(TAG, "Démarrage écouteur temps réel attestations");
+        Log.d(TAG, "Recherche attestations avec UID: " + currentUser.getUid());
 
         attestationsListener = db.collection("Attestations")
                 .whereEqualTo("employeeId", currentUser.getUid())
@@ -601,77 +671,148 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 .addSnapshotListener((querySnapshot, error) -> {
                     if (error != null) {
                         Log.e(TAG, "Erreur écoute attestations: " + error.getMessage());
+                        Log.e(TAG, "Détails erreur: ", error);
                         return;
                     }
 
+                    // DEBUG: Vérifiez ce qui est retourné
+                    if (querySnapshot != null) {
+                        Log.d(TAG, "Attestations QuerySnapshot - taille: " + querySnapshot.size());
+
+                        for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                            Log.d(TAG, "Attestation document: ID=" + doc.getId() +
+                                    ", statut=" + doc.getString("statut") +
+                                    ", employeeId=" + doc.getString("employeeId") +
+                                    ", type=" + doc.getString("typeAttestation"));
+                        }
+                    } else {
+                        Log.d(TAG, "QuerySnapshot est null pour les attestations");
+                    }
+
                     int attestationsEnAttente = querySnapshot != null ? querySnapshot.size() : 0;
+                    Log.d(TAG, "Attestations en attente calculées: " + attestationsEnAttente);
 
                     mainHandler.post(() -> {
                         try {
                             if (notifAttestation != null) {
                                 notifAttestation.setText(String.valueOf(attestationsEnAttente));
                                 notifAttestation.setVisibility(attestationsEnAttente > 0 ? VISIBLE : View.GONE);
+                                Log.d(TAG, "UI Badge attestations mis à jour: " + attestationsEnAttente);
                             }
                         } catch (Exception e) {
-                            Log.e(TAG, "Erreur mise à jour attestations UI: " + e.getMessage());
+                            Log.e(TAG, "Erreur mise à jour attestations UI: " + e.getMessage(), e);
                         }
                     });
+
+                    // Déclencher une mise à jour des notifications
+                    scheduleNotificationsUpdate();
                 });
     }
 
-    private void setupNotificationsListener() {
-        Log.d(TAG, "Démarrage écouteur temps réel notifications");
+    private void testFirestoreDataStructure() {
+        if (currentUser == null) return;
 
-        // Cet écouteur combiné va surveiller toutes les sources de notifications
-        backgroundExecutor.execute(() -> {
-            try {
-                // Initialiser les notifications avec les données actuelles
-                updateAllNotifications();
+        Log.d(TAG, "=== TEST STRUCTURE DONNÉES FIRESTORE ===");
 
-                // Démarrer les écouteurs spécifiques pour les notifications
-                startPresenceNotificationListener();
-                startCongesNotificationListener();
-                startReunionsNotificationListener();
-                startAttestationsNotificationListener();
+        // Tester la collection congés
+        db.collection("conges")
+                .limit(5)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Structure congés - documents trouvés: " + task.getResult().size());
+                        for (DocumentSnapshot doc : task.getResult().getDocuments()) {
+                            Log.d(TAG, "Conge Doc ID: " + doc.getId());
+                            Log.d(TAG, "  userEmail: " + doc.getString("userEmail"));
+                            Log.d(TAG, "  userId: " + doc.getString("userId"));
+                            Log.d(TAG, "  statut: " + doc.getString("statut"));
+                            Log.d(TAG, "  typeConge: " + doc.getString("typeConge"));
+                            Log.d(TAG, "  userEmail de l'utilisateur courant: " + currentUser.getEmail());
+                        }
+                    } else {
+                        Log.e(TAG, "Erreur test congés: " + task.getException());
+                    }
+                });
 
-            } catch (Exception e) {
-                Log.e(TAG, "Erreur initialisation notifications: " + e.getMessage());
-            }
-        });
+        // Tester la collection attestations
+        db.collection("Attestations")
+                .limit(5)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Structure attestations - documents trouvés: " + task.getResult().size());
+                        for (DocumentSnapshot doc : task.getResult().getDocuments()) {
+                            Log.d(TAG, "Attestation Doc ID: " + doc.getId());
+                            Log.d(TAG, "  employeeId: " + doc.getString("employeeId"));
+                            Log.d(TAG, "  employeeNom: " + doc.getString("employeeNom"));
+                            Log.d(TAG, "  statut: " + doc.getString("statut"));
+                            Log.d(TAG, "  UID utilisateur courant: " + currentUser.getUid());
+                        }
+                    } else {
+                        Log.e(TAG, "Erreur test attestations: " + task.getException());
+                    }
+                });
+    }
+
+    private void scheduleNotificationsUpdate() {
+        // Annuler la tâche précédente si elle existe
+        if (debouncedUpdateTask != null) {
+            debounceHandler.removeCallbacks(debouncedUpdateTask);
+        }
+
+        // Créer une nouvelle tâche avec délai
+        debouncedUpdateTask = () -> {
+            Log.d(TAG, "Déclenchement différé de la mise à jour des notifications");
+            updateAllNotifications();
+        };
+
+        // Planifier la tâche avec délai (debouncing)
+        debounceHandler.postDelayed(debouncedUpdateTask, DEBOUNCE_DELAY);
     }
 
     private void updateAllNotifications() {
         if (currentUser == null) return;
 
+        Log.d(TAG, "Mise à jour des notifications démarrée");
+
         backgroundExecutor.execute(() -> {
             try {
-                List<NotificationItem> notifications = new ArrayList<>();
+                List<NotificationItem> allNotifications = new ArrayList<>();
                 String userEmail = currentUser.getEmail();
 
-                // 1. Vérifier présence
-                checkPresenceForNotification(userEmail, notifications);
+                // 1. Vérifier présence (limiter à 1)
+                checkPresenceForNotification(userEmail, allNotifications);
 
-                // 2. Congés en attente
-                loadCongesForNotifications(userEmail, notifications);
+                // 2. Récupérer les congés (limiter à 2 par type)
+                loadCongesForNotificationsLimited(userEmail, allNotifications);
 
-                // 3. Réunions à venir
-                loadReunionsForNotifications(notifications);
+                // 3. Récupérer les réunions (limiter à 2 par type)
+                loadReunionsForNotificationsLimited(allNotifications);
 
-                // 4. Attestations en attente
-                loadAttestationsForNotifications(notifications);
+                // 4. Récupérer les attestations (limiter à 2 par type)
+                loadAttestationsForNotificationsLimited(allNotifications);
 
-                // Trier par priorité
-                Collections.sort(notifications, (n1, n2) -> {
-                    int p1 = getPriority(n1.type);
-                    int p2 = getPriority(n2.type);
-                    return Integer.compare(p2, p1);
+                // Trier toutes les notifications par date (les plus récentes d'abord)
+                Collections.sort(allNotifications, (n1, n2) -> {
+                    // 1. La présence est toujours en premier
+                    if ("presence".equals(n1.type)) return -1;
+                    if ("presence".equals(n2.type)) return 1;
+
+                    // 2. Pour les autres, trier par date (plus récent d'abord)
+                    return n2.date.compareTo(n1.date);
                 });
-
-                // Afficher
+                // Limiter à 7 notifications les plus récentes au total
                 final List<NotificationItem> finalNotifications =
-                        notifications.subList(0, Math.min(notifications.size(), 7));
+                        allNotifications.subList(0, Math.min(allNotifications.size(), 7));
 
+                // Sauvegarder dans le cache
+                saveNotificationsToCache(finalNotifications);
+
+                // Afficher sur le thread principal
                 mainHandler.post(() -> displayNotifications(finalNotifications));
+
+                Log.d(TAG, "Notifications mises à jour: " + finalNotifications.size() +
+                        " (triées par date, 2 max par type)");
 
             } catch (Exception e) {
                 Log.e(TAG, "Erreur mise à jour notifications: " + e.getMessage());
@@ -679,62 +820,181 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         });
     }
 
-    private void startPresenceNotificationListener() {
+    // Méthode pour les congés (limitée à 2)
+    private void loadCongesForNotificationsLimited(String userEmail, List<NotificationItem> notifications) {
+        try {
+            Log.d(TAG, "Chargement congés (limités à 2) pour: " + userEmail);
+
+            QuerySnapshot congesSnapshot = Tasks.await(
+                    db.collection("conges")
+                            .whereEqualTo("userEmail", userEmail)
+                            .orderBy("dateDemande", Query.Direction.DESCENDING)
+                            .limit(2) // Seulement 2 congés les plus récents
+                            .get()
+            );
+
+            if (congesSnapshot != null && !congesSnapshot.isEmpty()) {
+                for (DocumentSnapshot doc : congesSnapshot.getDocuments()) {
+                    String typeConge = doc.getString("typeConge");
+                    String statut = doc.getString("statut");
+                    com.google.firebase.Timestamp timestamp = doc.getTimestamp("dateDemande");
+
+                    if (timestamp == null) continue;
+
+                    Date dateDemande = timestamp.toDate();
+                    String date = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).format(dateDemande);
+
+                    String type = typeConge != null ? typeConge : "Congé";
+
+                    String titre;
+                    switch (statut != null ? statut : "") {
+                        case "En attente":
+                            titre = "Congé en attente";
+                            break;
+                        case "Approuvé":
+                        case "Approuvée":
+                            titre = "Congé approuvé";
+                            break;
+                        case "Refusé":
+                        case "Refusée":
+                            titre = "Congé refusé";
+                            break;
+                        default:
+                            titre = "Congé";
+                    }
+
+                    notifications.add(new NotificationItem(
+                            titre,
+                            type + " - Demandé le " + date,
+                            getCongeIcon(statut),
+                            "conges",
+                            statut,
+                            dateDemande
+                    ));
+
+                    Log.d(TAG, "Notification congé ajoutée: " + titre + " - Date: " + date);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur chargement congés: " + e.getMessage(), e);
+        }
+    }
+
+    // Méthode pour les réunions (limitée à 2)
+    private void loadReunionsForNotificationsLimited(List<NotificationItem> notifications) {
+        try {
+            QuerySnapshot reunionsSnapshot = Tasks.await(
+                    db.collection("Reunions")
+                            .orderBy("date", Query.Direction.DESCENDING)
+                            .limit(2) // Seulement 2 réunions les plus proches
+                            .get()
+            );
+
+            List<ReunionNotification> reunionsList = new ArrayList<>();
+            Date aujourdhui = new Date();
+
+            if (reunionsSnapshot != null && !reunionsSnapshot.isEmpty()) {
+                for (DocumentSnapshot doc : reunionsSnapshot.getDocuments()) {
+                    String dateStr = doc.getString("date");
+                    String timeStr = doc.getString("heure");
+                    String titre = doc.getString("titre");
+                    String lieu = doc.getString("lieu");
+
+                    if (dateStr != null && timeStr != null && titre != null) {
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRENCH);
+                            Date dateReunion = sdf.parse(dateStr + " " + timeStr);
+
+                            if (dateReunion != null && dateReunion.after(aujourdhui)) {
+                                reunionsList.add(new ReunionNotification(
+                                        titre, dateStr, timeStr, lieu != null ? lieu : "", dateReunion
+                                ));
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Erreur parsing date réunion: " + e.getMessage());
+                        }
+                    }
+                }
+            }
+
+            // Trier par date (les plus proches d'abord) et prendre max 2
+            Collections.sort(reunionsList, (r1, r2) -> r1.date.compareTo(r2.date));
+
+            for (int i = 0; i < Math.min(2, reunionsList.size()); i++) {
+                ReunionNotification reunion = reunionsList.get(i);
+                String lieuText = (!reunion.lieu.isEmpty()) ? " à " + reunion.lieu : "";
+
+                notifications.add(new NotificationItem(
+                        "Réunion à venir",
+                        reunion.titre + "\nprogrammé le " + reunion.dateStr + " " + reunion.heure + lieuText,
+                        R.drawable.userb,
+                        "reunion",
+                        null,
+                        reunion.date
+                ));
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur chargement réunions: " + e.getMessage());
+        }
+    }
+
+    // Méthode pour les attestations (limitée à 2)
+    private void loadAttestationsForNotificationsLimited(List<NotificationItem> notifications) {
         if (currentUser == null) return;
 
-        String userEmail = currentUser.getEmail();
-        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        try {
+            QuerySnapshot attestationsSnapshot = Tasks.await(
+                    db.collection("Attestations")
+                            .whereEqualTo("employeeId", currentUser.getUid())
+                            .orderBy("dateDemande", Query.Direction.DESCENDING)
+                            .limit(2) // Seulement 2 attestations les plus récentes
+                            .get()
+            );
 
-        // Écouteur spécifique pour les notifications de présence
-        db.collection("PresenceHistory")
-                .whereEqualTo("userId", userEmail)
-                .whereEqualTo("date", today)
-                .addSnapshotListener((querySnapshot, error) -> {
-                    if (error != null) return;
+            if (attestationsSnapshot != null && !attestationsSnapshot.isEmpty()) {
+                for (DocumentSnapshot doc : attestationsSnapshot.getDocuments()) {
+                    String type = doc.getString("typeAttestation");
+                    String statut = doc.getString("statut");
+                    com.google.firebase.Timestamp timestamp = doc.getTimestamp("dateDemande");
 
-                    // Mettre à jour toutes les notifications quand la présence change
-                    updateAllNotifications();
-                });
+                    if (timestamp == null) continue;
+
+                    Date dateDemande = timestamp.toDate();
+                    String date = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).format(dateDemande);
+
+                    String titre;
+                    switch (statut != null ? statut : "") {
+                        case "en_attente":
+                            titre = "Attestation en attente";
+                            break;
+                        case "approuvee":
+                        case "approuvé":
+                            titre = "Attestation approuvée";
+                            break;
+                        case "refusee":
+                        case "refusé":
+                            titre = "Attestation refusée";
+                            break;
+                        default:
+                            titre = "Attestation";
+                    }
+
+                    notifications.add(new NotificationItem(
+                            titre,
+                            (type != null ? type : "Attestation") + "\nDemandée le " + date,
+                            getAttestationIcon(statut),
+                            "attestation",
+                            statut,
+                            dateDemande
+                    ));
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur chargement attestations: " + e.getMessage());
+        }
     }
 
-    private void startCongesNotificationListener() {
-        if (currentUser == null) return;
-
-        String userEmail = currentUser.getEmail();
-
-        db.collection("conges")
-                .whereEqualTo("userEmail", userEmail)
-                .addSnapshotListener((querySnapshot, error) -> {
-                    if (error != null) return;
-
-                    // Mettre à jour quand les congés changent
-                    updateAllNotifications();
-                });
-    }
-
-    private void startReunionsNotificationListener() {
-        db.collection("Reunions")
-                .addSnapshotListener((querySnapshot, error) -> {
-                    if (error != null) return;
-
-                    // Mettre à jour quand les réunions changent
-                    updateAllNotifications();
-                });
-    }
-
-    private void startAttestationsNotificationListener() {
-        if (currentUser == null) return;
-
-        db.collection("Attestations")
-                .whereEqualTo("employeeId", currentUser.getUid())
-                .addSnapshotListener((querySnapshot, error) -> {
-                    if (error != null) return;
-
-                    // Mettre à jour quand les attestations changent
-                    updateAllNotifications();
-                });
-    }
-
+    // Modifier checkPresenceForNotification pour qu'elle retourne max 1 notification
     private void checkPresenceForNotification(String userEmail, List<NotificationItem> notifications) {
         Calendar cal = Calendar.getInstance();
         int currentHour = cal.get(Calendar.HOUR_OF_DAY);
@@ -764,11 +1024,14 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 boolean presenceMarqueeLocal = prefs.getBoolean(KEY_PRESENCE_MARKED_TODAY, false);
 
                 if (!presenceMarqueeFirestore && !presenceMarqueeLocal) {
+                    // Utiliser la date actuelle pour la notification de présence
                     notifications.add(new NotificationItem(
-                            "Présence non marquée ! ",
+                            "Présence non marquée !",
                             "N'oubliez pas de marquer votre présence",
                             R.drawable.alerticon,
-                            "presence"
+                            "presence",
+                            null,
+                            new Date() // Date actuelle
                     ));
                 }
             } catch (Exception e) {
@@ -777,140 +1040,100 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         }
     }
 
-    private void loadCongesForNotifications(String userEmail, List<NotificationItem> notifications) {
-        try {
-            QuerySnapshot congesSnapshot = Tasks.await(
-                    db.collection("conges")
-                            .whereEqualTo("userEmail", userEmail)
-                            .whereEqualTo("statut", "En attente")
-                            .orderBy("dateDemande", Query.Direction.DESCENDING)
-                            .limit(2)
-                            .get()
-            );
+    // Mettre à jour saveNotificationsToCache pour la date
+    private void saveNotificationsToCache(List<NotificationItem> notifications) {
+        if (notifications.isEmpty()) return;
 
-            if (congesSnapshot != null && !congesSnapshot.isEmpty()) {
-                for (DocumentSnapshot doc : congesSnapshot.getDocuments()) {
-                    String typeConge = doc.getString("typeConge");
-                    String typeCongé = doc.getString("typeCongé");
-
-                    String type = typeConge;
-                    if (type == null || type.isEmpty()) {
-                        type = typeCongé;
-                    }
-                    if (type == null) type = "Congé";
-
-                    com.google.firebase.Timestamp timestamp = doc.getTimestamp("dateDemande");
-                    String date = (timestamp != null) ?
-                            new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).format(timestamp.toDate()) :
-                            "Date inconnue";
-
-                    notifications.add(new NotificationItem(
-                            "Congé en attente",
-                            type + " - Demandé le " + date,
-                            R.drawable.docpurple,
-                            "conges"
-                    ));
-                }
+        StringBuilder cacheBuilder = new StringBuilder();
+        for (int i = 0; i < Math.min(notifications.size(), 7); i++) {
+            NotificationItem notif = notifications.get(i);
+            cacheBuilder.append(notif.type).append("|")
+                    .append(notif.title).append("|")
+                    .append(notif.subtitle).append("|")
+                    .append(notif.iconRes).append("|")
+                    .append(notif.statut != null ? notif.statut : "null").append("|")
+                    .append(notif.date.getTime()); // Ajouter le timestamp
+            if (i < notifications.size() - 1 && i < 6) {
+                cacheBuilder.append("§");
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Erreur chargement congés: " + e.getMessage());
         }
+
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_NOTIFICATIONS_CACHE, cacheBuilder.toString());
+        editor.putLong(KEY_NOTIFICATIONS_TIMESTAMP, System.currentTimeMillis());
+        editor.apply();
+
+        Log.d(TAG, "Notifications sauvegardées en cache: " + notifications.size());
     }
 
-    private void loadReunionsForNotifications(List<NotificationItem> notifications) {
-        try {
-            QuerySnapshot reunionsSnapshot = Tasks.await(
-                    db.collection("Reunions")
-                            .limit(10)
-                            .get()
-            );
+    // Mettre à jour loadCachedNotifications pour lire la date
+    private void loadCachedNotifications() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        String cachedNotifications = prefs.getString(KEY_NOTIFICATIONS_CACHE, "");
+        long cacheTime = prefs.getLong(KEY_NOTIFICATIONS_TIMESTAMP, 0);
+        long currentTime = System.currentTimeMillis();
 
-            List<ReunionNotification> reunionsList = new ArrayList<>();
-            Date aujourdhui = new Date();
+        // Utiliser le cache si moins de 5 minutes
+        if (!cachedNotifications.isEmpty() && (currentTime - cacheTime) < 300000) {
+            try {
+                String[] notifications = cachedNotifications.split("§");
+                List<NotificationItem> notificationList = new ArrayList<>();
 
-            if (reunionsSnapshot != null && !reunionsSnapshot.isEmpty()) {
-                for (DocumentSnapshot doc : reunionsSnapshot.getDocuments()) {
-                    String dateStr = doc.getString("date");
-                    String timeStr = doc.getString("heure");
-                    String titre = doc.getString("titre");
-                    String lieu = doc.getString("lieu");
+                for (String notifData : notifications) {
+                    String[] parts = notifData.split("\\|");
+                    if (parts.length >= 5) {
+                        String type = parts[0];
+                        String title = parts[1];
+                        String subtitle = parts[2];
+                        int icon = Integer.parseInt(parts[3]);
+                        String statut = parts[4];
+                        Date date = new Date();
 
-                    if (dateStr != null && timeStr != null && titre != null) {
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.FRENCH);
-                            Date dateReunion = sdf.parse(dateStr + " " + timeStr);
+                        if ("null".equals(statut)) statut = null;
 
-                            if (dateReunion != null && dateReunion.after(aujourdhui)) {
-                                reunionsList.add(new ReunionNotification(
-                                        titre, dateStr, timeStr, lieu != null ? lieu : "", dateReunion
-                                ));
+                        // Lire la date si disponible
+                        if (parts.length >= 6) {
+                            try {
+                                long timestamp = Long.parseLong(parts[5]);
+                                date = new Date(timestamp);
+                            } catch (NumberFormatException e) {
+                                // Garder la date actuelle par défaut
                             }
-                        } catch (Exception e) {
-                            // Ignorer les erreurs de parsing
                         }
+
+                        notificationList.add(new NotificationItem(title, subtitle, icon, type, statut, date));
                     }
                 }
-            }
 
-            Collections.sort(reunionsList, (r1, r2) -> r1.date.compareTo(r2.date));
+                // Trier les notifications du cache par date (les plus récentes d'abord)
+                Collections.sort(notificationList, (n1, n2) -> n2.date.compareTo(n1.date));
 
-            int limit = Math.min(2, reunionsList.size());
-            for (int i = 0; i < limit; i++) {
-                ReunionNotification reunion = reunionsList.get(i);
-                String lieuText = (!reunion.lieu.isEmpty()) ? " à " + reunion.lieu : "";
+                // Prendre seulement les 7 plus récentes même du cache
+                final List<NotificationItem> finalList =
+                        notificationList.subList(0, Math.min(notificationList.size(), 7));
 
-                notifications.add(new NotificationItem(
-                        "Réunion à venir",
-                        reunion.titre + "\n programmé le " + reunion.dateStr + " " + reunion.heure + lieuText,
-                        R.drawable.userb,
-                        "reunion"
-                ));
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Erreur chargement réunions: " + e.getMessage());
-        }
-    }
-
-    private void loadAttestationsForNotifications(List<NotificationItem> notifications) {
-        if (currentUser == null) return;
-
-        try {
-            QuerySnapshot attestationsSnapshot = Tasks.await(
-                    db.collection("Attestations")
-                            .whereEqualTo("employeeId", currentUser.getUid())
-                            .whereEqualTo("statut", "en_attente")
-                            .limit(2)
-                            .get()
-            );
-
-            if (attestationsSnapshot != null && !attestationsSnapshot.isEmpty()) {
-                for (DocumentSnapshot doc : attestationsSnapshot.getDocuments()) {
-                    String type = doc.getString("typeAttestation");
-                    com.google.firebase.Timestamp timestamp = doc.getTimestamp("dateDemande");
-                    String date = (timestamp != null) ?
-                            new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH).format(timestamp.toDate()) :
-                            "Date inconnue";
-
-                    notifications.add(new NotificationItem(
-                            "Attestation en attente",
-                            (type != null ? type : "Attestation") + "\nDemandée le " + date,
-                            R.drawable.attestation,
-                            "attestation"
-                    ));
+                if (!finalList.isEmpty()) {
+                    mainHandler.post(() -> displayNotifications(finalList));
+                    Log.d(TAG, "Notifications affichées depuis le cache: " + finalList.size());
                 }
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur parsing cache notifications: " + e.getMessage());
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Erreur chargement attestations: " + e.getMessage());
         }
     }
 
-    private int getPriority(String type) {
-        switch (type) {
-            case "presence": return 100;
-            case "reunion": return 80;
-            case "conges": return 60;
-            case "attestation": return 40;
-            default: return 0;
+    private int getCongeIcon(String statut) {
+        switch (statut) {
+            default:
+                return R.drawable.conge;
+        }
+    }
+
+    private int getAttestationIcon(String statut) {
+        switch (statut) {
+            default:
+                return R.drawable.attestation;
         }
     }
 
@@ -931,9 +1154,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
             notifRecentesContainer.setVisibility(VISIBLE);
 
             LayoutInflater inflater = LayoutInflater.from(this);
-
-            // Supprimer le background par défaut du layout XML
-            // et appliquer un background différent selon le type
 
             for (int i = 0; i < notifications.size(); i++) {
                 NotificationItem notif = notifications.get(i);
@@ -986,15 +1206,15 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private int getNotificationBackground(String type) {
         switch (type) {
             case "presence":
-                return R.drawable.border_redlight; // Rouge clair pour présence
+                return R.drawable.border_redlight;
             case "conges":
-                return R.drawable.border_orangelight; // Orange clair pour congés
+                return R.drawable.border_icon_grey;
             case "reunion":
-                return R.drawable.border_blueclair; // Bleu pour réunions
+                return R.drawable.border_icon_blue;
             case "attestation":
-                return R.drawable.border_icon_purple; // Vert clair pour attestations
+                return R.drawable.border_icon_purple;
             default:
-                return R.drawable.border_gris; // Gris par défaut
+                return R.drawable.border_gris;
         }
     }
 
@@ -1034,7 +1254,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         if (intent != null) {
             startActivity(intent);
         }
-    }    @Override
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "=== onResume ===");
@@ -1054,37 +1276,11 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         if (reunionsListener != null) reunionsListener.remove();
         if (employeListener != null) employeListener.remove();
 
+        // Nettoyer le handler de debouncing
+        if (debouncedUpdateTask != null) {
+            debounceHandler.removeCallbacks(debouncedUpdateTask);
+        }
+
         backgroundExecutor.shutdown();
-    }
-
-    // Classes internes
-    private static class NotificationItem {
-        String title;
-        String subtitle;
-        int iconRes;
-        String type;
-
-        NotificationItem(String title, String subtitle, int iconRes, String type) {
-            this.title = title;
-            this.subtitle = subtitle;
-            this.iconRes = iconRes;
-            this.type = type;
-        }
-    }
-
-    private static class ReunionNotification {
-        String titre;
-        String dateStr;
-        String heure;
-        String lieu;
-        Date date;
-
-        ReunionNotification(String titre, String dateStr, String heure, String lieu, Date date) {
-            this.titre = titre;
-            this.dateStr = dateStr;
-            this.heure = heure;
-            this.lieu = lieu;
-            this.date = date;
-        }
     }
 }
