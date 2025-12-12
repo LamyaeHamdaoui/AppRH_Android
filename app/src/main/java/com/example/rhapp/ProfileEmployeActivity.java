@@ -312,7 +312,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                                         nomComplet = "Utilisateur";
                                     }
                                 }
-
                                 Log.d(TAG, "Données récupérées - Nom: " + nomComplet);
 
                                 // Appeler sans photoUrl (ou avec null)
