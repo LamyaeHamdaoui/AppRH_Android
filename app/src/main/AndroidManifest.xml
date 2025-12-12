@@ -32,7 +32,8 @@
         <activity
             android:name=".AcceuilEmployeActivity"
             android:exported="false"
-            tools:ignore="Instantiatable,MissingClass" />
+            tools:ignore="Instantiatable,MissingClass"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".EmployeActivity"
             android:exported="false"
@@ -43,14 +44,16 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".AttestationEmployeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".HelpSupportActivity"
             android:exported="false"
             tools:ignore="DuplicateActivity" />
         <activity
             android:name=".CongesEmployeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
@@ -62,7 +65,8 @@
             android:exported="false" />
         <activity
             android:name=".AttestationsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".CongesActivity"
             android:exported="false" />
