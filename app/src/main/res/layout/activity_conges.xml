@@ -306,15 +306,14 @@
                     android:layout_width="24dp"
                     android:layout_height="30dp"
                     android:src="@drawable/home"
-                    app:tint="@color/grey" />
+                    android:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/accueilText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15dp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -336,15 +335,14 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/employe"
-                    app:tint="@color/grey" />
+                    android:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/employesText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Employés"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -366,14 +364,14 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/conge"
-                    app:tint="#4669EB" />
+                    android:tint="#4669EB" />
 
                 <TextView
                     android:id="@+id/congesText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Congés"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="#4669EB"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -396,15 +394,14 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/reunion"
-                    app:tint="@color/grey" />
+                    android:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/reunionsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Réunions"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -427,19 +424,23 @@
                     android:layout_height="30dp"
                     android:maxWidth="30dp"
                     android:src="@drawable/profil"
-                    app:tint="@color/grey"/>
+                    android:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/profilText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profil"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Notification bell en superposition -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
