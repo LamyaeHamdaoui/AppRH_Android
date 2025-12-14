@@ -5,11 +5,9 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <!-- Dans res/values/strings.xml -->
     <string name="accept_conge">Accepter le congé</string>
     <string name="refuse_conge">Refuser le congé</string>
-
     <string-array name="departements_recherche">
         <item>Tous les départements</item>
         <item>Développement</item>
@@ -18,7 +16,6 @@
         <item>Support</item>
         <item>RH</item>
     </string-array>
-
     <string-array name="type_attestation">
         <item>Sélectionner le type de l\'attestation</item>
         <item>Attestation de travail</item>
@@ -29,7 +26,7 @@
 
 
     <string-array name="departements">
-        <item>Tous les départements</item>
+        <item>Sélectionner un département</item>
         <item>Développement</item>
         <item>Marketing</item>
         <item>Ventes</item>

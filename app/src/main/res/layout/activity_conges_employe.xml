@@ -329,7 +329,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/home"
-                    android:contentDescription="Accueil" />
+                    android:contentDescription="Accueil"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textView3"
@@ -355,7 +356,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/presence"
-                    android:contentDescription="Présence" />
+                    android:contentDescription="Présence"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textemployee"
@@ -363,8 +365,7 @@
                     android:layout_height="wrap_content"
                     android:text="Présence"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/grey"/>
+                    android:textStyle="bold"                    android:textColor="@color/grey"/>
             </LinearLayout>
 
             <LinearLayout
@@ -382,7 +383,7 @@
                     android:layout_height="30dp"
                     android:src="@drawable/conge"
                     android:contentDescription="Congés"
-                    app:tint="#4669EB" />
+                    app:tint="#4669EB"/>
 
                 <TextView
                     android:id="@+id/textconge"
@@ -408,7 +409,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/reunion"
-                    android:contentDescription="Réunions" />
+                    android:contentDescription="Réunions"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textreunion"
@@ -434,7 +436,8 @@
                     android:layout_height="30dp"
                     android:maxWidth="30dp"
                     android:src="@drawable/profil"
-                    android:contentDescription="Profil"/>
+                    android:contentDescription="Profil"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textprofil"
@@ -448,5 +451,5 @@
         </LinearLayout>
     </LinearLayout>
 
-
+    <!-- Notification bell en overlay -->
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

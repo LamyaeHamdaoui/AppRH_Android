@@ -374,8 +374,9 @@
                     android:layout_height="wrap_content"
                     android:text="Congés"
                     android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="#4669EB"
-                    android:textStyle="bold"/>
+                    />
             </LinearLayout>
 
             <!-- Réunions -->
@@ -441,5 +442,10 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Notification bell en superposition -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
