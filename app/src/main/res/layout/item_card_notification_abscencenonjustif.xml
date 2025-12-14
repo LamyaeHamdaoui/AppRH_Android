@@ -6,7 +6,7 @@
     app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="12dp"
     app:cardElevation="8dp"
-
+    app:strokeColor="@null"
 
     xmlns:android="http://schemas.android.com/apk/res/android">
 

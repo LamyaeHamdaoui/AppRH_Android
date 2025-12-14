@@ -5,11 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="10dp"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="true"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    app:strokeColor="@null"
+    app:cardBackgroundColor="@null"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +34,7 @@
                 android:layout_weight="1"
                 android:text="Nissrine EL MNIAI"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
 
             <ImageView
                 android:layout_width="32dp"
@@ -47,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Developpement"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
         <!-- Type de Attestation -->
         <TextView
@@ -55,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Attestation de travail"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:layout_marginTop="5dp" />
 
         <!-- Date -->
@@ -65,7 +68,7 @@
             android:layout_height="wrap_content"
             android:text="Demandée le 18 Octobre 2025"
             android:textColor="@color/black"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:layout_marginTop="10dp" />
         <TextView
             android:id="@+id/DateApprouvé"
@@ -73,7 +76,8 @@
             android:layout_height="wrap_content"
             android:text="Approuvée le 18 Octobre 2025"
             android:textColor="@color/green"
-            android:textSize="14sp"
+            android:textSize="13sp"
+            android:textStyle="bold"
             android:layout_marginTop="10dp" />
 
         <!-- Separator -->
@@ -87,14 +91,16 @@
         <Button
             android:id="@+id/btnTelecharger"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="15dp"
             android:text="Télécharger PDF"
             android:textColor="@color/grey"
             android:background="@drawable/green_border"
             app:backgroundTint="@null"
             android:textStyle="bold"
-            android:padding="10dp" />
+            android:textSize="13sp"
+             />
 
 
 
