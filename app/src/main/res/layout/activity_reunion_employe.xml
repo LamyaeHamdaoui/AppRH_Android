@@ -400,7 +400,8 @@
                 android:layout_height="wrap_content"
                 android:text="Accueil"
                 android:textColor="@color/grey"
-                android:textSize="15dp" />
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -424,7 +425,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Présence"
-                android:textSize="15sp"
+                android:textSize="13sp"
+                android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
 
@@ -449,7 +451,8 @@
                 android:layout_height="wrap_content"
                 android:text="Congés"
                 android:textColor="@color/grey"
-                android:textSize="15sp" />
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -473,7 +476,8 @@
                 android:layout_height="wrap_content"
                 android:text="Réunions"
                 android:textColor="#4669EB"
-                android:textSize="15sp" />
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -498,7 +502,8 @@
                 android:layout_height="wrap_content"
                 android:text="Profil"
                 android:textColor="@color/grey"
-                android:textSize="15sp" />
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
