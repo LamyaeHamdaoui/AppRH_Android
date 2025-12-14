@@ -835,17 +835,12 @@ public class AcceuilRhActivity extends AppCompatActivity {
         setNavigationListener(R.id.attestation, AttestationsActivity.class);
         setNavigationListener(R.id.actionAttestation, AttestationsActivity.class);
         setNavigationListener(R.id.employes, EmployeActivity.class);
-        setNavigationListener(R.id.presence, PresenceActivity.class);
+        setNavigationListener(R.id.presence, PresenceRhActivity.class);
         setNavigationListener(R.id.actionPresence, PresenceRhActivity.class);
         setNavigationListener(R.id.conges, CongesActivity.class);
         setNavigationListener(R.id.ActionConge, CongesActivity.class);
 
-        // Ajouter l'écouteur pour la carte d'alerte
-        if (alertCard != null) {
-            alertCard.setOnClickListener(v -> {
-                startActivity(new Intent(AcceuilRhActivity.this, PresenceRhActivity.class));
-            });
-        }
+
     }
 
     private void setNavigationListener(int viewId, Class<?> destination) {
