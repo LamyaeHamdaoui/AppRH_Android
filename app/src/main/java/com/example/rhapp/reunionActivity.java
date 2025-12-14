@@ -32,12 +32,12 @@ import java.util.Locale;
 
 public class reunionActivity extends AppCompatActivity {
 
-    private LinearLayout reunionPlanifieContainer, reunionPasseContainer,noReunionContainer;
+    private LinearLayout reunionPlanifieContainer, reunionPasseContainer,noReunionContainer,noReunionContainerPasse , noReunionContainerVenirs;
     private FirebaseFirestore db;
     private TextView nbrParticipants;
     String Participants;
 
-    // ⚠️ Variable de contrôle pour savoir si on doit rafraîchir
+    //  Variable de contrôle pour savoir si on doit rafraîchir
     private boolean shouldRefresh = false;
 
     @Override
@@ -49,6 +49,8 @@ public class reunionActivity extends AppCompatActivity {
         reunionPlanifieContainer = findViewById(R.id.reunionPlanifieContainer);
         reunionPasseContainer = findViewById(R.id.reunionPasseContainer);
         noReunionContainer = findViewById(R.id.noReunionContainer);
+        noReunionContainerPasse= findViewById(R.id.noReunionContainerPasse);
+        noReunionContainerVenirs= findViewById(R.id.noReunionContainerVenirs);
 
         // ******************************* Passer d'une fenetre a l'autre ************************************
         LinearLayout accueil = findViewById(R.id.accueil);
@@ -96,16 +98,7 @@ public class reunionActivity extends AppCompatActivity {
             }
         });
 
-        // ********************************** Notifications ********************
 
-        RelativeLayout notifications = findViewById(R.id.notifications);
-
-        notifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(reunionActivity.this, NotificationsRhActivity.class));
-            }
-        });
 
         // ************************************* Afficher les cards view des reuinons a venir **************************
 
@@ -115,7 +108,7 @@ public class reunionActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-         Participants = intent.getStringExtra("nbrConfirm");
+        Participants = intent.getStringExtra("nbrConfirm");
 
         statistique();
     }
@@ -149,10 +142,10 @@ public class reunionActivity extends AppCompatActivity {
                     reunionPlanifieContainer.removeAllViews();
                     reunionPasseContainer.removeAllViews();
 
-                    if (querySnapshot == null || querySnapshot.isEmpty()) {
-                        noReunionContainer.setVisibility(View.VISIBLE);
-                        return;
-                    }
+//                    if (querySnapshot == null || querySnapshot.isEmpty()) {
+//                        noReunionContainer.setVisibility(View.VISIBLE);
+//                        return;
+//                    }
 
                     // ================================
                     // AJOUTER LES TITRES UNE SEULE FOIS
@@ -201,6 +194,13 @@ public class reunionActivity extends AppCompatActivity {
                             TextView tempsRestantReunion = cardView.findViewById(R.id.tempsRestantReunion);
                             ImageView edit = cardView.findViewById(R.id.iconEdit);
                             ImageView delete = cardView.findViewById(R.id.iconDelete);
+                            TextView leaderReunion = cardView.findViewById(R.id.reunionLeader);
+                            afficherNomRH(reunion, leaderReunion);
+
+                            int nbr = reunion.getParticipantsCount();
+                            TextView Participants = cardView.findViewById(R.id.participants);
+                            Participants.setText(reunion.getParticipantsCount() + " participants");
+
 
                             try {
                                 dateReunion.setText(convertDate(dateStr));
@@ -263,6 +263,11 @@ public class reunionActivity extends AppCompatActivity {
                             TextView lieuReunion = cardView.findViewById(R.id.lieuReunion);
                             TextView participantsReunion = cardView.findViewById(R.id.participants);
 
+                            int nbr = reunion.getParticipantsCount();
+                            TextView Participants = cardView.findViewById(R.id.participants);
+                            participantsReunion.setText(reunion.getParticipantsCount() + " participants");
+
+
                             try {
                                 dateReunion.setText(convertDate(dateStr) + " , " + reunion.getHeure());
                             } catch (Exception e) {
@@ -271,7 +276,7 @@ public class reunionActivity extends AppCompatActivity {
 
                             titreReunion.setText(reunion.getTitre());
                             lieuReunion.setText(reunion.getLieu());
-                            participantsReunion.setText(reunion.getDescription());
+                            //participantsReunion.setText(reunion.getParticipants());
 
 
 
@@ -281,77 +286,80 @@ public class reunionActivity extends AppCompatActivity {
                 });
     }
 
-    // ******************* fonction pour convertir la date en date complet **********
-    private String convertDate(String date){
-        // 1. Définir le format source
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        // 2. Parser vers LocalDate ( convertir la date entrer au date forme )
-        LocalDate dateForm = LocalDate.parse(date, inputFormatter);
-        // 3. Définir le format souhaité avec la locale française
-        DateTimeFormatter outputFormatter =
-                DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy", Locale.FRENCH);
-        // 4. Formatter en string et afficher
-        String formattedDate = dateForm.format(outputFormatter);
 
-        return formattedDate;
 
+    //***********************************
+    // Conversion robuste de la date venant de Firestore
+    private LocalDate safeParseDate(String date) {
+        if (date == null || date.isEmpty()) return null;
+
+        // Essayer format avec slash → dd/MM/yyyy
+        try {
+            return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        } catch (Exception ignored) {}
+
+        // Essayer format avec tirets → dd-MM-yyyy
+        try {
+            return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        } catch (Exception ignored) {}
+
+        // ❌ NE PAS accepter les formats sans séparateurs
+        // ddMMyyyy → doit retourner null pour lever l'exception dans compareDate()
+
+        return null; // rien ne marche → date invalide
     }
 
 
-   // ******* fonct pour comparer une date avec date d aujourd'hui ( pour determiner les passes avec a venir ) *******
-   private int compareDate(String date, String time) {
-       if (date == null || date.isEmpty() || time == null || time.isEmpty()) {
-           return -1; // considérer comme passée ou ignorer
-       }
-
-       // Conversion de la date en LocalDate
-       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");// Format correspondant dans le XML
-       LocalDate dateForm = LocalDate.parse(date, formatter);// Conversion en LocalDate
-
-       // Conversion de l'heure en LocalTime
-       DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-       LocalTime timeForm = LocalTime.parse(time, timeFormatter);
-
-       // Date actuelle
-       LocalDate today = LocalDate.now();
-       LocalDateTime now = LocalDateTime.now();
 
 
-       // Combinaison en LocalDateTime
-       LocalDateTime xmlDateTime = LocalDateTime.of(dateForm, timeForm);
+    // ******************* fonction pour convertir la date en date complet **********
+    private String convertDate(String date){
+        LocalDate dateForm = safeParseDate(date);
+        if (dateForm == null) return date;
 
-       int result;
-       if (xmlDateTime.isEqual(now)) {
-           result = 0; //maintenant
-       } else if (xmlDateTime.isBefore(now)) {
-           result = -1; //passe
-       } else {
-           result = 1; //venir
-       }
-       return result;
-   }
+        DateTimeFormatter outputFormatter =
+                DateTimeFormatter.ofPattern("EEEE dd MMMM yyyy", Locale.FRENCH);
+
+        return dateForm.format(outputFormatter);
+    }
+
+
+
+    // ******* fonct pour comparer une date avec date d aujourd'hui ( pour determiner les passes avec a venir ) *******
+    private int compareDate(String date, String time) {
+        LocalDate dateForm = safeParseDate(date);
+        if (dateForm == null) return -1;
+
+        LocalTime timeForm;
+        try {
+            timeForm = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
+        } catch (Exception e) {
+            return -1;
+        }
+
+        LocalDateTime xmlDateTime = LocalDateTime.of(dateForm, timeForm);
+        LocalDateTime now = LocalDateTime.now();
+
+        if (xmlDateTime.isEqual(now)) return 0;
+        if (xmlDateTime.isBefore(now)) return -1;
+        return 1;
+    }
+
 
 
     // ******* fonct pour calculer la difference entre une date et la date d aujourd'hui  *******
     private String NbrJourRestant(String date){
-        //****** Determiner la date restant **********
+        LocalDate dateForm = safeParseDate(date);
+        if (dateForm == null) return "";
+
         LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");// Format correspondant dans le XML
-        LocalDate dateForm = LocalDate.parse(date, formatter);// Conversion en LocalDate
+        long diff = ChronoUnit.DAYS.between(today, dateForm);
 
-        long JourResrant = ChronoUnit.DAYS.between(today, dateForm);//calcul la difference entre les dates
-        String rest ;
-
-        if(JourResrant==0){
-            rest = "Aujourd'hui ";
-        } else if (JourResrant==1) {
-            rest = "Demain ";
-        }
-        else {
-            rest = "Dans -"+JourResrant+ " Jour ";
-        }
-        return rest ;
+        if (diff == 0) return "Aujourd'hui";
+        if (diff == 1) return "Demain";
+        return "Dans " + diff + " jours";
     }
+
 
     private void AfficherBoiteDialogue(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -392,27 +400,99 @@ public class reunionActivity extends AppCompatActivity {
 
                     int nbrVenirs = 0;
                     int nbrPassees = 0;
-                    int nbrConfirmes = 0; // ← compteur des participants confirmés
+                    int nbrConfirmes = 0;
 
                     if (querySnapshot != null) {
                         for (QueryDocumentSnapshot doc : querySnapshot) {
                             Reunion reunion = doc.toObject(Reunion.class);
+
                             int etatDate = compareDate(reunion.getDate(), reunion.getHeure());
                             if (etatDate == 1 || etatDate == 0) nbrVenirs++;
                             else nbrPassees++;
 
-                            // 🔹 Compter les participants confirmés
                             if (reunion.isConfirmed()) nbrConfirmes++;
                         }
                     }
 
+                    // Mise à jour du texte statistique
                     nbrReunionVenir.setText(String.valueOf(nbrVenirs));
                     nbrReunionPassees.setText(String.valueOf(nbrPassees));
                     nbrParticipants.setText(String.valueOf(nbrConfirmes));
 
-                    reunionPlanifieContainer.setVisibility(nbrVenirs == 0 ? View.GONE : View.VISIBLE);
-                    reunionPasseContainer.setVisibility(nbrPassees == 0 ? View.GONE : View.VISIBLE);
+                    // Appeler la fonction qui affiche les containers
+                    afficherContainers(nbrVenirs, nbrPassees);
                 });
+    }
+
+    private void afficherContainers(int nbrVenirs, int nbrPassees) {
+
+        // Masquer toutes les cards
+        noReunionContainer.setVisibility(View.GONE);
+        noReunionContainerVenirs.setVisibility(View.GONE);
+        noReunionContainerPasse.setVisibility(View.GONE);
+        reunionPlanifieContainer.setVisibility(View.GONE);
+        reunionPasseContainer.setVisibility(View.GONE);
+
+        // CAS 3 : aucune réunion nulle part
+        if (nbrVenirs == 0 && nbrPassees == 0) {
+            noReunionContainer.setVisibility(View.VISIBLE);
+        }
+        // CAS 1 : aucune réunion à venir
+        else if (nbrVenirs == 0) {
+            noReunionContainerVenirs.setVisibility(View.VISIBLE);
+            reunionPasseContainer.setVisibility(View.VISIBLE);
+        }
+        // CAS 2 : aucune réunion passée
+        else if (nbrPassees == 0) {
+            noReunionContainerPasse.setVisibility(View.VISIBLE);
+            reunionPlanifieContainer.setVisibility(View.VISIBLE);
+        }
+        // CAS NORMAL : il y a les deux
+        else {
+            reunionPlanifieContainer.setVisibility(View.VISIBLE);
+            reunionPasseContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    private void afficherNomRH(Reunion reunion, TextView leaderReunion) {
+        if (reunion.getPlanifiePar() != null && !reunion.getPlanifiePar().isEmpty()) {
+            FirebaseFirestore.getInstance().collection("Users")
+                    .document(reunion.getPlanifiePar())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String nom = documentSnapshot.getString("nom");
+                            String prenom = documentSnapshot.getString("prenom");
+
+                            // --- Capitalisation ---
+                            nom = capitalize(nom);
+                            prenom = capitalize(prenom);
+
+                            String fullName = nom + " " + prenom;
+
+                            leaderReunion.setText("Par " + fullName);
+                            reunion.setLeaderNomComplet(fullName);
+
+                        } else {
+                            leaderReunion.setText("RH inconnu");
+                            reunion.setLeaderNomComplet("RH inconnu");
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        leaderReunion.setText("RH inconnu");
+                        reunion.setLeaderNomComplet("RH inconnu");
+                    });
+        } else {
+            leaderReunion.setText("RH inconnu");
+            reunion.setLeaderNomComplet("RH inconnu");
+        }
+    }
+
+    // --- Fonction utilitaire pour capitaliser correctement ---
+    private String capitalize(String s) {
+        if (s == null || s.isEmpty()) return "";
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
     }
 
 

@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentManager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,24 +24,22 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.Timestamp;
-import com.bumptech.glide.Glide; // ⭐ NOUVEAU
-import com.bumptech.glide.load.engine.DiskCacheStrategy; // ⭐ NOUVEAU
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-// L'activité implémente l'interface pour recevoir le signal de confirmation du Fragment
 public class ProfileEmployeActivity extends AppCompatActivity implements DeconnecterFragment.LogoutListener {
 
     private static final String TAG = "ProfileEmployeActivity";
-    private static final String EMPLOYEE_REFERENCE_COLLECTION = "employees";
+    private static final String COLLECTION_EMPLOYEES = "employees";
 
     private TextView userName, userPoste, userDepartment;
     private TextView userEmail, userPosteDetails, userDepartmentDetails;
     private TextView userDateEmbauche, userInitial;
     private ProgressBar progressBar;
 
-    // ⭐ NOUVEAU : ImageView pour la photo de profil
     private ImageView userProfileImage;
 
     private String userRole;
@@ -61,6 +61,10 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
+
+    // Executor pour les opérations en arrière-plan
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +97,6 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         highlightFooterIcon();
     }
 
-    // ⭐ NOUVELLE MÉTHODE : Recharge les données à chaque fois que l'activité redevient visible
     @Override
     protected void onResume() {
         super.onResume();
@@ -106,6 +109,14 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Nettoyer l'executor
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
+    }
 
     @SuppressLint("WrongViewCast")
     private void initializeViews() {
@@ -115,9 +126,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         userDepartment = findViewById(R.id.userDepartment);
         userInitial = findViewById(R.id.userInitial);
 
-        // ⭐ NOUVEAU : Récupération de l'ImageView
         userProfileImage = findViewById(R.id.userProfileImage);
-        notificationsButton = findViewById(R.id.notificationsButton);
 
         // Bloc Détails
         userEmail = findViewById(R.id.userEmailDetail);
@@ -145,46 +154,58 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     }
 
     private void initializeFooterViews() {
-        // Logique pour s'assurer que les enfants existent avant de caster
-        if (footerAccueil != null && footerAccueil.getChildCount() > 1) {
-            iconAccueil = (ImageView) footerAccueil.getChildAt(0);
-            textAccueil = (TextView) footerAccueil.getChildAt(1);
-        }
-        if (footerPresence != null && footerPresence.getChildCount() > 1) {
-            iconPresence = (ImageView) footerPresence.getChildAt(0);
-            textPresence = (TextView) footerPresence.getChildAt(1);
-        }
-        if (footerConges != null && footerConges.getChildCount() > 1) {
-            iconConges = (ImageView) footerConges.getChildAt(0);
-            textConges = (TextView) footerConges.getChildAt(1);
-        }
-        if (footerReunions != null && footerReunions.getChildCount() > 1) {
-            iconReunions = (ImageView) footerReunions.getChildAt(0);
-            textReunions = (TextView) footerReunions.getChildAt(1);
-        }
-        if (footerProfil != null && footerProfil.getChildCount() > 1) {
-            iconProfile = (ImageView) footerProfil.getChildAt(0);
-            textProfile = (TextView) footerProfil.getChildAt(1);
-        }
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                if (footerAccueil != null && footerAccueil.getChildCount() > 1) {
+                    iconAccueil = (ImageView) footerAccueil.getChildAt(0);
+                    textAccueil = (TextView) footerAccueil.getChildAt(1);
+                }
+                if (footerPresence != null && footerPresence.getChildCount() > 1) {
+                    iconPresence = (ImageView) footerPresence.getChildAt(0);
+                    textPresence = (TextView) footerPresence.getChildAt(1);
+                }
+                if (footerConges != null && footerConges.getChildCount() > 1) {
+                    iconConges = (ImageView) footerConges.getChildAt(0);
+                    textConges = (TextView) footerConges.getChildAt(1);
+                }
+                if (footerReunions != null && footerReunions.getChildCount() > 1) {
+                    iconReunions = (ImageView) footerReunions.getChildAt(0);
+                    textReunions = (TextView) footerReunions.getChildAt(1);
+                }
+                if (footerProfil != null && footerProfil.getChildCount() > 1) {
+                    iconProfile = (ImageView) footerProfil.getChildAt(0);
+                    textProfile = (TextView) footerProfil.getChildAt(1);
+                }
+            });
+        });
     }
 
     private void setupClickListeners() {
-        if (seDeconnecterButton != null) {
-            seDeconnecterButton.setOnClickListener(v -> displayLogoutConfirmation());
-        }
-        setupFooterNavigation();
-        setupSettingsClickListeners();
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                if (seDeconnecterButton != null) {
+                    seDeconnecterButton.setOnClickListener(v -> displayLogoutConfirmation());
+                }
+                setupFooterNavigation();
+                setupSettingsClickListeners();
+            });
+        });
     }
 
     private void displayLogoutConfirmation() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        DeconnecterFragment deconnecterFragment = new DeconnecterFragment();
-        deconnecterFragment.show(fragmentManager, "DeconnecterFragmentTag");
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                // Afficher seulement le fragment de confirmation
+                DeconnecterFragment fragment = new DeconnecterFragment();
+                fragment.show(getSupportFragmentManager(), "logout_dialog");
+            });
+        });
     }
 
     @Override
     public void onLogoutConfirmed() {
-        performLogout();
+        // La déconnexion doit se faire sur le thread principal
+        mainHandler.post(this::performLogout);
     }
 
     private void performLogout() {
@@ -193,184 +214,209 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
         navigateToMainActivity();
     }
 
-
     private void setupFooterNavigation() {
-        if (footerAccueil != null) {
-            footerAccueil.setOnClickListener(v -> navigateToHome());
-        }
-        if (footerPresence != null) {
-            // Remplacez navigateToEmployees par navigateToPresence si c'est l'activité prévue pour l'employé
-            footerPresence.setOnClickListener(v -> navigateToPresence());
-        }
-        if (footerConges != null) {
-            footerConges.setOnClickListener(v -> navigateToConges());
-        }
-        if (footerReunions != null) {
-            footerReunions.setOnClickListener(v -> navigateToReunions());
-        }
-        if (notificationsButton != null) {
-            notificationsButton.setOnClickListener(v -> navigateToNotifications());
-        }
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                if (footerAccueil != null) {
+                    footerAccueil.setOnClickListener(v -> navigateToHome());
+                }
+                if (footerPresence != null) {
+                    footerPresence.setOnClickListener(v -> navigateToPresence());
+                }
+                if (footerConges != null) {
+                    footerConges.setOnClickListener(v -> navigateToConges());
+                }
+                if (footerReunions != null) {
+                    footerReunions.setOnClickListener(v -> navigateToReunions());
+                }
+                if (notificationsButton != null) {
+                    notificationsButton.setOnClickListener(v -> navigateToNotifications());
+                }
+            });
+        });
     }
 
-    // ⭐ NOUVELLE MÉTHODE DE NAVIGATION AJUSTÉE
     private void navigateToPresence() {
-        // Remplacez par l'activité correcte pour la gestion de présence si ce n'est pas EmployeActivity
-        startActivity(new Intent(ProfileEmployeActivity.this, PresenceActivity.class));
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                startActivity(new Intent(ProfileEmployeActivity.this, PresenceActivity.class));
+            });
+        });
     }
-
 
     private void setupSettingsClickListeners() {
-        LinearLayout modifierProfil = findViewById(R.id.modifier_profil);
-        LinearLayout notifications = findViewById(R.id.notifications);
-        LinearLayout securityInterface = findViewById(R.id.security_interface);
-        LinearLayout helpSupport = findViewById(R.id.help_support);
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                LinearLayout modifierProfil = findViewById(R.id.modifier_profil);
+                LinearLayout notifications = findViewById(R.id.notifications);
+                LinearLayout securityInterface = findViewById(R.id.security_interface);
+                LinearLayout helpSupport = findViewById(R.id.help_support);
 
-        if (modifierProfil != null) {
-            modifierProfil.setOnClickListener(v -> navigateToEditProfile());
-        }
-        if (notifications != null) {
-            notifications.setOnClickListener(v -> navigateToNotifications());
-        }
-        if (securityInterface != null) {
-            securityInterface.setOnClickListener(v -> navigateToSecurity());
-        }
-        if (helpSupport != null) {
-            helpSupport.setOnClickListener(v -> navigateToHelpSupport());
-        }
+                if (modifierProfil != null) {
+                    modifierProfil.setOnClickListener(v -> navigateToEditProfile());
+                }
+                if (notifications != null) {
+                    notifications.setOnClickListener(v -> navigateToNotifications());
+                }
+                if (securityInterface != null) {
+                    securityInterface.setOnClickListener(v -> navigateToSecurity());
+                }
+                if (helpSupport != null) {
+                    helpSupport.setOnClickListener(v -> navigateToHelpSupport());
+                }
+            });
+        });
     }
 
     /**
-     * Charge les données du profil en recherchant par email dans la collection employees.
+     * Charge les données depuis la collection employees (en arrière-plan)
      */
     private void loadUserProfileDataByEmail(String userEmail) {
-        showLoading(true);
-        final String searchEmail = userEmail.toLowerCase(Locale.ROOT).trim();
+        executorService.execute(() -> {
+            try {
+                mainHandler.post(() -> showLoading(true));
 
-        db.collection(EMPLOYEE_REFERENCE_COLLECTION)
-                .whereEqualTo("email", searchEmail)
-                .limit(1)
-                .get()
-                .addOnCompleteListener(task -> {
+                final String searchEmail = userEmail.toLowerCase(Locale.ROOT).trim();
+
+                Log.d(TAG, "Recherche de l'employé avec email: " + searchEmail);
+
+                db.collection(COLLECTION_EMPLOYEES)
+                        .whereEqualTo("email", searchEmail)
+                        .limit(1)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            mainHandler.post(() -> showLoading(false));
+
+                            if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                                DocumentSnapshot employeeSnapshot = task.getResult().getDocuments().get(0);
+
+                                // Récupération des données essentielles seulement
+                                String nomComplet = employeeSnapshot.getString("nomComplet");
+                                String email = employeeSnapshot.getString("email");
+                                String poste = employeeSnapshot.getString("poste");
+                                String departement = employeeSnapshot.getString("departement");
+                                String role = employeeSnapshot.getString("role");
+                                Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
+
+                                // Si pas de nomComplet, essayer avec nom + prenom
+                                if (nomComplet == null || nomComplet.isEmpty()) {
+                                    String nom = employeeSnapshot.getString("nom");
+                                    String prenom = employeeSnapshot.getString("prenom");
+                                    if (nom != null && prenom != null) {
+                                        nomComplet = prenom + " " + nom;
+                                    } else if (prenom != null) {
+                                        nomComplet = prenom;
+                                    } else if (nom != null) {
+                                        nomComplet = nom;
+                                    } else {
+                                        nomComplet = "Utilisateur";
+                                    }
+                                }
+                                Log.d(TAG, "Données récupérées - Nom: " + nomComplet);
+
+                                // Appeler sans photoUrl (ou avec null)
+                                displayAllUserData(nomComplet.toUpperCase(), email, poste, departement,
+                                        role, dateEmbaucheTimestamp);
+
+                            } else {
+                                if (task.isSuccessful()) {
+                                    Log.w(TAG, "Aucun profil trouvé pour l'email: " + searchEmail);
+                                } else {
+                                    Log.e(TAG, "Erreur lors de la recherche par email:", task.getException());
+                                }
+
+                                showDefaultData();
+                                mainHandler.post(() -> {
+                                    Toast.makeText(ProfileEmployeActivity.this,
+                                            "Profil employé non trouvé. Données par défaut affichées.",
+                                            Toast.LENGTH_LONG).show();
+                                });
+                            }
+                        });
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur dans loadUserProfileDataByEmail: ", e);
+                mainHandler.post(() -> {
                     showLoading(false);
-
-                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        DocumentSnapshot employeeSnapshot = task.getResult().getDocuments().get(0);
-
-                        String nom = employeeSnapshot.getString("nom");
-                        String prenom = employeeSnapshot.getString("prenom");
-                        String email = employeeSnapshot.getString("email");
-                        String poste = employeeSnapshot.getString("poste");
-                        String departement = employeeSnapshot.getString("departement");
-                        String role = employeeSnapshot.getString("role");
-                        Timestamp dateEmbaucheTimestamp = employeeSnapshot.getTimestamp("dateEmbauche");
-                        String photoUrl = employeeSnapshot.getString("photoUrl"); // ⭐ RÉCUPÉRATION DE L'URL
-
-                        // ⭐ MISE À JOUR : Passage de l'URL de la photo
-                        displayAllUserData(nom, prenom, email, poste, departement, role, dateEmbaucheTimestamp, photoUrl);
-
-                    } else {
-                        if (task.isSuccessful()) {
-                            Log.w(TAG, "Aucun profil trouvé, affichage des données par défaut.");
-                        } else {
-                            Log.e(TAG, "Erreur lors de la recherche par email:", task.getException());
-                        }
-
-                        showDefaultData();
-                        Toast.makeText(this,
-                                "Profil employé non trouvé. Données par défaut affichées.",
-                                Toast.LENGTH_LONG).show();
-                    }
+                    showDefaultData();
+                    Toast.makeText(ProfileEmployeActivity.this,
+                            "Erreur de chargement du profil", Toast.LENGTH_SHORT).show();
                 });
+            }
+        });
     }
 
-    /**
-     * Affiche les données par défaut quand le profil n'est pas trouvé.
-     */
-    private void showDefaultData() {
-        String email = currentUser != null ? currentUser.getEmail() : "N/A";
-        String displayName = currentUser != null && currentUser.getDisplayName() != null ?
-                currentUser.getDisplayName() : "Employé";
-
-        // ⭐ MISE À JOUR : Passage de null pour photoUrl
-        displayAllUserData(null, displayName, email, "Poste non défini",
-                "Département non défini", "employe", null, null);
-    }
-
-    /**
-     * Affiche toutes les données utilisateur dans l'UI et gère l'affichage de la photo/initiales.
-     */
-    private void displayAllUserData(String nom, String prenom, String email,
+    private void displayAllUserData(String fullName, String email,
                                     String poste, String departement, String role,
-                                    Timestamp dateEmbaucheTimestamp, String photoUrl) { // ⭐ NOUVEAU PARAMÈTRE
+                                    Timestamp dateEmbaucheTimestamp) {
 
         this.userRole = role;
 
-        // 1. Bloc Card
-        String fullName = buildFullName(nom, prenom);
-        if (userName != null) userName.setText(fullName);
+        mainHandler.post(() -> {
+            // 1. Bloc Card - Nom et informations
+            if (userName != null) userName.setText(fullName);
 
-        String departmentDisplay = formatText(departement, "Non défini");
-        String posteDisplay = formatText(poste, "Poste non défini");
+            String departmentDisplay = formatText(departement, "Non défini");
+            String posteDisplay = formatText(poste, "Poste non défini");
 
-        if (userPoste != null) userPoste.setText(posteDisplay);
-        if (userDepartment != null) userDepartment.setText(departmentDisplay);
+            if (userPoste != null) userPoste.setText(posteDisplay);
+            if (userDepartment != null) userDepartment.setText(departmentDisplay);
 
-        // ⭐ LOGIQUE CLÉ : Affichage de la photo ou des initiales
-        if (userProfileImage != null && userInitial != null) {
-            if (photoUrl != null && !photoUrl.isEmpty()) {
-                // 1. Photo disponible : Charger l'image et cacher les initiales
-                userInitial.setVisibility(View.GONE);
-                userProfileImage.setVisibility(View.VISIBLE);
-
-                Glide.with(this)
-                        .load(photoUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.drawable.user)
-                        .error(R.drawable.user)
-                        .into(userProfileImage);
-
-            } else {
-                // 2. Pas de photo : Afficher les initiales et cacher l'ImageView
-                userInitial.setVisibility(View.VISIBLE);
-                // Utiliser INVISIBLE pour potentiellement conserver la mise en page
-                userProfileImage.setVisibility(View.INVISIBLE);
-
-                String initial = buildInitials(nom, prenom);
-                userInitial.setText(initial);
+            // 2. AFFICHAGE DES INITIALES (toujours visible)
+            if (userInitial != null) {
+                String initials = getInitialsFromFullName(fullName);
+                userInitial.setText(initials);
             }
-        }
 
+            // 3. Bloc Détails
+            if (userEmail != null) userEmail.setText(formatText(email, "N/A"));
+            if (userPosteDetails != null) userPosteDetails.setText(posteDisplay);
+            if (userDepartmentDetails != null) userDepartmentDetails.setText(departmentDisplay);
 
-        // 2. Bloc Détails
-        if (userEmail != null) userEmail.setText(formatText(email, "N/A"));
-        if (userPosteDetails != null) userPosteDetails.setText(posteDisplay);
-        if (userDepartmentDetails != null) userDepartmentDetails.setText(departmentDisplay);
-
-        // 3. Date d'embauche
-        if (userDateEmbauche != null) {
-            String dateEmbauche = formatDateEmbauche(dateEmbaucheTimestamp);
-            userDateEmbauche.setText(dateEmbauche);
-        }
+            // 4. Date d'embauche
+            if (userDateEmbauche != null) {
+                String dateEmbauche = formatDateEmbauche(dateEmbaucheTimestamp);
+                userDateEmbauche.setText(dateEmbauche);
+            }
+        });
     }
 
-    private String buildFullName(String nom, String prenom) {
-        String finalPrenom = prenom != null ? prenom : "";
-        String finalNom = nom != null ? nom : "";
+    private String getInitialsFromFullName(String fullName) {
+        if (fullName == null || fullName.trim().isEmpty()) return "??";
 
-        String fullName = (finalPrenom + " " + finalNom).trim();
-        return fullName.isEmpty() ? "Utilisateur" : fullName;
+        String cleanedName = fullName.trim().replaceAll("\\s+", " ");
+        String[] parts = cleanedName.split(" ");
+
+        StringBuilder initials = new StringBuilder();
+
+        if (parts.length > 0 && !parts[0].isEmpty()) {
+            initials.append(parts[0].charAt(0));
+        }
+
+        if (parts.length > 1 && !parts[1].isEmpty()) {
+            initials.append(parts[1].charAt(0));
+        }
+
+        if (initials.length() == 0) {
+            return "??";
+        }
+
+        return initials.toString().toUpperCase(Locale.getDefault());
     }
 
-    private String buildInitials(String nom, String prenom) {
-        StringBuilder initial = new StringBuilder();
-        if (prenom != null && !prenom.isEmpty()) {
-            initial.append(prenom.substring(0, 1).toUpperCase(Locale.getDefault()));
-        }
-        if (nom != null && !nom.isEmpty()) {
-            initial.append(nom.substring(0, 1).toUpperCase(Locale.getDefault()));
-        }
-        return initial.length() > 0 ? initial.toString() : "U";
+    /**
+     * Affiche les données par défaut
+     */
+    private void showDefaultData() {
+        executorService.execute(() -> {
+            String email = currentUser != null ? currentUser.getEmail() : "N/A";
+            String displayName = currentUser != null && currentUser.getDisplayName() != null ?
+                    currentUser.getDisplayName() : "Utilisateur";
+
+            mainHandler.post(() -> {
+                displayAllUserData(displayName, email, "Poste non défini",
+                        "Département non défini", "employe", null);
+            });
+        });
     }
 
     private String formatText(String text, String defaultValue) {
@@ -401,13 +447,17 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
      * Met en évidence l'icône de profil dans le footer
      */
     private void highlightFooterIcon() {
-        int colorBlue = ContextCompat.getColor(this, R.color.blue);
-        int colorGrey = ContextCompat.getColor(this, R.color.grey);
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                int colorBlue = ContextCompat.getColor(this, R.color.blue);
+                int colorGrey = ContextCompat.getColor(this, R.color.grey);
 
-        resetFooterIcons(colorGrey);
+                resetFooterIcons(colorGrey);
 
-        if (iconProfile != null) iconProfile.setColorFilter(colorBlue);
-        if (textProfile != null) textProfile.setTextColor(colorBlue);
+                if (iconProfile != null) iconProfile.setColorFilter(colorBlue);
+                if (textProfile != null) textProfile.setTextColor(colorBlue);
+            });
+        });
     }
 
     private void resetFooterIcons(int colorGrey) {
@@ -423,41 +473,63 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     }
 
     private void navigateToMainActivity() {
-        Intent intent = new Intent(ProfileEmployeActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                Intent intent = new Intent(ProfileEmployeActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            });
+        });
     }
 
     // --- Méthodes de navigation ---
     private void navigateToHome() {
-        startActivity(new Intent(ProfileEmployeActivity.this, AcceuilEmployeActivity.class));
-    }
-
-    private void navigateToEmployees() {
-        // C'était une erreur de nommage, c'est remplacé par navigateToPresence pour le footer
-        navigateToPresence();
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                startActivity(new Intent(ProfileEmployeActivity.this, AcceuilEmployeActivity.class));
+            });
+        });
     }
 
     private void navigateToConges() {
-        startActivity(new Intent(ProfileEmployeActivity.this, CongesActivity.class));
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                startActivity(new Intent(ProfileEmployeActivity.this, CongesEmployeActivity.class));
+            });
+        });
     }
 
     private void navigateToReunions() {
-        startActivity(new Intent(ProfileEmployeActivity.this, ReunionEmployeActivity.class));
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                startActivity(new Intent(ProfileEmployeActivity.this, ReunionEmployeActivity.class));
+            });
+        });
     }
 
     private void navigateToEditProfile() {
-        startActivity(new Intent(ProfileEmployeActivity.this, EditProfileActivity.class));
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                startActivity(new Intent(ProfileEmployeActivity.this, EditProfileActivity.class));
+            });
+        });
     }
 
-
     private void navigateToNotifications() {
-        startActivity(new Intent(ProfileEmployeActivity.this, NotificationsEmployesActivity.class));
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                startActivity(new Intent(ProfileEmployeActivity.this, AcceuilEmployeActivity.class));
+            });
+        });
     }
 
     private void navigateToSecurity() {
-        startActivity(new Intent(ProfileEmployeActivity.this, SecurityActivity.class));
+        executorService.execute(() -> {
+            mainHandler.post(() -> {
+                startActivity(new Intent(ProfileEmployeActivity.this, SecurityActivity.class));
+            });
+        });
     }
 
     private void navigateToHelpSupport() {
@@ -468,15 +540,17 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
      * Gestion de l'affichage du chargement
      */
     private void showLoading(boolean show) {
-        int contentVisibility = show ? View.GONE : View.VISIBLE;
+        mainHandler.post(() -> {
+            int contentVisibility = show ? View.GONE : View.VISIBLE;
 
-        if (profileCard != null) profileCard.setVisibility(contentVisibility);
-        if (profileDetails != null) profileDetails.setVisibility(contentVisibility);
-        if (parametres != null) parametres.setVisibility(contentVisibility);
-        if (sedeconnecter != null) sedeconnecter.setVisibility(contentVisibility);
+            if (profileCard != null) profileCard.setVisibility(contentVisibility);
+            if (profileDetails != null) profileDetails.setVisibility(contentVisibility);
+            if (parametres != null) parametres.setVisibility(contentVisibility);
+            if (sedeconnecter != null) sedeconnecter.setVisibility(contentVisibility);
 
-        if (progressBar != null) {
-            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-        }
+            if (progressBar != null) {
+                progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 }

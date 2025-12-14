@@ -56,12 +56,13 @@ public class EmployeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_employe);
 
         initViews();
+        gererNavigationFooter();
         styliserSpinnerRecherche();
         configurerRecherche();
         configurerFiltreDepartement();
         chargerEmployes();
 
-        gererNavigationFooter();
+
 
         btnAddEmploye.setOnClickListener(v -> ouvrirFragmentAddEmploye());
 
@@ -91,7 +92,7 @@ public class EmployeActivity extends AppCompatActivity {
         btnAddEmploye = findViewById(R.id.btnAddEmploye);
         fragmentContainer = findViewById(R.id.fragment_container);
         mainContent = findViewById(R.id.main_content);
-        relative = findViewById(R.id.relative);
+        //relative = findViewById(R.id.relative);
         footer = findViewById(R.id.footer);
         actif = findViewById(R.id.employesActifs);
 

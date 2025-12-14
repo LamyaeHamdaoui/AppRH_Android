@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:paddingBottom="80dp"
 
-       >
+        >
         <LinearLayout
 
             android:layout_width="match_parent"
@@ -21,31 +21,32 @@
             android:orientation="vertical">
 
             <!-- ***** header ****** -->
+
+            <!-- **** planifier reunion ****-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_header_blue"
                 android:layout_margin="10dp"
+                android:background="@drawable/bg_header_blue"
+                android:orientation="vertical"
                 android:padding="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Gestion des réunions"
-                    android:textSize="30sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="30sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:text="Planification et organisation"
-                    android:textSize="15sp"
                     android:textColor="@color/white"
-                    android:layout_marginTop="10dp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- **** planifier reunion ****-->
             <Button
                 android:id="@+id/btnPlanifierReunion"
                 android:layout_width="match_parent"
@@ -54,207 +55,156 @@
                 android:layout_margin="15dp"
                 android:padding="0dp"
                 android:background="@drawable/border_button"
-                android:text="+ Planifier une reunion"
+                android:text="+ Planifier une réunion"
                 app:backgroundTint="@null" />
 
 
             <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="15dp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="15dp"
-                    android:background="@drawable/border_blue"
-                    >
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:orientation="vertical"
-                        android:layout_weight="1">
-
-                        <FrameLayout
-                            android:layout_width="45dp"
-                            android:layout_height="42dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/border_roseclair">
-
-                            <ImageView
-
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:layout_gravity="center"
-                                android:maxWidth="30dp"
-                                android:src="@drawable/conge_rose" />
-
-                        </FrameLayout>
-
-                        <TextView
-                            android:id="@+id/nbrReunionVenir"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="15dp"
-                            android:text="0"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="À venir"
-                            android:textSize="15sp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:orientation="vertical"
-                        android:layout_weight="1">
-
-                        <FrameLayout
-                            android:layout_width="45dp"
-                            android:layout_height="42dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/border_green">
-
-                            <ImageView
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:layout_gravity="center"
-                                android:maxWidth="30dp"
-                                android:src="@drawable/employe_green" />
-
-                        </FrameLayout>
-
-                        <TextView
-                            android:id="@+id/nbrParticipants"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="15dp"
-                            android:gravity="center"
-                            android:text="0"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="Participants"
-                            android:textAlignment="center"
-                            android:textSize="15sp"
-                            android:layout_marginTop="5sp"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:orientation="vertical"
-                        android:layout_weight="1">
-
-                        <FrameLayout
-                            android:layout_width="45dp"
-                            android:layout_height="42dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/border_blueclair">
-
-                            <ImageView
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
-                                android:layout_gravity="center"
-                                android:maxWidth="30dp"
-                                android:src="@drawable/time_bleu" />
-
-                        </FrameLayout>
-
-                        <TextView
-                            android:id="@+id/nbrReunionPassees"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="0"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="15dp"/>
-
-                        <TextView
-                            android:id="@+id/textView5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="Passées"
-                            android:textSize="15sp"
-                            android:layout_marginTop="5dp"
-                            />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-
-                <!-- reunions planifié container -->
-            <LinearLayout
-                android:id="@+id/reunionPlanifieContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="10dp"
-                android:padding="5dp"
-                android:background="@drawable/border_gris"
-                android:visibility="visible"
-
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:background="@drawable/border_blue"
                 >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <FrameLayout
+                        android:layout_width="45dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/border_roseclair">
+
+                        <ImageView
+
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_gravity="center"
+                            android:maxWidth="30dp"
+                            android:src="@drawable/conge_rose" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/nbrReunionVenir"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:text="0"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="92dp"
-                        android:text="Réunions à venir"
-                        android:textSize="18sp"
-                        android:layout_margin="10dp"
-                       />
+                        android:layout_gravity="center"
+                        android:text="À venir"
+                        android:textSize="15sp"/>
+                </LinearLayout>
 
-
-
-           </LinearLayout>
-
-
-
-
-                <!-- les ruenions passees  container  -->
-
-            <LinearLayout
-                android:id="@+id/reunionPasseContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="10dp"
-                android:padding="5dp"
-                android:background="@drawable/border_gris"
-                android:visibility="visible"
-                >
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="92dp"
-                    android:text="Réunions passées"
-                    android:textSize="18sp"
+                    android:layout_gravity="center"
                     android:layout_margin="10dp"
-                    />
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <FrameLayout
+                        android:layout_width="45dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/border_green">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_gravity="center"
+                            android:maxWidth="30dp"
+                            android:src="@drawable/employe_green" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/nbrParticipants"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Participants"
+                        android:textAlignment="center"
+                        android:textSize="15sp"
+                        android:layout_marginTop="5sp"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <FrameLayout
+                        android:layout_width="45dp"
+                        android:layout_height="42dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/border_blueclair">
+
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_gravity="center"
+                            android:maxWidth="30dp"
+                            android:src="@drawable/time_bleu" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/nbrReunionPassees"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="15dp"/>
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Passées"
+                        android:textSize="15sp"
+                        android:layout_marginTop="5dp"
+                        />
+
+                </LinearLayout>
             </LinearLayout>
 
-            <!--- ******* no reunion  container *******  -->
+            <!--- ******* no reunion  container  *******  -->
             <LinearLayout
                 android:id="@+id/noReunionContainer"
                 android:layout_width="match_parent"
@@ -294,6 +244,134 @@
 
             </LinearLayout>
 
+            <!-- reunions planifié container  -->
+            <LinearLayout
+                android:id="@+id/reunionPlanifieContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="10dp"
+                android:padding="5dp"
+                android:background="@drawable/border_gris"
+                android:visibility="visible"
+
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="92dp"
+                    android:text="Réunions à venir"
+                    android:textSize="18sp"
+                    android:layout_margin="10dp"
+                    />
+
+
+
+            </LinearLayout>
+
+
+            <!--- ******* no reunion  container venirs  *******  -->
+            <LinearLayout
+                android:id="@+id/noReunionContainerVenirs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="18dp"
+                android:visibility="gone"
+                android:background="@drawable/border_gris"
+                android:layout_margin="10dp"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/reunion"
+                    android:layout_marginBottom="10dp"
+                    app:tint="@color/black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Pas de réunions à venir"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text="Aucune réunion n’est planifiée."
+                    android:textColor="@color/grey"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+
+            <!--- *******  reunion passe  container *******  -->
+            <LinearLayout
+                android:id="@+id/reunionPasseContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/border_gris"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_marginRight="92dp"
+                    android:text="Réunions passées"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+
+            <!--- ******* no reunion  container passee  *******  -->
+            <LinearLayout
+                android:id="@+id/noReunionContainerPasse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:padding="18dp"
+                android:visibility="gone"
+                android:background="@drawable/border_gris"
+                android:layout_margin="10dp"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/time"
+                    android:layout_marginBottom="10dp"
+                    app:tint="@color/black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Pas de réunions passées"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text="Aucun historique disponible."
+                    android:textColor="@color/grey"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
 
 
 
@@ -304,33 +382,7 @@
 
 
 
-    <RelativeLayout
-        android:id="@+id/notifications"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="top|end">
-        <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/bell"
-            android:layout_gravity="right"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"/>
-        <TextView
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="17dp"
-            android:layout_marginTop="7dp"
-            android:background="@drawable/notification_border"
-            android:backgroundTint="@color/red"
-            android:text="0"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            />
-    </RelativeLayout>
+
 
 
     <LinearLayout
@@ -364,7 +416,8 @@
                 android:layout_height="wrap_content"
                 android:text="Accueil"
                 android:textColor="@color/grey"
-                android:textSize="15dp" />
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -388,7 +441,8 @@
                 android:layout_height="wrap_content"
                 android:text="Employés"
                 android:textColor="@color/grey"
-                android:textSize="15sp" />
+                android:textSize="13sp"
+                android:textStyle="bold"/>
         </LinearLayout>
 
         <LinearLayout
@@ -412,7 +466,8 @@
                 android:layout_height="wrap_content"
                 android:text="Congés"
                 android:textColor="@color/grey"
-                android:textSize="15sp" />
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -436,7 +491,8 @@
                 android:layout_height="wrap_content"
                 android:text="Réunions"
                 android:textColor="#4669EB"
-                android:textSize="15sp" />
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -461,7 +517,8 @@
                 android:layout_height="wrap_content"
                 android:text="Profil"
                 android:textColor="@color/grey"
-                android:textSize="15sp" />
+                android:textSize="13sp"
+                android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
