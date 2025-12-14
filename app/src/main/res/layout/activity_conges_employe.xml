@@ -329,14 +329,16 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/home"
-                    android:contentDescription="Accueil" />
+                    android:contentDescription="Accueil"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -354,15 +356,16 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/presence"
-                    android:contentDescription="Présence" />
+                    android:contentDescription="Présence"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textemployee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Présence"
-                    android:textSize="15sp"
-                    android:textColor="@color/grey"/>
+                    android:textSize="13sp"
+                    android:textStyle="bold"                    android:textColor="@color/grey"/>
             </LinearLayout>
 
             <LinearLayout
@@ -379,15 +382,17 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/conge"
-                    android:contentDescription="Congés" />
+                    android:contentDescription="Congés"
+                    app:tint="#4669EB"/>
 
                 <TextView
                     android:id="@+id/textconge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Congés"
-                    android:textSize="15sp"
-                    android:textColor="@color/grey"/>
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="#4669EB"/>
             </LinearLayout>
 
             <LinearLayout
@@ -404,14 +409,16 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/reunion"
-                    android:contentDescription="Réunions" />
+                    android:contentDescription="Réunions"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textreunion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Réunions"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
             <LinearLayout
@@ -429,14 +436,16 @@
                     android:layout_height="30dp"
                     android:maxWidth="30dp"
                     android:src="@drawable/profil"
-                    android:contentDescription="Profil"/>
+                    android:contentDescription="Profil"
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/textprofil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profil"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>

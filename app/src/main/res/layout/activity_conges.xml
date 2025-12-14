@@ -306,14 +306,15 @@
                     android:layout_width="24dp"
                     android:layout_height="30dp"
                     android:src="@drawable/home"
-                    android:tint="@color/grey" />
+                    app:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/accueilText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="15dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -335,14 +336,15 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/employe"
-                    android:tint="@color/grey" />
+                    app:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/employesText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Employés"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -364,16 +366,17 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/conge"
-                    android:tint="#4669EB" />
+                    app:tint="#4669EB" />
 
                 <TextView
                     android:id="@+id/congesText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Congés"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="#4669EB"
-                    android:textStyle="bold"/>
+                    />
             </LinearLayout>
 
             <!-- Réunions -->
@@ -394,14 +397,15 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/reunion"
-                    android:tint="@color/grey" />
+                    app:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/reunionsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Réunions"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -424,14 +428,15 @@
                     android:layout_height="30dp"
                     android:maxWidth="30dp"
                     android:src="@drawable/profil"
-                    android:tint="@color/grey"/>
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/profilText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profil"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>

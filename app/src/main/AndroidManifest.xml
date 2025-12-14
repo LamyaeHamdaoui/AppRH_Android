@@ -12,13 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
-            android:name=".PresenceRhActivity"
-            android:exported="false"
-            tools:ignore="Instantiatable" />
-        <activity
             android:name=".ProfileEmployeActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
+
         <activity
             android:name=".ChangePasswordActivity"
             android:exported="false" />
@@ -27,33 +24,28 @@
             android:exported="false" />
         <activity
             android:name=".AcceuilRhActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:exported="false" />
         <activity
             android:name=".AcceuilEmployeActivity"
             android:exported="false"
-            tools:ignore="Instantiatable,MissingClass"
-            android:windowSoftInputMode="adjustPan"/>
+            tools:ignore="Instantiatable,MissingClass" />
         <activity
             android:name=".EmployeActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".PresenceActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".AttestationEmployeActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:exported="false" />
         <activity
             android:name=".HelpSupportActivity"
-            android:exported="false"
-            tools:ignore="DuplicateActivity" />
+            android:exported="false" />
         <activity
             android:name=".CongesEmployeActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
@@ -65,8 +57,7 @@
             android:exported="false" />
         <activity
             android:name=".AttestationsActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:exported="false" />
         <activity
             android:name=".CongesActivity"
             android:exported="false" />
@@ -82,15 +73,14 @@
         <activity
             android:name=".ProfileActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".NotificationsRhActivity"
             android:exported="true" />
         <activity
             android:name=".NotificationsEmployesActivity"
             android:exported="true" />
-        <activity
-            android:name=".SecurityActivity"
+        <activity android:name=".SecurityActivity"
             android:label="Sécurité du Compte" />
         <activity
             android:name=".MainActivity"

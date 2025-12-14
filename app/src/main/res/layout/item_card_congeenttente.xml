@@ -13,14 +13,16 @@
     android:backgroundTint="@color/white"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    app:strokeColor="@null"
+    app:cardBackgroundColor="@null">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="30dp"
-        android:paddingRight="10dp"
+        android:paddingRight="8dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:background="@drawable/border_orangelight">
