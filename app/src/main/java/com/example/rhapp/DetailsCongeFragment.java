@@ -73,7 +73,7 @@ public class DetailsCongeFragment extends Fragment {
         motifConge = view.findViewById(R.id.MotifConge);
         soldeCongesEmploye = view.findViewById(R.id.soldeCongesEmploye);
         raisonRefus = view.findViewById(R.id.raisonrefusConge);
-        backgroundOverlay = view.findViewById(R.id.backgroundOverlay);
+        //backgroundOverlay = view.findViewById(R.id.backgroundOverlay);
 
         // Initialiser avec des valeurs vides
         if (sousDetails != null) sousDetails.setText("");

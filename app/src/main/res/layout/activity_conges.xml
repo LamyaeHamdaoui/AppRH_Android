@@ -306,14 +306,15 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/home"
-                    android:tint="@color/grey" />
+                    app:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/accueilText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="15dp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -335,14 +336,15 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/employe"
-                    android:tint="@color/grey" />
+                    app:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/employesText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Employés"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -364,14 +366,14 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/conge"
-                    android:tint="#4669EB" />
+                    app:tint="#4669EB" />
 
                 <TextView
                     android:id="@+id/congesText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Congés"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
                     android:textColor="#4669EB"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -394,14 +396,15 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/reunion"
-                    android:tint="@color/grey" />
+                    app:tint="@color/grey" />
 
                 <TextView
                     android:id="@+id/reunionsText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Réunions"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -424,45 +427,19 @@
                     android:layout_height="30dp"
                     android:maxWidth="30dp"
                     android:src="@drawable/profil"
-                    android:tint="@color/grey"/>
+                    app:tint="@color/grey"/>
 
                 <TextView
                     android:id="@+id/profilText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profil"
-                    android:textSize="15sp"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Notification bell en superposition -->
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end">
-
-        <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/bell"
-            android:layout_gravity="right"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"/>
-
-        <TextView
-            android:layout_width="25dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="17dp"
-            android:layout_marginTop="7dp"
-            android:background="@drawable/notification_border"
-            android:backgroundTint="@color/red"
-            android:text="0"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textAlignment="center" />
-    </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

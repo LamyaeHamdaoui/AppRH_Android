@@ -530,7 +530,8 @@ android:id="@+id/footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Accueil"
-        android:textSize="15sp"
+        android:textSize="13sp"
+        android:textStyle="bold"
         android:textColor="#4669EB"/>
 </LinearLayout>
 
@@ -554,7 +555,8 @@ android:id="@+id/footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Présence"
-        android:textSize="15sp"
+        android:textSize="13sp"
+        android:textStyle="bold"
         android:textColor="@color/grey"/>
 </LinearLayout>
 
@@ -578,7 +580,8 @@ android:id="@+id/footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Congés"
-        android:textSize="15sp"
+        android:textSize="13sp"
+        android:textStyle="bold"
         android:textColor="@color/grey"/>
 </LinearLayout>
 
@@ -601,7 +604,8 @@ android:id="@+id/footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Réunions"
-        android:textSize="15sp"
+        android:textSize="13sp"
+        android:textStyle="bold"
         android:textColor="@color/grey"/>
 </LinearLayout>
 <LinearLayout
@@ -625,7 +629,8 @@ android:id="@+id/footer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Profil"
-        android:textSize="15sp"
+        android:textSize="13sp"
+        android:textStyle="bold"
         android:textColor="@color/grey"/>
 </LinearLayout>
 </LinearLayout>
