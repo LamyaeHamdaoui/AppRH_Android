@@ -22,7 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:background="@color/white">
 
         <LinearLayout
@@ -39,7 +42,7 @@
                 android:layout_weight="1"
                 android:text="Congé payé"
                 android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textSize="18sp"
                  />
 
             <!-- Statut aligné à droite -->
@@ -48,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="En attente"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:textStyle="bold"
                 android:textColor="@color/orange"
                 android:paddingLeft="12dp"
@@ -65,8 +68,8 @@
             android:layout_height="wrap_content"
             android:text="15 nov. 2025 - 22 nov. 2025"
             android:textColor="@color/grey"
-            android:textSize="13sp"
-            android:layout_marginTop="10dp" />
+            android:textSize="14sp"
+            android:layout_marginTop="12dp" />
 
         <!-- Durée -->
         <TextView
@@ -76,8 +79,8 @@
             android:text="5 jours"
             android:textColor="@color/grey"
             android:textStyle="bold"
-            android:textSize="12sp"
-            android:layout_marginTop="10dp"
+            android:textSize="13sp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/border_icon_grey"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -91,8 +94,8 @@
             android:layout_height="wrap_content"
             android:text="Vacances en famille"
             android:textColor="@color/grey"
-            android:textSize="13sp"
-            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
             android:textStyle="italic"/>
 
     </LinearLayout>

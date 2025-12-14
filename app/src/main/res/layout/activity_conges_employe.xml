@@ -336,8 +336,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -362,8 +361,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Présence"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -381,17 +379,15 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:src="@drawable/conge"
-                    android:contentDescription="Congés"
-                    app:tint="#4669EB" />
+                    android:contentDescription="Congés" />
 
                 <TextView
                     android:id="@+id/textconge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Congés"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="#4669EB"/>
+                    android:textSize="15sp"
+                    android:textColor="@color/grey"/>
             </LinearLayout>
 
             <LinearLayout
@@ -415,8 +411,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Réunions"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
             <LinearLayout
@@ -441,12 +436,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profil"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
+                    android:textSize="15sp"
                     android:textColor="@color/grey"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
-
+    <!-- Notification bell en overlay -->
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
