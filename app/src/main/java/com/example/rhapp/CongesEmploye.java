@@ -136,18 +136,16 @@ public class CongesEmploye extends AppCompatActivity {
             setActiveNavigationItem(congesIcon, congesText);
 
             // Configuration des listeners de navigation
-            setupNavigationClickListener(accueilFooter, AcceuilEmployeActivity.class, "Accueil");
-            setupNavigationClickListener(presenceFooter, PresenceActivity.class, "Présence");
-            setupNavigationClickListener(reunionFooter, ReunionEmployeActivity.class, "Réunions");
-            setupNavigationClickListener(profilFooter, ProfileEmployeActivity.class, "Profil");
+            accueilFooter.setOnClickListener(v -> navigateToActivity(AcceuilEmployeActivity.class));
+            presenceFooter.setOnClickListener(v -> navigateToActivity(PresenceActivity.class));
+            reunionFooter.setOnClickListener(v -> navigateToActivity(ReunionEmployeActivity.class));
+            profilFooter.setOnClickListener(v -> navigateToActivity(ProfileEmployeActivity.class));
 
             // Pour congés, on reste sur la même page mais on met à jour l'état actif
-            if (congesFooter != null) {
-                congesFooter.setOnClickListener(v -> {
-                    setActiveNavigationItem(congesIcon, congesText);
-                    Toast.makeText(CongesEmploye.this, "Vous êtes déjà sur la page Congés", Toast.LENGTH_SHORT).show();
-                });
-            }
+            congesFooter.setOnClickListener(v -> {
+                setActiveNavigationItem(congesIcon, congesText);
+                Toast.makeText(CongesEmploye.this, "Vous êtes déjà sur la page Congés", Toast.LENGTH_SHORT).show();
+            });
 
         } catch (Exception e) {
             Log.e(TAG, "Erreur dans setupNavigation: " + e.getMessage(), e);
@@ -155,46 +153,32 @@ public class CongesEmploye extends AppCompatActivity {
         }
     }
 
-    private void setupNavigationClickListener(LinearLayout layout, Class<?> destination, String pageName) {
-        if (layout != null) {
-            layout.setOnClickListener(v -> {
-                try {
-                    // Réinitialiser tous les éléments de navigation
-                    resetNavigationItems();
-
-                    // Mettre en surbrillance l'élément cliqué avant la navigation
-                    setActiveNavigationItemForPage(pageName);
-
-                    // Naviguer vers la nouvelle activité
-                    if (CongesEmploye.this.getClass() != destination) {
-                        startActivity(new Intent(CongesEmploye.this, destination));
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "Erreur navigation " + pageName + ": " + e.getMessage(), e);
-                    Toast.makeText(CongesEmploye.this, "Erreur navigation " + pageName, Toast.LENGTH_SHORT).show();
+    private void navigateToActivity(Class<?> destinationActivity) {
+        try {
+            if (CongesEmploye.this.getClass() != destinationActivity) {
+                // Détacher le listener Firestore avant de naviguer
+                if (congesListener != null) {
+                    congesListener.remove();
                 }
-            });
-        }
-    }
 
-    private void setActiveNavigationItemForPage(String pageName) {
-        switch (pageName) {
-            case "Accueil":
-                setActiveNavigationItem(accueilIcon, accueilText);
-                break;
-            case "Présence":
-                setActiveNavigationItem(presenceIcon, presenceText);
-                break;
-            case "Congés":
+                // Créer l'intent pour la nouvelle activité
+                Intent intent = new Intent(CongesEmploye.this, destinationActivity);
+
+                // Ajouter des flags pour une meilleure gestion de la navigation
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                // Démarrer l'activité avec une animation de transition
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+                Log.d(TAG, "Navigation vers: " + destinationActivity.getSimpleName());
+            } else {
+                Log.d(TAG, "Navigation vers la même activité: " + destinationActivity.getSimpleName());
                 setActiveNavigationItem(congesIcon, congesText);
-                break;
-            case "Réunions":
-                setActiveNavigationItem(reunionIcon, reunionText);
-                break;
-            case "Profil":
-                setActiveNavigationItem(profilIcon, profilText);
-                break;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur lors de la navigation vers " + destinationActivity.getSimpleName() + ": " + e.getMessage(), e);
+            Toast.makeText(CongesEmploye.this, "Erreur de navigation", Toast.LENGTH_SHORT).show();
         }
     }
 
