@@ -303,7 +303,7 @@
 
                 <ImageView
                     android:id="@+id/accueilIcon"
-                    android:layout_width="30dp"
+                    android:layout_width="24dp"
                     android:layout_height="30dp"
                     android:src="@drawable/home"
                     android:tint="@color/grey" />
