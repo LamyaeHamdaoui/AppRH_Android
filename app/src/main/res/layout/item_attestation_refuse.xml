@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="10dp"
     app:cardElevation="2dp"
     app:cardPreventCornerOverlap="true"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    app:strokeColor="@null"
+    app:cardBackgroundColor="@null">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +30,7 @@
                 android:layout_weight="2"
                 android:text="Nissrine EL MNIAI"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -39,15 +41,15 @@
             android:id="@+id/departement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:text="Developpement"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
         <TextView
             android:id="@+id/TypeAttestation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Attestation de travail"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:layout_marginTop="5dp"
             />
         <TextView
@@ -56,7 +58,7 @@
             android:layout_height="wrap_content"
             android:text="Demandée le 18 Octobre 2025"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:layout_marginTop="10dp" />
 
         <TextView
@@ -65,7 +67,7 @@
             android:layout_height="wrap_content"
             android:text="Refusée - motif"
             android:textColor="@color/red"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:layout_marginTop="10dp"
             />
 
