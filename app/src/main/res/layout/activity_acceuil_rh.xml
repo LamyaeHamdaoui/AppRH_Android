@@ -15,14 +15,15 @@
         android:layout_height="match_parent"
         android:paddingHorizontal="15dp"
         android:paddingTop="15dp"
-        android:paddingBottom="100dp"
+        android:paddingBottom="80dp"
         android:background="#F5F5F5"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+           >
 
             <!-- Header Section -->
             <LinearLayout

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:paddingBottom="100dp"
+        android:paddingBottom="80dp"
         >
 
         <LinearLayout
@@ -119,11 +119,12 @@
                 <Button
                     android:id="@+id/btnNouvelleDemandeConge"
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:text="+  Nouvell demande"
+                    android:layout_height="wrap_content"
+                    android:text="+  Nouvelle demande"
                     android:background="@drawable/border_button"
                     android:layout_marginTop="10dp"
                     app:backgroundTint="@null"
+                    android:padding="0dp"
                     />
 
             </LinearLayout>
