@@ -244,15 +244,15 @@
     </ScrollView>
 
 
-    <!-- FOOTER -->
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
         android:background="@color/white"
         android:elevation="8dp"
+        android:orientation="horizontal"
         android:padding="5dp">
 
         <!-- Bottom nav icons : reused structure -->

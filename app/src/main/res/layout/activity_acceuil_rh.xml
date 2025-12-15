@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="#F5F5F5"
     tools:context=".AcceuilRhActivity">
 
 
@@ -761,13 +762,10 @@
 
     </ScrollView>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
 
 
-        <!-- Bottom Navigation -->
+
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
@@ -919,6 +917,6 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
