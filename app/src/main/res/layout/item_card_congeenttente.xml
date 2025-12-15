@@ -15,6 +15,7 @@
     android:clickable="true"
     android:focusable="true"
     app:strokeColor="@null"
+    app:strokeWidth="0dp"
     app:cardBackgroundColor="@null">
 
     <LinearLayout
