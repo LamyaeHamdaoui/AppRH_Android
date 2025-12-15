@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:layout_marginTop="25dp">
             <!--  hadi header section -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,7 +27,7 @@
                 android:background="@drawable/bg_header_blue"
                 android:orientation="vertical"
                 android:padding="30dp"
-                android:layout_marginTop="7dp"
+
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -506,7 +507,7 @@
         android:background="@color/white"
         android:elevation="8dp"
         android:padding="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="30dp"
         >
         <LinearLayout
             android:id="@+id/acceuilfooter"
