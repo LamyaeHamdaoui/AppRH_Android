@@ -12,6 +12,87 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RhApp">
         <activity
+            android:name=".PresenceRhActivity"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".ProfileEmployeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ChangePasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ModifierReunionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AcceuilRhActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".AcceuilEmployeActivity"
+            android:exported="false"
+            tools:ignore="Instantiatable,MissingClass"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".EmployeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".PresenceActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".AttestationEmployeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".HelpSupportActivity"
+            android:exported="false"
+            tools:ignore="DuplicateActivity" />
+        <activity
+            android:name=".CongesEmployeActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ForgottenPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateAccActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AttestationsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".CongesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".reunionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReunionEmployeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlanifierReunionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".NotificationsRhActivity"
+            android:exported="true" />
+        <activity
+            android:name=".NotificationsEmployesActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SecurityActivity"
+            android:label="Sécurité du Compte" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
