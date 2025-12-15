@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:background="#F5F5F5"
         tools:context=".AcceuilEmployeActivity"
-        android:paddingBottom="80dp"
+        android:paddingBottom="70dp"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -512,7 +512,7 @@
         android:orientation="horizontal"
         android:padding="5dp"
         android:layout_marginBottom="45dp"
-       >
+        >
         <LinearLayout
             android:id="@+id/acceuilfooter"
             android:layout_width="0dp"
