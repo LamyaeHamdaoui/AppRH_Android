@@ -821,7 +821,6 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         btnJustifierAbsence.setOnClickListener(v -> showJustifyAbsenceFragment());
 
         iconAccueil.setOnClickListener(v -> navigateTo(AcceuilEmployeActivity.class));
-        iconConges.setOnClickListener(v -> navigateTo(CongesEmployeActivity.class));
         iconReunions.setOnClickListener(v -> navigateTo(ReunionEmployeActivity.class));
         iconProfil.setOnClickListener(v -> navigateTo(ProfileEmployeActivity.class));
     }
