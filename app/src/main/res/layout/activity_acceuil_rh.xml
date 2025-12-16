@@ -807,7 +807,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Accueil"
                     android:textColor="#4669EB"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -836,7 +836,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Employés"
                     android:textColor="@color/grey"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -864,7 +864,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Congés"
                     android:textColor="@color/grey"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -892,7 +892,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Réunions"
                     android:textColor="@color/grey"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -920,7 +920,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Profil"
                     android:textColor="@color/grey"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>

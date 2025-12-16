@@ -13,13 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:paddingBottom="70dp"
+
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="100dp">
 
             <!-- ***** header ****** -->
             <LinearLayout
@@ -311,7 +312,9 @@
         android:background="@color/white"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:paddingHorizontal="3dp"
+        android:paddingBottom="7dp"
+        >
             <LinearLayout
                 android:id="@+id/acceuilfooter"
                 android:layout_width="0dp"
@@ -323,8 +326,8 @@
 
                 <ImageView
                     android:id="@+id/accueil"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/home"
                     android:contentDescription="Accueil"
                     app:tint="@color/grey"/>
@@ -334,7 +337,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Accueil"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
@@ -350,8 +353,8 @@
 
                 <ImageView
                     android:id="@+id/employes"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/presence"
                     android:contentDescription="Présence"
                     app:tint="@color/grey"/>
@@ -361,7 +364,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Présence"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"                    android:textColor="@color/grey"/>
             </LinearLayout>
 
@@ -370,14 +373,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="5dp"
+                android:layout_marginHorizontal="5dp"
                 android:gravity="center"
                 android:orientation="vertical">
-
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="#4669EB"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginHorizontal="3dp"
+                    />
                 <ImageView
                     android:id="@+id/conge"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/conge"
                     android:contentDescription="Congés"
                     app:tint="#4669EB"/>
@@ -387,7 +396,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Congés"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="#4669EB"/>
             </LinearLayout>
@@ -403,8 +412,8 @@
 
                 <ImageView
                     android:id="@+id/reunions"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/reunion"
                     android:contentDescription="Réunions"
                     app:tint="@color/grey"/>
@@ -414,7 +423,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Réunions"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
@@ -429,8 +438,8 @@
 
                 <ImageView
                     android:id="@+id/profil"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:maxWidth="30dp"
                     android:src="@drawable/profil"
                     android:contentDescription="Profil"
@@ -441,7 +450,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profil"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
                     android:textColor="@color/grey"/>
             </LinearLayout>
