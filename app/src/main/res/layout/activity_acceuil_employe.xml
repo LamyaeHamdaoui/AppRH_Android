@@ -511,6 +511,7 @@
         android:elevation="8dp"
         android:orientation="horizontal"
         android:padding="5dp"
+        android:layout_marginBottom="45dp"
        >
         <LinearLayout
             android:id="@+id/acceuilfooter"

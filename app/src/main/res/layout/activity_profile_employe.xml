@@ -14,7 +14,8 @@
         android:layout_above="@id/footer"
         android:layout_marginBottom="70dp"
         android:fillViewport="true"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:background="#F5F5F5">
 
         <RelativeLayout
             android:layout_width="match_parent"

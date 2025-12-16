@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:paddingHorizontal="15dp"
         android:paddingTop="15dp"
-        android:paddingBottom="80dp"
+        android:paddingBottom="70dp"
         android:background="#F5F5F5"
         >
 
