@@ -44,7 +44,7 @@
             android:name=".HelpSupportActivity"
             android:exported="false" />
         <activity
-            android:name=".CongesEmployeActivity"
+            android:name=".CongesEmploye"
             android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
