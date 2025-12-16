@@ -11,14 +11,15 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="70dp"
+
 
         >
         <LinearLayout
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="80dp">
 
             <!-- ***** header ****** -->
 
@@ -393,7 +394,9 @@
         android:background="@color/white"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:paddingHorizontal="3dp"
+        android:paddingBottom="7dp"
+        >
 
         <LinearLayout
             android:id="@+id/accueil"
@@ -406,8 +409,8 @@
 
             <ImageView
                 android:id="@+id/iconaccueil"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/home" />
 
             <TextView
@@ -416,7 +419,7 @@
                 android:layout_height="wrap_content"
                 android:text="Accueil"
                 android:textColor="@color/grey"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -431,8 +434,8 @@
 
             <ImageView
                 android:id="@+id/iconemployes"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/employe" />
 
             <TextView
@@ -441,7 +444,7 @@
                 android:layout_height="wrap_content"
                 android:text="Employés"
                 android:textColor="@color/grey"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"/>
         </LinearLayout>
 
@@ -456,8 +459,8 @@
 
             <ImageView
                 android:id="@+id/iconconge"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/conge" />
 
             <TextView
@@ -466,7 +469,7 @@
                 android:layout_height="wrap_content"
                 android:text="Congés"
                 android:textColor="@color/grey"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -474,15 +477,22 @@
             android:id="@+id/reunions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#4669EB"
+                android:layout_marginBottom="5dp"
+                android:layout_marginHorizontal="3dp"
+                />
 
             <ImageView
                 android:id="@+id/iconreunions"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/reunion_bleu" />
 
             <TextView
@@ -491,7 +501,7 @@
                 android:layout_height="wrap_content"
                 android:text="Réunions"
                 android:textColor="#4669EB"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -506,8 +516,8 @@
 
             <ImageView
                 android:id="@+id/iconprofil"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:maxWidth="30dp"
                 android:src="@drawable/profil" />
 
@@ -517,7 +527,7 @@
                 android:layout_height="wrap_content"
                 android:text="Profil"
                 android:textColor="@color/grey"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"/>
         </LinearLayout>
     </LinearLayout>
