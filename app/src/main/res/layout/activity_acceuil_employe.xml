@@ -5,20 +5,24 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CongesEmploye"
+    tools:context=".AcceuilEmployeActivity"
     android:background="#F5F5F5"
+
     >
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5F5F5"
         tools:context=".AcceuilEmployeActivity"
-        android:paddingBottom="100dp">
+        android:paddingBottom="70dp"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:layout_marginTop="25dp"
+            >
             <!--  hadi header section -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -26,7 +30,7 @@
                 android:background="@drawable/bg_header_blue"
                 android:orientation="vertical"
                 android:padding="30dp"
-                android:layout_marginTop="7dp"
+
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -501,12 +505,13 @@
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
         android:background="@color/white"
         android:elevation="8dp"
+        android:orientation="horizontal"
         android:padding="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="45dp"
         >
         <LinearLayout
             android:id="@+id/acceuilfooter"

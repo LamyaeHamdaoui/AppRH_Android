@@ -14,7 +14,7 @@
         app:layout_anchorGravity="center"
         android:id="@+id/scrollView2"
         app:layout_anchor="@+id/scrollView2"
-        android:layout_marginBottom="80dp">
+        android:layout_marginBottom="70dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -379,10 +379,11 @@
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:orientation="horizontal"
         android:background="@color/white"
         android:elevation="8dp"
+        android:orientation="horizontal"
         android:padding="5dp">
         <LinearLayout
             android:id="@+id/footerAccueil"

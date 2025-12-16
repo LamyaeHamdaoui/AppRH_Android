@@ -14,13 +14,14 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="80dp"
+        android:paddingBottom="70dp"
         android:fillViewport="true"
         android:overScrollMode="never">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <!-- HEADER -->
             <LinearLayout
@@ -284,11 +285,12 @@
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:background="@color/white"
-        android:elevation="5dp"
-        android:padding="5dp"
-        android:layout_gravity="bottom">
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <!-- ACCUEIL -->
         <LinearLayout

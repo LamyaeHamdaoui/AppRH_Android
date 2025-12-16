@@ -14,7 +14,8 @@
         android:layout_above="@id/footer"
         android:layout_marginBottom="70dp"
         android:fillViewport="true"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:background="#F5F5F5">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -549,15 +550,16 @@
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-        <LinearLayout
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/white"
-            android:elevation="5dp"
-            android:padding="5dp"
-            android:layout_gravity="bottom">
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
 
             <!-- ACCUEIL -->
             <LinearLayout

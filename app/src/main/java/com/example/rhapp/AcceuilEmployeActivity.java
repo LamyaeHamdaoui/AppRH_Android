@@ -2,8 +2,6 @@ package com.example.rhapp;
 
 import static android.view.View.VISIBLE;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -258,10 +256,10 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         aucuneNotif = findViewById(R.id.aucuneNotif);
 
         // Footer
-        presencefooter = findViewById(R.id.footerPresence);
-        congesfooter = findViewById(R.id.footerConges);
-        reunionsfooter = findViewById(R.id.footerReunions);
-        profilefooter = findViewById(R.id.footerProfil);
+        presencefooter = findViewById(R.id.presencefooter);
+        congesfooter = findViewById(R.id.congesfooter);
+        reunionsfooter = findViewById(R.id.reunionsfooter);
+        profilefooter = findViewById(R.id.profilefooter);
 
         // Initialiser les badges comme cachés
         notifPresence.setVisibility(View.GONE);
@@ -280,7 +278,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
             if (actionConge != null) {
                 actionConge.setOnClickListener(v ->
-                        startActivity(new Intent(this, CongesEmploye.class)));
+                        startActivity(new Intent(this, CongesEmployeActivity.class)));
             }
 
             if (actionReunions != null) {
@@ -298,7 +296,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     startActivity(new Intent(this, PresenceActivity.class)));
 
             findViewById(R.id.conge).setOnClickListener(v ->
-                    startActivity(new Intent(this, CongesEmploye.class)));
+                    startActivity(new Intent(this, CongesEmployeActivity.class)));
 
             findViewById(R.id.profil).setOnClickListener(v ->
                     startActivity(new Intent(this, ProfileEmployeActivity.class)));
@@ -1260,7 +1258,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
         switch (type) {
             case "conges":
-                intent = new Intent(this, CongesEmploye.class);
+                intent = new Intent(this, CongesEmployeActivity.class);
                 break;
             case "reunion":
                 intent = new Intent(this, ReunionEmployeActivity.class);

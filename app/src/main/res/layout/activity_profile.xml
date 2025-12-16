@@ -562,7 +562,6 @@
             android:elevation="8dp"
             android:orientation="horizontal"
             android:padding="5dp">
-
             <LinearLayout
                 android:id="@+id/footerAccueil"
                 android:layout_width="0dp"
