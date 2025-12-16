@@ -443,7 +443,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:orientation="horizontal"
-                    android:layout_gravity="center">
+                    android:gravity="center">
 
 
 
@@ -655,7 +655,7 @@
                 android:orientation="vertical">
                 <View
                     android:layout_width="wrap_content"
-                    android:layout_height="1dp"
+                    android:layout_height="2dp"
                     android:background="#4669EB"
                     android:layout_marginBottom="5dp"
                     android:layout_marginHorizontal="3dp"
