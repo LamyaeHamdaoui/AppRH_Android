@@ -12,14 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/footer"
-
         android:fillViewport="true"
         android:padding="5dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="70dp">
+            android:layout_height="match_parent"
+            android:paddingBottom="80dp">
 
             <LinearLayout
                 android:id="@+id/entete"
@@ -79,7 +78,9 @@
                     android:orientation="horizontal"
                     android:gravity="center">
 
-
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
                         <TextView
                             android:id="@+id/userInitial"
                             android:layout_width="60dp"
@@ -91,6 +92,12 @@
                             android:textColor="@color/white"
                             android:textSize="30sp"
                             android:visibility="visible" />
+                        <ImageView
+                            android:id="@+id/userProfileImage"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:visibility="gone"/>
+                    </FrameLayout>
 
 
 
@@ -352,7 +359,7 @@
                         android:layout_weight="10"
                         android:linksClickable="true"
                         android:text="Modifier le profil"
-                        android:textSize="17dp" />
+                        android:textSize="18dp" />
 
                     <ImageView
                         android:layout_width="22dp"
@@ -388,7 +395,7 @@
                         android:layout_weight="10"
                         android:linksClickable="true"
                         android:text="Notifications"
-                        android:textSize="17dp" />
+                        android:textSize="18dp" />
 
                     <ImageView
                         android:layout_width="22dp"
@@ -425,7 +432,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_weight="10"
                         android:text="Securité et confidentialité"
-                        android:textSize="17dp" />
+                        android:textSize="18dp" />
 
                     <ImageView
                         android:layout_width="22dp"
@@ -462,7 +469,7 @@
                         android:layout_weight="10"
                         android:linksClickable="true"
                         android:text="Aide et support"
-                        android:textSize="17dp" />
+                        android:textSize="18dp" />
 
                     <ImageView
                         android:layout_width="22dp"
@@ -487,8 +494,8 @@
                     android:id="@+id/seDeconnecterButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_marginVertical="25dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginVertical="20dp"
                     android:background="@drawable/border_red"
                     android:text=" [->  Se déconnecter"
                     app:backgroundTint="@null" />
@@ -498,6 +505,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_below="@+id/sedeconnecter"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"

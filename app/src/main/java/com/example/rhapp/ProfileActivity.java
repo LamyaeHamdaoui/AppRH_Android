@@ -135,7 +135,7 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
         userPoste = findViewById(R.id.userPoste);
         userDepartment = findViewById(R.id.userDepartment);
         userInitial = findViewById(R.id.userInitial);
-        //userProfileImage = findViewById(R.id.userProfileImage);
+        userProfileImage = findViewById(R.id.userProfileImage);
 
         // Bloc Détails
         userEmail = findViewById(R.id.userEmailDetail);
@@ -184,8 +184,8 @@ public class ProfileActivity extends AppCompatActivity implements DeconnecterFra
                 textReunions = (TextView) footerReunions.getChildAt(1);
             }
             if (footerProfil != null && footerProfil.getChildCount() > 1) {
-                iconProfile = (ImageView) footerProfil.getChildAt(0);
-                textProfile = (TextView) footerProfil.getChildAt(1);
+                iconProfile = (ImageView) footerProfil.getChildAt(1);
+                textProfile = (TextView) footerProfil.getChildAt(2);
             }
         });
     }
