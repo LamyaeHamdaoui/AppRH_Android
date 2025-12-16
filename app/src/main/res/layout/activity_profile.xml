@@ -12,13 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/footer"
-        android:layout_marginBottom="70dp"
+
         android:fillViewport="true"
         android:padding="5dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp">
 
             <LinearLayout
                 android:id="@+id/entete"
@@ -75,18 +76,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-                    <FrameLayout
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_margin="5dp"
-                        android:layout_weight="1">
 
                         <TextView
                             android:id="@+id/userInitial"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:layout_gravity="center"
                             android:background="@drawable/bg_circle_blue"
                             android:gravity="center"
@@ -95,14 +92,7 @@
                             android:textSize="30sp"
                             android:visibility="visible" />
 
-                        <ImageView
-                            android:id="@+id/userProfileImage"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:background="@drawable/bg_circle_blue"
-                            android:clipToOutline="true"
-                            android:visibility="gone" />
-                    </FrameLayout>
+
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -116,7 +106,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="EL MNIAI Nissrine"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -125,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
                             android:text="Responsable RH"
-                            android:textSize="15sp"
+                            android:textSize="14sp"
                             tools:ignore="NestedWeights" />
 
                         <TextView
@@ -134,7 +124,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="10"
                             android:text="Ressources Humaines"
-                            android:textSize="15sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -157,20 +147,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/border_icon_blue">
 
                             <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
                                 android:layout_margin="7dp"
-                                android:layout_weight="1"
+                                android:padding="5dp"
+                                android:background="@drawable/border_icon_blue"
                                 android:src="@drawable/mail_blue" />
-                        </LinearLayout>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -198,20 +186,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        >
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/border_icon_green">
 
                             <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
                                 android:layout_margin="7dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/poste" />
-                        </LinearLayout>
+                                android:padding="5dp"
+                                android:src="@drawable/poste"
+                                android:background="@drawable/border_icon_green"/>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
