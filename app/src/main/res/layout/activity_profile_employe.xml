@@ -361,7 +361,7 @@
                         android:layout_weight="10"
                         android:linksClickable="true"
                         android:text="Modifier le profil"
-                        android:textSize="18dp" />
+                        android:textSize="16dp" />
 
                     <ImageView
                         android:layout_width="22dp"
@@ -397,7 +397,7 @@
                         android:layout_weight="10"
                         android:linksClickable="true"
                         android:text="Notifications"
-                        android:textSize="18dp" />
+                        android:textSize="16dp" />
 
                     <ImageView
                         android:layout_width="22dp"
@@ -434,7 +434,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_weight="10"
                         android:text="Securité et confidentialité"
-                        android:textSize="18dp" />
+                        android:textSize="16dp" />
 
                     <ImageView
                         android:layout_width="22dp"
@@ -471,7 +471,7 @@
                         android:layout_weight="10"
                         android:linksClickable="true"
                         android:text="Aide et support"
-                        android:textSize="18dp" />
+                        android:textSize="16dp" />
 
                     <ImageView
                         android:layout_width="22dp"
