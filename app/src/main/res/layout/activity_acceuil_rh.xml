@@ -15,14 +15,15 @@
         android:layout_height="match_parent"
         android:paddingHorizontal="15dp"
         android:paddingTop="15dp"
-        android:paddingBottom="70dp"
         android:background="#F5F5F5"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
+            android:paddingBottom="80dp"
+
            >
 
             <!-- Header Section -->
@@ -767,28 +768,37 @@
 
 
 
-        <LinearLayout
-            android:id="@+id/footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom"
-            android:background="@color/white"
-            android:elevation="8dp"
-            android:orientation="horizontal"
-            android:padding="5dp">
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="3dp"
+        android:paddingBottom="7dp"
+        >
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="2dp"
+                    android:background="#4669EB"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginHorizontal="3dp"
+                    />
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/home"
                     app:tint="#4669EB" />
 
@@ -798,7 +808,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Accueil"
                     android:textColor="#4669EB"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -816,8 +826,8 @@
 
                 <ImageView
                     android:id="@+id/employes"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/employe" />
 
                 <TextView
@@ -827,7 +837,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Employés"
                     android:textColor="@color/grey"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -844,8 +854,8 @@
 
                 <ImageView
                     android:id="@+id/conge"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/conge" />
 
                 <TextView
@@ -855,7 +865,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Congés"
                     android:textColor="@color/grey"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -872,8 +882,8 @@
 
                 <ImageView
                     android:id="@+id/reunions"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/reunion" />
 
                 <TextView
@@ -883,7 +893,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Réunions"
                     android:textColor="@color/grey"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -899,8 +909,8 @@
 
                 <ImageView
                     android:id="@+id/profil"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:maxWidth="30dp"
                     android:src="@drawable/profil" />
 
@@ -911,7 +921,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Profil"
                     android:textColor="@color/grey"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
