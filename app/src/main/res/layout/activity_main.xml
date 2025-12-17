@@ -41,7 +41,9 @@
                     android:layout_gravity="center_horizontal"
                     android:text="Connectez-vous pour accédez à votre espace"
                     android:layout_marginTop="20dp"
-                    android:textSize="16dp"/>
+                    android:textSize="16dp"
+
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
