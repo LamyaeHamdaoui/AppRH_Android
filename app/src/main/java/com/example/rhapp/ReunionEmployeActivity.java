@@ -80,6 +80,9 @@ public class ReunionEmployeActivity extends AppCompatActivity {
         conge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(ReunionEmployeActivity.this, CongesEmploye.class));
+
+
 
             }
         });

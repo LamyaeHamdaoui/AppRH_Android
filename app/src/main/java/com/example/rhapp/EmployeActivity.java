@@ -121,13 +121,13 @@ public class EmployeActivity extends AppCompatActivity {
     public void retourDepuisFragment() {
         fragmentContainer.setVisibility(View.GONE);
         mainContent.setVisibility(View.VISIBLE);
-        relative.setVisibility(View.VISIBLE);
+        //relative.setVisibility(View.VISIBLE);
         footer.setVisibility(View.VISIBLE);
     }
 
     private void cacherUI() {
         mainContent.setVisibility(View.GONE);
-        relative.setVisibility(View.GONE);
+        //relative.setVisibility(View.GONE);
         footer.setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
     }
@@ -276,21 +276,33 @@ public class EmployeActivity extends AppCompatActivity {
     private void filtrerEmployes() {
         executor.execute(() -> db.collection("employees").get()
                 .addOnSuccessListener(query -> runOnUiThread(() -> {
-
                     String rechercheTxt = rechercherEmploye.getText().toString().trim().toLowerCase();
                     String depSel = departement.getSelectedItem().toString();
 
+                    // Vider la vue
                     itemsEmployeeCardsContainer.removeAllViews();
+
+                    boolean hasMatches = false;
 
                     for (QueryDocumentSnapshot doc : query) {
                         Employe emp = doc.toObject(Employe.class);
                         emp.setId(doc.getId());
 
                         if (matchFiltre(emp, rechercheTxt, depSel)) {
+                            hasMatches = true;
                             View card = getLayoutInflater().inflate(R.layout.item_employee_card, null);
                             setCardInfo(card, emp);
                             itemsEmployeeCardsContainer.addView(card);
                         }
+                    }
+
+                    // Gérer l'affichage quand aucun résultat
+                    if (hasMatches) {
+                        noEmployeeContainer.setVisibility(View.GONE);
+                        itemsEmployeeCardsContainer.setVisibility(View.VISIBLE);
+                    } else {
+                        noEmployeeContainer.setVisibility(View.VISIBLE);
+                        itemsEmployeeCardsContainer.setVisibility(View.GONE);
                     }
                 })));
     }

@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#F5F5F5">
+    android:background="#F5F5F5"
+    android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +23,7 @@
                     android:layout_height="100dp"
                     android:src="@drawable/logo_remove_background"
                     android:scaleType="centerCrop"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="30dp"
                     />
                 <TextView
                     android:id="@+id/nameApp"
@@ -30,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="RH Manager"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     />
@@ -51,7 +52,7 @@
                     android:text="Email"
                     android:textSize="18dp"
                     android:textStyle="bold"
-                    android:layout_marginTop="40dp"/>
+                    android:layout_marginTop="25dp"/>
                 <EditText
                     android:id="@+id/emailBox"
                     android:layout_width="match_parent"
@@ -105,7 +106,7 @@
                     android:background="@drawable/border_button"
                     app:backgroundTint="@null"
                     android:textStyle="bold"
-                    android:textSize="20dp"
+                    android:textSize="18dp"
                     android:textColor="@color/white"
                     android:layout_marginTop="40dp"
                     />
@@ -132,8 +133,9 @@
                     android:text="Créer un nouveau compte"
                     android:textAlignment="center"
                     android:textColor="@color/blue"
-                    android:textSize="20dp"
+                    android:textSize="18sp"
                     app:backgroundTint="@null"
                     tools:ignore="RtlCompat"/>
         </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

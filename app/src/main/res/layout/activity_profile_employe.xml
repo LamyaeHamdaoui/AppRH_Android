@@ -84,8 +84,8 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:id="@+id/userInitial"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:layout_gravity="center"
                             android:background="@drawable/bg_circle_blue"
                             android:gravity="center"
@@ -141,7 +141,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:background="@color/gris_clair" />
 
                 <!-- 3. Conteneur des détails (NOUVEL ID AJOUTÉ ICI !) -->

@@ -21,9 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:paddingHorizontal="10dp"
-            android:paddingTop="10dp"
             android:paddingBottom="80dp"
 
 
