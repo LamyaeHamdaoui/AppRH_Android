@@ -6,7 +6,9 @@
     android:id="@+id/main"
     android:background="#F5F5F5"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
 
     <!-- CONTAINER DYNAMIQUE (Fragment) -->
     <FrameLayout
@@ -186,7 +188,7 @@
         android:elevation="8dp"
         android:orientation="horizontal"
         android:paddingHorizontal="3dp"
-        android:paddingBottom="7dp"
+        android:paddingBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
