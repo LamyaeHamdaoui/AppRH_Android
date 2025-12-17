@@ -180,7 +180,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         adapter = new PresenceHistoryAdapter(presenceDays, userGender);
         recyclerViewHistorique.setAdapter(adapter);
         recyclerViewHistorique.setLayoutManager(new LinearLayoutManager(this));
-
+//ici
         checkAndRestorePresenceState();
         setupClickListeners();
         setupFooterHighlight();
