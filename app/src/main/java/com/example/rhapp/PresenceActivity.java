@@ -823,6 +823,7 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
         iconAccueil.setOnClickListener(v -> navigateTo(AcceuilEmployeActivity.class));
         iconReunions.setOnClickListener(v -> navigateTo(ReunionEmployeActivity.class));
         iconProfil.setOnClickListener(v -> navigateTo(ProfileEmployeActivity.class));
+        iconConges.setOnClickListener(v -> navigateTo(CongesEmploye.class));
     }
 
     private void replacePresenceActionWithCard() {
