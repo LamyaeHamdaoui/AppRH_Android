@@ -156,6 +156,7 @@ public class EmployeActivity extends AppCompatActivity {
 
                         actif.setText(querySnapshot.size() + " employés actifs");
                         noEmployeeContainer.setVisibility(View.GONE);
+                        itemsEmployeeCardsContainer.setVisibility(View.VISIBLE);
 
                         for (QueryDocumentSnapshot doc : querySnapshot) {
                             Employe emp = doc.toObject(Employe.class);
