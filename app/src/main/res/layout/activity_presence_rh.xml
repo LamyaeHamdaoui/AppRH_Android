@@ -13,9 +13,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_anchorGravity="center"
         android:id="@+id/scrollView2"
         app:layout_anchor="@+id/scrollView2"
+        android:paddingTop="30dp"
        >
 
         <LinearLayout
