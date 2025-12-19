@@ -51,14 +51,10 @@
             android:exported="false"
             tools:ignore="DuplicateActivity" />
         <activity
-<<<<<<< HEAD
+
             android:name=".CongesEmploye"
             android:exported="false" />
-=======
-            android:name=".CongesEmployeActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
->>>>>>> f897ab0670485ed6d47a46e6c6b7d771f6878c62
+
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />

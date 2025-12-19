@@ -278,7 +278,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
             if (actionConge != null) {
                 actionConge.setOnClickListener(v ->
-                        startActivity(new Intent(this, CongesEmployeActivity.class)));
+                        startActivity(new Intent(this, CongesEmploye.class)));
             }
 
             if (actionReunions != null) {
@@ -296,7 +296,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     startActivity(new Intent(this, PresenceActivity.class)));
 
             findViewById(R.id.conge).setOnClickListener(v ->
-                    startActivity(new Intent(this, CongesEmployeActivity.class)));
+                    startActivity(new Intent(this, CongesEmploye.class)));
 
             findViewById(R.id.profil).setOnClickListener(v ->
                     startActivity(new Intent(this, ProfileEmployeActivity.class)));
@@ -1258,7 +1258,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
         switch (type) {
             case "conges":
-                intent = new Intent(this, CongesEmployeActivity.class);
+                intent = new Intent(this, CongesEmploye.class);
                 break;
             case "reunion":
                 intent = new Intent(this, ReunionEmployeActivity.class);
