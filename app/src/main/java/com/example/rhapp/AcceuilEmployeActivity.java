@@ -56,6 +56,8 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     private static final String KEY_EMPLOYEE_CACHE = "employee_cache";
     private static final String KEY_NOTIFICATIONS_CACHE = "notifications_cache";
     private static final String KEY_NOTIFICATIONS_TIMESTAMP = "notifications_timestamp";
+    private static final String KEY_SOLDE_CACHE = "solde_cache";
+    private static final String KEY_SOLDE_TIMESTAMP = "solde_timestamp";
 
     // Écouteurs Firestore TEMPS RÉEL
     private ListenerRegistration congesListener;
@@ -136,10 +138,10 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         // Afficher les données en cache IMMÉDIATEMENT
         loadCachedData();
         loadCachedNotifications();
+        loadCachedSolde();
 
         // Configurer TOUS les écouteurs Firestore temps réel
         setupAllRealtimeListeners();
-        testFirestoreDataStructure();
     }
 
     private void loadCachedData() {
@@ -170,6 +172,43 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void loadCachedSolde() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        int cachedSolde = prefs.getInt(KEY_SOLDE_CACHE, -1);
+        long cacheTime = prefs.getLong(KEY_SOLDE_TIMESTAMP, 0);
+        long currentTime = System.currentTimeMillis();
+
+        // Utiliser le cache si moins de 5 minutes
+        if (cachedSolde != -1 && (currentTime - cacheTime) < 300000) {
+            soldeCongeValue = cachedSolde;
+            runOnUiThread(() -> {
+                updateSoldeCongeUI();
+                Log.d(TAG, "Solde chargé depuis cache: " + soldeCongeValue + " jours");
+            });
+        }
+    }
+
+    private void saveSoldeToCache(int solde) {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(KEY_SOLDE_CACHE, solde);
+        editor.putLong(KEY_SOLDE_TIMESTAMP, System.currentTimeMillis());
+        editor.apply();
+
+        // Mettre à jour aussi dans le cache employé
+        String cachedData = prefs.getString(KEY_EMPLOYEE_CACHE, "");
+        if (!cachedData.isEmpty()) {
+            String[] parts = cachedData.split("\\|");
+            if (parts.length >= 5) {
+                String newCacheData = parts[0] + "|" + parts[1] + "|" + parts[2] + "|" + parts[3] + "|" + solde;
+                editor.putString(KEY_EMPLOYEE_CACHE, newCacheData);
+                editor.apply();
+            }
+        }
+
+        Log.d(TAG, "Solde sauvegardé en cache: " + solde + " jours");
     }
 
     private void saveToCache() {
@@ -319,8 +358,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                         startActivity(new Intent(this, CongesEmploye.class)));
             }
 
-
-
         } catch (Exception e) {
             Log.e(TAG, "Erreur setupNavigation: " + e.getMessage());
         }
@@ -338,7 +375,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         // 3. Écouteur réunions
         setupReunionsListener();
 
-        // 4. Écouteur congés (pour badge)
+        // 4. Écouteur congés (pour solde et badge)
         setupCongesListener();
 
         // 5. Écouteur attestations (pour badge)
@@ -395,8 +432,8 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                         employeePoste = documentSnapshot.getString("poste");
                         employeeDepartement = documentSnapshot.getString("departement");
 
-                        Long solde = documentSnapshot.getLong("soldeConge");
-                        soldeCongeValue = solde != null ? solde.intValue() : 0;
+                        // NE PAS lire soldeConge depuis employés
+                        // Le solde viendra de la collection congés
 
                         // Sauvegarder en cache
                         saveToCache();
@@ -404,7 +441,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                         // Mettre à jour l'UI sur le thread principal
                         mainHandler.post(() -> {
                             updateEmployeUI();
-                            updateSoldeCongeUI();
                         });
 
                         Log.d(TAG, "Données employé mises à jour en temps réel");
@@ -432,11 +468,10 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     employeePrenom = userDoc.getString("prenom");
                     employeePoste = "Non défini";
                     employeeDepartement = "Non défini";
-                    soldeCongeValue = 0;
+                    // Solde sera récupéré depuis congés
 
                     mainHandler.post(() -> {
                         updateEmployeUI();
-                        updateSoldeCongeUI();
                     });
 
                     Log.d(TAG, "Données utilisateur chargées depuis Users");
@@ -469,6 +504,10 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         try {
             if (soldeConge != null) {
                 soldeConge.setText(soldeCongeValue + " jours");
+
+
+
+                Log.d(TAG, "UI solde mis à jour: " + soldeCongeValue + " jours");
             }
         } catch (Exception e) {
             Log.e(TAG, "Erreur updateSoldeCongeUI: " + e.getMessage());
@@ -615,50 +654,92 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         String userEmail = currentUser.getEmail();
 
         Log.d(TAG, "Démarrage écouteur temps réel congés pour: " + userEmail);
-        Log.d(TAG, "UID utilisateur: " + currentUser.getUid());
-        Log.d(TAG, "Email utilisateur: " + userEmail);
+        Log.d(TAG, "Récupération du SOLDE ACTUEL le plus récent...");
 
+        // Écouteur pour récupérer le DERNIER congé (le plus récent par dateDemande)
         congesListener = db.collection("conges")
                 .whereEqualTo("userEmail", userEmail)
-                .whereEqualTo("statut", "En attente")
+                .orderBy("dateDemande", Query.Direction.DESCENDING)
+                .limit(1)
                 .addSnapshotListener((querySnapshot, error) -> {
                     if (error != null) {
                         Log.e(TAG, "Erreur écoute congés: " + error.getMessage());
-                        Log.e(TAG, "Détails erreur: ", error);
                         return;
                     }
 
-                    // DEBUG: Vérifiez ce qui est retourné
-                    if (querySnapshot != null) {
-                        Log.d(TAG, "QuerySnapshot reçu - taille: " + querySnapshot.size());
-                        Log.d(TAG, "Metadata: " + querySnapshot.getMetadata());
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        DocumentSnapshot dernierConge = querySnapshot.getDocuments().get(0);
 
-                        for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                            Log.d(TAG, "Document trouvé: ID=" + doc.getId() +
-                                    ", statut=" + doc.getString("statut") +
-                                    ", userEmail=" + doc.getString("userEmail"));
+                        // RÉCUPÉRER LE SOLDE ACTUEL
+                        Long soldeActuel = dernierConge.getLong("soldeActuel");
+
+                        if (soldeActuel != null) {
+                            int nouveauSolde = soldeActuel.intValue();
+
+                            // Mettre à jour la valeur
+                            if (soldeCongeValue != nouveauSolde) {
+                                soldeCongeValue = nouveauSolde;
+
+                                mainHandler.post(() -> {
+                                    updateSoldeCongeUI();
+                                    Log.d(TAG, "✅ SOLDE ACTUEL récupéré: " + soldeCongeValue + " jours");
+                                });
+
+                                // Sauvegarder en cache
+                                saveSoldeToCache(soldeCongeValue);
+                            }
+
+                            // DEBUG: Afficher les détails
+                            Log.d(TAG, "=== DERNIER CONGÉ TROUVÉ ===");
+                            Log.d(TAG, "ID: " + dernierConge.getId());
+                            Log.d(TAG, "SoldeActuel: " + soldeActuel);
+                            Log.d(TAG, "Statut: " + dernierConge.getString("statut"));
+                            Log.d(TAG, "Type: " + dernierConge.getString("typeConge"));
+                            Log.d(TAG, "Date demande: " + dernierConge.getTimestamp("dateDemande"));
+                        } else {
+                            Log.d(TAG, "⚠️ Champ 'soldeActuel' non trouvé dans le dernier congé");
+                            mainHandler.post(() -> {
+                                if (soldeConge != null) {
+                                    soldeConge.setText("-- jours");
+                                }
+                            });
                         }
                     } else {
-                        Log.d(TAG, "QuerySnapshot est null pour les congés");
+                        Log.d(TAG, "⚠️ Aucun document congé trouvé pour: " + userEmail);
+                        mainHandler.post(() -> {
+
+                        });
                     }
 
-                    int congesEnAttente = querySnapshot != null ? querySnapshot.size() : 0;
-                    Log.d(TAG, "Congés en attente calculés: " + congesEnAttente);
+                    // Compter les congés en attente pour le badge (séparément)
+                    countCongesEnAttente(userEmail);
 
-                    mainHandler.post(() -> {
-                        try {
-                            if (notifConge != null) {
-                                notifConge.setText(String.valueOf(congesEnAttente));
-                                notifConge.setVisibility(congesEnAttente > 0 ? VISIBLE : View.GONE);
-                                Log.d(TAG, "UI Badge congés mis à jour: " + congesEnAttente);
-                            }
-                        } catch (Exception e) {
-                            Log.e(TAG, "Erreur mise à jour congés UI: " + e.getMessage(), e);
-                        }
-                    });
-
-                    // Déclencher une mise à jour des notifications
+                    // Déclencher les notifications
                     scheduleNotificationsUpdate();
+                });
+    }
+
+    private void countCongesEnAttente(String userEmail) {
+        db.collection("conges")
+                .whereEqualTo("userEmail", userEmail)
+                .whereEqualTo("statut", "En attente")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int congesEnAttente = task.getResult().size();
+                        Log.d(TAG, "Congés en attente: " + congesEnAttente);
+
+                        mainHandler.post(() -> {
+                            try {
+                                if (notifConge != null) {
+                                    notifConge.setText(String.valueOf(congesEnAttente));
+                                    notifConge.setVisibility(congesEnAttente > 0 ? VISIBLE : View.GONE);
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "Erreur badge congés: " + e.getMessage());
+                            }
+                        });
+                    }
                 });
     }
 
@@ -666,7 +747,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         if (currentUser == null) return;
 
         Log.d(TAG, "Démarrage écouteur temps réel attestations");
-        Log.d(TAG, "Recherche attestations avec UID: " + currentUser.getUid());
 
         attestationsListener = db.collection("Attestations")
                 .whereEqualTo("employeeId", currentUser.getUid())
@@ -674,22 +754,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 .addSnapshotListener((querySnapshot, error) -> {
                     if (error != null) {
                         Log.e(TAG, "Erreur écoute attestations: " + error.getMessage());
-                        Log.e(TAG, "Détails erreur: ", error);
                         return;
-                    }
-
-                    // DEBUG: Vérifiez ce qui est retourné
-                    if (querySnapshot != null) {
-                        Log.d(TAG, "Attestations QuerySnapshot - taille: " + querySnapshot.size());
-
-                        for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                            Log.d(TAG, "Attestation document: ID=" + doc.getId() +
-                                    ", statut=" + doc.getString("statut") +
-                                    ", employeeId=" + doc.getString("employeeId") +
-                                    ", type=" + doc.getString("typeAttestation"));
-                        }
-                    } else {
-                        Log.d(TAG, "QuerySnapshot est null pour les attestations");
                     }
 
                     int attestationsEnAttente = querySnapshot != null ? querySnapshot.size() : 0;
@@ -709,51 +774,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
                     // Déclencher une mise à jour des notifications
                     scheduleNotificationsUpdate();
-                });
-    }
-
-    private void testFirestoreDataStructure() {
-        if (currentUser == null) return;
-
-        Log.d(TAG, "=== TEST STRUCTURE DONNÉES FIRESTORE ===");
-
-        // Tester la collection congés
-        db.collection("conges")
-                .limit(5)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "Structure congés - documents trouvés: " + task.getResult().size());
-                        for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                            Log.d(TAG, "Conge Doc ID: " + doc.getId());
-                            Log.d(TAG, "  userEmail: " + doc.getString("userEmail"));
-                            Log.d(TAG, "  userId: " + doc.getString("userId"));
-                            Log.d(TAG, "  statut: " + doc.getString("statut"));
-                            Log.d(TAG, "  typeConge: " + doc.getString("typeConge"));
-                            Log.d(TAG, "  userEmail de l'utilisateur courant: " + currentUser.getEmail());
-                        }
-                    } else {
-                        Log.e(TAG, "Erreur test congés: " + task.getException());
-                    }
-                });
-
-        // Tester la collection attestations
-        db.collection("Attestations")
-                .limit(5)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "Structure attestations - documents trouvés: " + task.getResult().size());
-                        for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                            Log.d(TAG, "Attestation Doc ID: " + doc.getId());
-                            Log.d(TAG, "  employeeId: " + doc.getString("employeeId"));
-                            Log.d(TAG, "  employeeNom: " + doc.getString("employeeNom"));
-                            Log.d(TAG, "  statut: " + doc.getString("statut"));
-                            Log.d(TAG, "  UID utilisateur courant: " + currentUser.getUid());
-                        }
-                    } else {
-                        Log.e(TAG, "Erreur test attestations: " + task.getException());
-                    }
                 });
     }
 
@@ -837,7 +857,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     db.collection("conges")
                             .whereEqualTo("userEmail", userEmail)
                             .orderBy("dateDemande", Query.Direction.DESCENDING)
-                            .limit(2) // Seulement 2 congés les plus récents
+                            .limit(2)
                             .get()
             );
 
@@ -894,7 +914,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
             QuerySnapshot reunionsSnapshot = Tasks.await(
                     db.collection("Reunions")
                             .orderBy("date", Query.Direction.DESCENDING)
-                            .limit(2) // Seulement 2 réunions les plus proches
+                            .limit(2)
                             .get()
             );
 
@@ -955,7 +975,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     db.collection("Attestations")
                             .whereEqualTo("employeeId", currentUser.getUid())
                             .orderBy("dateDemande", Query.Direction.DESCENDING)
-                            .limit(2) // Seulement 2 attestations les plus récentes
+                            .limit(2)
                             .get()
             );
 
@@ -1032,9 +1052,8 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 boolean presenceMarqueeLocal = prefs.getBoolean(KEY_PRESENCE_MARKED_TODAY, false);
 
                 if (!presenceMarqueeFirestore && !presenceMarqueeLocal) {
-                    // Date très récente pour que la présence soit en premier
                     Calendar now = Calendar.getInstance();
-                    now.add(Calendar.MINUTE, -1); // 1 minute dans le passé
+                    now.add(Calendar.MINUTE, -1);
                     Date recentDate = now.getTime();
 
                     notifications.add(new NotificationItem(
@@ -1054,7 +1073,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         }
     }
 
-    // Mettre à jour saveNotificationsToCache pour la date
     private void saveNotificationsToCache(List<NotificationItem> notifications) {
         if (notifications.isEmpty()) return;
 
@@ -1066,7 +1084,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     .append(notif.subtitle).append("|")
                     .append(notif.iconRes).append("|")
                     .append(notif.statut != null ? notif.statut : "null").append("|")
-                    .append(notif.date.getTime()); // Ajouter le timestamp
+                    .append(notif.date.getTime());
             if (i < notifications.size() - 1 && i < 6) {
                 cacheBuilder.append("§");
             }
@@ -1081,14 +1099,12 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         Log.d(TAG, "Notifications sauvegardées en cache: " + notifications.size());
     }
 
-    // Mettre à jour loadCachedNotifications pour lire la date
     private void loadCachedNotifications() {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String cachedNotifications = prefs.getString(KEY_NOTIFICATIONS_CACHE, "");
         long cacheTime = prefs.getLong(KEY_NOTIFICATIONS_TIMESTAMP, 0);
         long currentTime = System.currentTimeMillis();
 
-        // Utiliser le cache si moins de 5 minutes
         if (!cachedNotifications.isEmpty() && (currentTime - cacheTime) < 300000) {
             try {
                 String[] notifications = cachedNotifications.split("§");
@@ -1106,7 +1122,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
                         if ("null".equals(statut)) statut = null;
 
-                        // Lire la date si disponible
                         if (parts.length >= 6) {
                             try {
                                 long timestamp = Long.parseLong(parts[5]);
@@ -1120,9 +1135,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     }
                 }
 
-                // Trier les notifications du cache avec priorité pour présence
                 Collections.sort(notificationList, (n1, n2) -> {
-                    // Présence en premier même dans le cache
                     if ("presence".equals(n1.type) && !"presence".equals(n2.type)) {
                         return -1;
                     }
@@ -1132,7 +1145,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     return n2.date.compareTo(n1.date);
                 });
 
-                // Prendre seulement les 7 plus récentes même du cache
                 final List<NotificationItem> finalList =
                         notificationList.subList(0, Math.min(notificationList.size(), 7));
 
@@ -1184,7 +1196,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 View notificationView = inflater.inflate(R.layout.layout_notification_item,
                         notifRecentesContainer, false);
 
-                // Définir le background selon le type de notification
                 int backgroundRes = getNotificationBackground(notif.type);
                 notificationView.setBackgroundResource(backgroundRes);
 
@@ -1198,21 +1209,17 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     subtitle.setText(notif.subtitle);
 
                     notificationView.setOnClickListener(v -> {
-                        // Effet visuel temporaire au clic
                         int originalBackground = backgroundRes;
                         int highlightBackground = getHighlightBackground(notif.type);
 
-                        // Appliquer un background plus foncé temporairement
                         notificationView.setBackgroundResource(highlightBackground);
 
-                        // Réinitialiser après un court délai
                         new Handler(Looper.getMainLooper()).postDelayed(() -> {
                             if (notificationView != null && notificationView.getParent() != null) {
                                 notificationView.setBackgroundResource(originalBackground);
                             }
                         }, 200);
 
-                        // Lancer l'activité correspondante
                         launchActivityForNotification(notif.type);
                     });
 
@@ -1283,7 +1290,6 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "=== onResume ===");
-        // Rien à recharger manuellement - tout est en temps réel !
         checkAndResetForNewDay();
     }
 
@@ -1292,14 +1298,12 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d(TAG, "=== onDestroy ===");
 
-        // Nettoyer tous les écouteurs
         if (presenceListener != null) presenceListener.remove();
         if (congesListener != null) congesListener.remove();
         if (attestationsListener != null) attestationsListener.remove();
         if (reunionsListener != null) reunionsListener.remove();
         if (employeListener != null) employeListener.remove();
 
-        // Nettoyer le handler de debouncing
         if (debouncedUpdateTask != null) {
             debounceHandler.removeCallbacks(debouncedUpdateTask);
         }

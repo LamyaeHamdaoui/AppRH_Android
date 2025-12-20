@@ -281,13 +281,28 @@ public class CongesActivity extends AppCompatActivity {
                     int attente = 0, approuve = 0, refuse = 0;
 
                     for (DocumentSnapshot document : documents) {
-                        Conge conge = document.toObject(Conge.class);
-                        if (conge != null) {
-                            switch (conge.getStatut()) {
-                                case "En attente": attente++; break;
-                                case "Approuvé": approuve++; break;
-                                case "Refusé": refuse++; break;
+                        // CORRECTION: Vérifier si le document existe et a des données
+                        if (document.exists() && document.getData() != null) {
+                            Conge conge = document.toObject(Conge.class);
+
+                            if (conge != null && conge.getStatut() != null) {
+                                String statut = conge.getStatut();
+
+                                // CORRECTION: Utiliser if/else au lieu de switch pour éviter l'erreur de null
+                                if (statut.equals("En attente")) {
+                                    attente++;
+                                } else if (statut.equals("Approuvé") || statut.equals("Approuvée")) {
+                                    approuve++;
+                                } else if (statut.equals("Refusé") || statut.equals("Refusée")) {
+                                    refuse++;
+                                } else {
+                                    Log.d(TAG, "Statut inconnu: " + statut);
+                                }
+                            } else {
+                                Log.d(TAG, "Document " + document.getId() + ": Congé null ou statut null");
                             }
+                        } else {
+                            Log.d(TAG, "Document " + document.getId() + " n'existe pas ou n'a pas de données");
                         }
                     }
 
