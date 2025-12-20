@@ -18,19 +18,19 @@
 
                 <ImageView
                     android:id="@+id/logoApp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/logo_remove_background"
-                    android:scaleType="centerCrop"
                     android:layout_marginTop="30dp"
-                    />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/logo_remove_background" />
+
                 <TextView
                     android:id="@+id/nameApp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="RH Manager"
+                    android:text="RHVerse"
                     android:layout_marginTop="15dp"
                     android:textSize="20dp"
                     android:textStyle="bold"
