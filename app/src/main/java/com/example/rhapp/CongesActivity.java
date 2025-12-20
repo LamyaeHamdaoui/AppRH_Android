@@ -317,7 +317,6 @@ public class CongesActivity extends AppCompatActivity {
             }
         });
     }
-
     private void updateStatisticsUI(int total, int attente, int approuve, int refuse) {
         runOnUiThread(() -> {
             TextView nbreTotal = findViewById(R.id.nbreTotalConge);
