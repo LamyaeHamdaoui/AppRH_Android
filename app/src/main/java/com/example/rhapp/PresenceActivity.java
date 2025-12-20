@@ -827,26 +827,42 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
     }
 
     private void replacePresenceActionWithCard() {
+        // 1. Vérification de l'utilisateur
         if (userId == null) {
             Toast.makeText(this, "Erreur: Utilisateur non identifié.", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // 2. Vérification du jour de la semaine (Week-end)
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+            Toast.makeText(this, "Impossible de marquer la présence le samedi ou le dimanche.", Toast.LENGTH_LONG).show();
+            return; // On arrête la fonction ici
+        }
+
+        // 3. Exécution si on est en semaine (Lundi à Vendredi)
         executorService.execute(() -> {
             try {
                 Date now = new Date();
                 String fullDateTime = dateTimeFormat.format(now);
+
+                // Sauvegarde locale de l'état
                 savePresenceState(fullDateTime);
 
                 SimpleDateFormat displaySdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
                 String displayTime = displaySdf.format(now);
 
+                // Mise à jour de l'interface graphique
                 runOnUiThread(() -> {
-                    restorePresenceCard(displayTime);
-                    Toast.makeText(this, "Présence marquée à " + displayTime, Toast.LENGTH_LONG).show();
+                    if (!isFinishing()) { // Sécurité pour éviter les crashs si l'activité se ferme
+                        restorePresenceCard(displayTime);
+                        Toast.makeText(this, "Présence marquée à " + displayTime, Toast.LENGTH_LONG).show();
+                    }
                 });
 
-                // Sauvegarder dans Firebase
+                // Sauvegarde dans Firebase
                 savePresenceToFirebase(
                         userId,
                         "present",
@@ -854,9 +870,14 @@ public class PresenceActivity extends AppCompatActivity implements JustifyAbsenc
                         displayTime
                 );
 
+                // Envoi de la notification
                 sendPresenceMarkedNotification(displayTime);
+
             } catch (Exception e) {
                 Log.e("PresenceActivity", "Erreur dans replacePresenceActionWithCard: ", e);
+                runOnUiThread(() ->
+                        Toast.makeText(this, "Erreur lors de l'enregistrement.", Toast.LENGTH_SHORT).show()
+                );
             }
         });
     }
