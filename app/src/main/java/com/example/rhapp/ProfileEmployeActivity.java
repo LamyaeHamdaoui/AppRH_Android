@@ -173,8 +173,8 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                     textReunions = (TextView) footerReunions.getChildAt(1);
                 }
                 if (footerProfil != null && footerProfil.getChildCount() > 1) {
-                    iconProfile = (ImageView) footerProfil.getChildAt(0);
-                    textProfile = (TextView) footerProfil.getChildAt(1);
+                    iconProfile = (ImageView) footerProfil.getChildAt(1);
+                    textProfile = (TextView) footerProfil.getChildAt(2);
                 }
             });
         });
@@ -495,7 +495,7 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
     private void navigateToConges() {
         executorService.execute(() -> {
             mainHandler.post(() -> {
-                startActivity(new Intent(ProfileEmployeActivity.this, CongesEmployeActivity.class));
+                startActivity(new Intent(ProfileEmployeActivity.this, CongesEmploye.class));
             });
         });
     }

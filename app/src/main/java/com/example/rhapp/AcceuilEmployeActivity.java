@@ -137,11 +137,13 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
         loadCachedData();
         loadCachedNotifications();
 
+        // Charger le solde depuis congés (en plus du cache)
+        loadSoldeFromConges();
+
         // Configurer TOUS les écouteurs Firestore temps réel
         setupAllRealtimeListeners();
         testFirestoreDataStructure();
     }
-
     private void loadCachedData() {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String cachedData = prefs.getString(KEY_EMPLOYEE_CACHE, "");
@@ -278,7 +280,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
             if (actionConge != null) {
                 actionConge.setOnClickListener(v ->
-                        startActivity(new Intent(this, CongesEmployeActivity.class)));
+                        startActivity(new Intent(this, CongesEmploye.class)));
             }
 
             if (actionReunions != null) {
@@ -296,7 +298,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     startActivity(new Intent(this, PresenceActivity.class)));
 
             findViewById(R.id.conge).setOnClickListener(v ->
-                    startActivity(new Intent(this, CongesEmployeActivity.class)));
+                    startActivity(new Intent(this, CongesEmploye.class)));
 
             findViewById(R.id.profil).setOnClickListener(v ->
                     startActivity(new Intent(this, ProfileEmployeActivity.class)));
@@ -307,6 +309,19 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                 reunionsLayout.setOnClickListener(v ->
                         startActivity(new Intent(this, ReunionEmployeActivity.class)));
             }
+
+            LinearLayout prsenceLayout = findViewById(R.id.presencefooter);
+            if (prsenceLayout != null) {
+                prsenceLayout.setOnClickListener(v ->
+                        startActivity(new Intent(this, PresenceActivity.class)));
+            }
+            LinearLayout congelerLayout = findViewById(R.id.congesfooter);
+            if (congelerLayout != null) {
+                congelerLayout.setOnClickListener(v ->
+                        startActivity(new Intent(this, CongesEmploye.class)));
+            }
+
+
 
         } catch (Exception e) {
             Log.e(TAG, "Erreur setupNavigation: " + e.getMessage());
@@ -330,6 +345,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
         // 5. Écouteur attestations (pour badge)
         setupAttestationsListener();
+
+        // 6. NOUVEAU: Écouteur pour le solde depuis congés
+        setupSoldeCongeListener();
     }
 
     private void setupEmployeListener() {
@@ -382,8 +400,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                         employeePoste = documentSnapshot.getString("poste");
                         employeeDepartement = documentSnapshot.getString("departement");
 
-                        Long solde = documentSnapshot.getLong("soldeConge");
-                        soldeCongeValue = solde != null ? solde.intValue() : 0;
+                        //Long solde = documentSnapshot.getLong("soldeConge");
+                       // soldeCongeValue = solde != null ? solde.intValue() : 0;
+                        loadSoldeFromConges();
 
                         // Sauvegarder en cache
                         saveToCache();
@@ -391,13 +410,134 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                         // Mettre à jour l'UI sur le thread principal
                         mainHandler.post(() -> {
                             updateEmployeUI();
-                            updateSoldeCongeUI();
+                           // updateSoldeCongeUI();
                         });
 
                         Log.d(TAG, "Données employé mises à jour en temps réel");
 
                         // Déclencher une mise à jour des notifications avec délai
                         scheduleNotificationsUpdate();
+                    }
+                });
+    }
+    private void loadSoldeFromConges() {
+        if (currentUser == null) return;
+
+        String userEmail = currentUser.getEmail();
+        Log.d(TAG, "=== CHARGEMENT SOLDE DEPUIS CONGES ===");
+        Log.d(TAG, "Email utilisateur: " + userEmail);
+
+        // Chercher la dernière demande de congé pour cet utilisateur
+        db.collection("conges")
+                .whereEqualTo("userEmail", userEmail)
+                .orderBy("dateDemande", Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        Log.d(TAG, "Nombre de documents trouvés dans conges: " + querySnapshot.size());
+
+                        if (!querySnapshot.isEmpty()) {
+                            DocumentSnapshot latestConge = querySnapshot.getDocuments().get(0);
+
+                            // DEBUG: Afficher tous les champs du document
+                            Log.d(TAG, "Document ID: " + latestConge.getId());
+                            Log.d(TAG, "Document data: " + latestConge.getData());
+
+                            // Vérifier si le champ soldeActuel existe
+                            Long soldeActuel = latestConge.getLong("soldeActuel");
+                            Log.d(TAG, "soldeActuel trouvé: " + soldeActuel);
+
+                            if (soldeActuel != null) {
+                                soldeCongeValue = soldeActuel.intValue();
+                                Log.d(TAG, "Solde chargé depuis congés: " + soldeCongeValue);
+                            } else {
+                                Log.d(TAG, "soldeActuel est null, fallback sur employees");
+                                // Fallback: chercher dans employees
+                                loadSoldeFallbackFromEmployees();
+                            }
+                        } else {
+                            // Aucune demande de congé trouvée, fallback sur employees
+                            Log.d(TAG, "Aucune demande de congé trouvée, fallback sur employees");
+                            loadSoldeFallbackFromEmployees();
+                        }
+
+                        // Mettre à jour l'UI
+                        mainHandler.post(() -> {
+                            Log.d(TAG, "Mise à jour UI avec solde: " + soldeCongeValue);
+                            updateSoldeCongeUI();
+                        });
+                    } else {
+                        Log.e(TAG, "Erreur chargement solde depuis congés: " + task.getException());
+                        loadSoldeFallbackFromEmployees();
+                        mainHandler.post(this::updateSoldeCongeUI);
+                    }
+                });
+    }
+
+    private void loadSoldeFallbackFromEmployees() {
+        if (employeeId.isEmpty()) return;
+
+        db.collection("employees").document(employeeId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                        DocumentSnapshot employeDoc = task.getResult();
+                        Long solde = employeDoc.getLong("soldeConge");
+                        soldeCongeValue = solde != null ? solde.intValue() : 0;
+                        Log.d(TAG, "Solde fallback depuis employees: " + soldeCongeValue);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Erreur fallback solde: " + e.getMessage());
+                    soldeCongeValue = 0;
+                });
+    }
+    private void setupSoldeCongeListener() {
+        if (currentUser == null) return;
+
+        String userEmail = currentUser.getEmail();
+        Log.d(TAG, "=== DÉMARRAGE ÉCOUTEUR SOLDE CONGÉS ===");
+        Log.d(TAG, "Email: " + userEmail);
+
+        // Écouter les changements dans les congés pour cet utilisateur
+        db.collection("conges")
+                .whereEqualTo("userEmail", userEmail)
+                .orderBy("dateDemande", Query.Direction.DESCENDING)
+                .limit(1)
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "Erreur écoute solde congés: " + error.getMessage());
+                        return;
+                    }
+
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                            Log.d(TAG, "Document mis à jour: ID=" + doc.getId());
+                            Log.d(TAG, "Données document: " + doc.getData());
+
+                            Long soldeActuel = doc.getLong("soldeActuel");
+                            Log.d(TAG, "soldeActuel dans listener: " + soldeActuel);
+
+                            if (soldeActuel != null) {
+                                int nouveauSolde = soldeActuel.intValue();
+                                Log.d(TAG, "Ancien solde: " + soldeCongeValue + ", Nouveau solde: " + nouveauSolde);
+
+                                if (soldeCongeValue != nouveauSolde) {
+                                    soldeCongeValue = nouveauSolde;
+                                    Log.d(TAG, "Solde mis à jour en temps réel depuis congés: " + soldeCongeValue);
+
+                                    mainHandler.post(() -> {
+                                        updateSoldeCongeUI();
+                                        saveToCache();
+                                        Log.d(TAG, "UI et cache mis à jour avec solde: " + soldeCongeValue);
+                                    });
+                                }
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "Aucun document trouvé dans l'écouteur solde congés");
                     }
                 });
     }
@@ -480,51 +620,42 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     }
 
                     backgroundExecutor.execute(() -> {
-                        boolean presenceMarqueeFirestore = false;
+                        boolean isPresent = false;
+                        boolean isAbsentJustifie = false;
 
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                             for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
                                 String status = doc.getString("status");
+
                                 if ("present".equals(status)) {
-                                    presenceMarqueeFirestore = true;
+                                    isPresent = true;
                                     break;
+                                } else if ("absent_justifie".equals(status)) {
+                                    isAbsentJustifie = true;
                                 }
                             }
                         }
 
-                        // Sauvegarder dans les préférences
-                        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean(KEY_PRESENCE_MARKED_TODAY, presenceMarqueeFirestore);
-                        editor.apply();
-
-                        // Calculer l'heure actuelle
-                        Calendar now = Calendar.getInstance();
-                        int currentHour = now.get(Calendar.HOUR_OF_DAY);
-                        int currentMinute = now.get(Calendar.MINUTE);
-                        int totalMinutes = (currentHour * 60) + currentMinute;
-                        int seuil9h = 9 * 60;
-
                         final String etatText;
                         final int etatColor;
                         final int iconResource;
-                        final boolean showNotification;
 
-                        if (presenceMarqueeFirestore) {
+                        if (isPresent) {
+                            // 🟢 PRESENT
                             etatText = "Marquée";
                             etatColor = Color.parseColor("#0FAC71");
                             iconResource = R.drawable.approuve;
-                            showNotification = false;
+
+                        } else if (isAbsentJustifie) {
+                            // 🟠 ABSENT JUSTIFIÉ
+                            etatText = "Absent justifié";
+                            etatColor = Color.parseColor("#FFA500");
+                            iconResource = R.drawable.valider_red;
+
                         } else {
-                            if (totalMinutes >= seuil9h) {
-                                etatText = "Non marquée";
-                                etatColor = Color.parseColor("#FF0000");
-                                showNotification = true;
-                            } else {
-                                etatText = "Non marquée";
-                                etatColor = Color.parseColor("#666666");
-                                showNotification = false;
-                            }
+                            // 🔴 NON MARQUÉ
+                            etatText = "Non marquée";
+                            etatColor = Color.parseColor("#FF0000");
                             iconResource = R.drawable.refuse;
                         }
 
@@ -536,8 +667,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                                     iconepresence.setImageResource(iconResource);
 
                                     if (notifPresence != null) {
-                                        notifPresence.setVisibility(showNotification ? VISIBLE : View.GONE);
-                                        if (showNotification) notifPresence.setText("!");
+                                        notifPresence.setVisibility(View.GONE);
                                     }
                                 }
                             } catch (Exception e) {
@@ -545,9 +675,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                             }
                         });
 
-                        // Déclencher une mise à jour des notifications
                         scheduleNotificationsUpdate();
                     });
+
                 });
     }
 
@@ -1258,7 +1388,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
 
         switch (type) {
             case "conges":
-                intent = new Intent(this, CongesEmployeActivity.class);
+                intent = new Intent(this, CongesEmploye.class);
                 break;
             case "reunion":
                 intent = new Intent(this, ReunionEmployeActivity.class);

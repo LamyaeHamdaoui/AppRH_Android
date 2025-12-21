@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".reunionActivity"
-    android:background="#F5F5F5">
+    android:background="#F5F5F5"
+    >
     <ScrollView
         android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="70dp"
+        android:layout_height="wrap_content"
         android:background="#F5F5F5"
 
 
@@ -19,8 +19,9 @@
         <LinearLayout
 
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
+            android:paddingBottom="80dp"
 
             >
 
@@ -45,7 +46,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Planification et organisation"
+                    android:text="Consultation et configuration"
                     android:textSize="15sp"
                     android:textColor="@color/white"
                     android:layout_marginTop="10dp" />
@@ -382,7 +383,9 @@
         android:background="@color/white"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:paddingHorizontal="3dp"
+        android:paddingBottom="5dp"
+        >
 
         <LinearLayout
             android:id="@+id/accueil"
@@ -395,8 +398,8 @@
 
             <ImageView
                 android:id="@+id/iconaccueil"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/home" />
 
             <TextView
@@ -405,7 +408,7 @@
                 android:layout_height="wrap_content"
                 android:text="Accueil"
                 android:textColor="@color/grey"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -420,8 +423,8 @@
 
             <ImageView
                 android:id="@+id/iconpresence"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/presence"
                 app:tint="@color/grey"/>
 
@@ -430,7 +433,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Présence"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
@@ -446,8 +449,8 @@
 
             <ImageView
                 android:id="@+id/iconconge"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/conge" />
 
             <TextView
@@ -456,7 +459,7 @@
                 android:layout_height="wrap_content"
                 android:text="Congés"
                 android:textColor="@color/grey"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -464,15 +467,22 @@
             android:id="@+id/reunions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginHorizontal="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:background="#4669EB"
+                android:layout_marginBottom="5dp"
+                android:layout_marginHorizontal="3dp"
+                />
 
             <ImageView
                 android:id="@+id/iconreunions"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/reunion_bleu" />
 
             <TextView
@@ -481,7 +491,7 @@
                 android:layout_height="wrap_content"
                 android:text="Réunions"
                 android:textColor="#4669EB"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -496,9 +506,8 @@
 
             <ImageView
                 android:id="@+id/iconprofil"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:maxWidth="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/profil" />
 
             <TextView
@@ -507,7 +516,7 @@
                 android:layout_height="wrap_content"
                 android:text="Profil"
                 android:textColor="@color/grey"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>

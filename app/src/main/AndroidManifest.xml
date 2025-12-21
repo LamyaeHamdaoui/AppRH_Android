@@ -32,7 +32,6 @@
         <activity
             android:name=".AcceuilEmployeActivity"
             android:exported="false"
-            tools:ignore="Instantiatable,MissingClass"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".EmployeActivity"
@@ -51,9 +50,10 @@
             android:exported="false"
             tools:ignore="DuplicateActivity" />
         <activity
-            android:name=".CongesEmployeActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+
+            android:name=".CongesEmploye"
+            android:exported="false" />
+
         <activity
             android:name=".EditProfileActivity"
             android:exported="false" />
@@ -83,18 +83,14 @@
             android:name=".ProfileActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".NotificationsRhActivity"
-            android:exported="true" />
-        <activity
-            android:name=".NotificationsEmployesActivity"
-            android:exported="true" />
+
         <activity
             android:name=".SecurityActivity"
             android:label="Sécurité du Compte" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

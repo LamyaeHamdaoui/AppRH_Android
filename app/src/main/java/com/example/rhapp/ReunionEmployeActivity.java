@@ -80,13 +80,16 @@ public class ReunionEmployeActivity extends AppCompatActivity {
         conge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(ReunionEmployeActivity.this, CongesEmploye.class));
+
+
 
             }
         });
         profil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ReunionEmployeActivity.this, ProfileActivity.class));
+                startActivity(new Intent(ReunionEmployeActivity.this, ProfileEmployeActivity.class));
 
             }
         });
