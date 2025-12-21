@@ -139,6 +139,7 @@
                 android:paddingEnd="15dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
+                app:hintEnabled="false"
                 android:theme="@style/Theme.RHApp"
                 >
 
@@ -162,6 +163,7 @@
                 android:paddingEnd="15dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
+                app:hintEnabled="false"
                 android:theme="@style/Theme.RHApp"
                 >
 
