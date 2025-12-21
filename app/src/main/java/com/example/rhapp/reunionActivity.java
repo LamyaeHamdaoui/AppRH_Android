@@ -28,6 +28,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class reunionActivity extends AppCompatActivity {
@@ -127,7 +130,7 @@ public class reunionActivity extends AppCompatActivity {
 
     private void afficherReunionsVenirs() {
 
-        // Vider les conteneurs avant d'afficher
+        // Vider les conteneurs
         reunionPlanifieContainer.removeAllViews();
         reunionPasseContainer.removeAllViews();
 
@@ -142,15 +145,9 @@ public class reunionActivity extends AppCompatActivity {
                     reunionPlanifieContainer.removeAllViews();
                     reunionPasseContainer.removeAllViews();
 
-//                    if (querySnapshot == null || querySnapshot.isEmpty()) {
-//                        noReunionContainer.setVisibility(View.VISIBLE);
-//                        return;
-//                    }
-
-                    // ================================
-                    // AJOUTER LES TITRES UNE SEULE FOIS
-                    // ================================
-
+                    // ===========================
+                    // Ajouter titres
+                    // ===========================
                     TextView tvHeaderVenirs = new TextView(this);
                     tvHeaderVenirs.setText("Réunions à venir");
                     tvHeaderVenirs.setTextSize(20);
@@ -166,125 +163,152 @@ public class reunionActivity extends AppCompatActivity {
                     reunionPlanifieContainer.addView(tvHeaderVenirs);
                     reunionPasseContainer.addView(tvHeaderPasses);
 
-                    // ================================
-                    // BOUCLE D'AFFICHAGE DES RÉUNIONS
-                    // ================================
+                    List<Reunion> reunionsVenir = new ArrayList<>();
+                    List<Reunion> reunionsPasse = new ArrayList<>();
 
                     for (QueryDocumentSnapshot doc : querySnapshot) {
-
                         Reunion reunion = doc.toObject(Reunion.class);
                         reunion.setId(doc.getId());
 
-                        String dateStr = reunion.getDate();
-                        String timeStr = reunion.getHeure();
-                        int etatDate = compareDate(dateStr, timeStr);
+                        int etatDate = compareDate(reunion.getDate(), reunion.getHeure());
 
-                        // ------------------ RÉUNIONS À VENIR ------------------
-                        if (etatDate == 1) {
-
-                            View cardView = LayoutInflater.from(this)
-                                    .inflate(R.layout.item_card_reunion_rh, reunionPlanifieContainer, false);
-
-                            TextView titreReunion = cardView.findViewById(R.id.titreReunion);
-                            TextView dateReunion = cardView.findViewById(R.id.dateReunion);
-                            TextView timeReunion = cardView.findViewById(R.id.timeReunion);
-                            TextView lieuReunion = cardView.findViewById(R.id.localReunion);
-                            TextView departementReunion = cardView.findViewById(R.id.departementReunion);
-                            TextView descriptionReunion = cardView.findViewById(R.id.reunionDescription);
-                            TextView tempsRestantReunion = cardView.findViewById(R.id.tempsRestantReunion);
-                            ImageView edit = cardView.findViewById(R.id.iconEdit);
-                            ImageView delete = cardView.findViewById(R.id.iconDelete);
-                            TextView leaderReunion = cardView.findViewById(R.id.reunionLeader);
-                            afficherNomRH(reunion, leaderReunion);
-
-                            int nbr = reunion.getParticipantsCount();
-                            TextView Participants = cardView.findViewById(R.id.participants);
-                            Participants.setText(reunion.getParticipantsCount() + " participants");
-
-
-                            try {
-                                dateReunion.setText(convertDate(dateStr));
-                            } catch (Exception e) {
-                                dateReunion.setText(reunion.getDate());
-                            }
-
-                            titreReunion.setText(reunion.getTitre());
-                            timeReunion.setText(reunion.getHeure());
-                            lieuReunion.setText(reunion.getLieu());
-                            departementReunion.setText(reunion.getDepartement());
-                            descriptionReunion.setText(reunion.getDescription());
-                            tempsRestantReunion.setText(NbrJourRestant(dateStr));
-
-                            // ---- Editer ----
-                            edit.setOnClickListener(v -> {
-                                Intent intent = new Intent(reunionActivity.this, ModifierReunionActivity.class);
-                                intent.putExtra("reunionId", reunion.getId());
-                                intent.putExtra("titre", reunion.getTitre());
-                                intent.putExtra("date", reunion.getDate());
-                                intent.putExtra("time", reunion.getHeure());
-                                intent.putExtra("lieu", reunion.getLieu());
-                                intent.putExtra("departement", departementReunion.getText().toString());
-                                intent.putExtra("description", reunion.getDescription());
-                                startActivity(intent);
-                            });
-
-                            // ---- Supprimer ----
-                            delete.setOnClickListener(v -> {
-                                new AlertDialog.Builder(reunionActivity.this)
-                                        .setTitle("Supprimer")
-                                        .setMessage("Voulez-vous vraiment supprimer cette réunion ?")
-                                        .setPositiveButton("Oui", (dialog, which) -> {
-                                            db.collection("Reunions")
-                                                    .document(reunion.getId())
-                                                    .delete()
-                                                    .addOnSuccessListener(aVoid -> {
-                                                        Toast.makeText(reunionActivity.this, "Réunion supprimée", Toast.LENGTH_SHORT).show();
-                                                    })
-                                                    .addOnFailureListener(e ->
-                                                            Toast.makeText(reunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                                                    );
-                                        })
-                                        .setNegativeButton("Annuler", null)
-                                        .show();
-                            });
-
-                            // Ajouter la card
-                            reunionPlanifieContainer.addView(cardView);
-                        }
-
-                        // ------------------ RÉUNIONS PASSÉES ------------------
-                        else if (etatDate == -1) {
-
-                            View cardView = LayoutInflater.from(this)
-                                    .inflate(R.layout.item_card_reunionpasse, reunionPasseContainer, false);
-
-                            TextView titreReunion = cardView.findViewById(R.id.titreReunion);
-                            TextView dateReunion = cardView.findViewById(R.id.dateReunion);
-                            TextView lieuReunion = cardView.findViewById(R.id.lieuReunion);
-                            TextView participantsReunion = cardView.findViewById(R.id.participants);
-
-                            int nbr = reunion.getParticipantsCount();
-                            TextView Participants = cardView.findViewById(R.id.participants);
-                            participantsReunion.setText(reunion.getParticipantsCount() + " participants");
-
-
-                            try {
-                                dateReunion.setText(convertDate(dateStr) + " , " + reunion.getHeure());
-                            } catch (Exception e) {
-                                dateReunion.setText(reunion.getDate() + " , " + reunion.getHeure());
-                            }
-
-                            titreReunion.setText(reunion.getTitre());
-                            lieuReunion.setText(reunion.getLieu());
-                            //participantsReunion.setText(reunion.getParticipants());
-
-
-
-                            reunionPasseContainer.addView(cardView);
+                        if (etatDate >= 0) { // réunion à venir ou aujourd'hui
+                            reunionsVenir.add(reunion);
+                        } else { // réunion passée
+                            reunionsPasse.add(reunion);
                         }
                     }
+
+                    // ===========================
+                    // Trier les réunions à venir par date + heure croissante
+                    // ===========================
+                    Collections.sort(reunionsVenir, (r1, r2) -> {
+                        LocalDateTime dt1 = LocalDateTime.of(
+                                safeParseDate(r1.getDate()),
+                                LocalTime.parse(r1.getHeure(), DateTimeFormatter.ofPattern("HH:mm"))
+                        );
+                        LocalDateTime dt2 = LocalDateTime.of(
+                                safeParseDate(r2.getDate()),
+                                LocalTime.parse(r2.getHeure(), DateTimeFormatter.ofPattern("HH:mm"))
+                        );
+                        return dt1.compareTo(dt2); // croissant
+                    });
+
+                    // Trier les réunions passées par date décroissante (optionnel)
+                    Collections.sort(reunionsPasse, (r1, r2) -> {
+                        LocalDateTime dt1 = LocalDateTime.of(
+                                safeParseDate(r1.getDate()),
+                                LocalTime.parse(r1.getHeure(), DateTimeFormatter.ofPattern("HH:mm"))
+                        );
+                        LocalDateTime dt2 = LocalDateTime.of(
+                                safeParseDate(r2.getDate()),
+                                LocalTime.parse(r2.getHeure(), DateTimeFormatter.ofPattern("HH:mm"))
+                        );
+                        return dt2.compareTo(dt1); // décroissant
+                    });
+
+                    // ===========================
+                    // Afficher les cards
+                    // ===========================
+                    for (Reunion reunion : reunionsVenir) {
+                        View cardView = LayoutInflater.from(this)
+                                .inflate(R.layout.item_card_reunion_rh, reunionPlanifieContainer, false);
+                        setupCardView(cardView, reunion);
+                        reunionPlanifieContainer.addView(cardView);
+                    }
+
+                    for (Reunion reunion : reunionsPasse) {
+                        View cardView = LayoutInflater.from(this)
+                                .inflate(R.layout.item_card_reunionpasse, reunionPasseContainer, false);
+
+                        setupCardViewPasse(cardView, reunion);
+
+                        reunionPasseContainer.addView(cardView);
+
+                    }
+
                 });
     }
+    private void setupCardView(View cardView, Reunion reunion) {
+        TextView titreReunion = cardView.findViewById(R.id.titreReunion);
+        TextView dateReunion = cardView.findViewById(R.id.dateReunion);
+        TextView timeReunion = cardView.findViewById(R.id.timeReunion);
+        TextView lieuReunion = cardView.findViewById(R.id.localReunion);
+        TextView departementReunion = cardView.findViewById(R.id.departementReunion);
+        TextView descriptionReunion = cardView.findViewById(R.id.reunionDescription);
+        TextView tempsRestantReunion = cardView.findViewById(R.id.tempsRestantReunion);
+        ImageView edit = cardView.findViewById(R.id.iconEdit);
+        ImageView delete = cardView.findViewById(R.id.iconDelete);
+        TextView leaderReunion = cardView.findViewById(R.id.reunionLeader);
+        TextView participants = cardView.findViewById(R.id.participants);
+
+        titreReunion.setText(reunion.getTitre());
+        lieuReunion.setText(reunion.getLieu());
+        departementReunion.setText(reunion.getDepartement());
+        descriptionReunion.setText(reunion.getDescription());
+        participants.setText(reunion.getParticipantsCount() + " participants");
+
+        try {
+            dateReunion.setText(convertDate(reunion.getDate()));
+        } catch (Exception e) {
+            dateReunion.setText(reunion.getDate());
+        }
+
+        timeReunion.setText(reunion.getHeure());
+        tempsRestantReunion.setText(NbrJourRestant(reunion.getDate()));
+        afficherNomRH(reunion, leaderReunion);
+
+        // Editer
+        edit.setOnClickListener(v -> {
+            Intent intent = new Intent(reunionActivity.this, ModifierReunionActivity.class);
+            intent.putExtra("reunionId", reunion.getId());
+            intent.putExtra("titre", reunion.getTitre());
+            intent.putExtra("date", reunion.getDate());
+            intent.putExtra("time", reunion.getHeure());
+            intent.putExtra("lieu", reunion.getLieu());
+            intent.putExtra("departement", reunion.getDepartement());
+            intent.putExtra("description", reunion.getDescription());
+            startActivity(intent);
+        });
+
+        // Supprimer
+        delete.setOnClickListener(v -> {
+            new AlertDialog.Builder(reunionActivity.this)
+                    .setTitle("Supprimer")
+                    .setMessage("Voulez-vous vraiment supprimer cette réunion ?")
+                    .setPositiveButton("Oui", (dialog, which) -> {
+                        db.collection("Reunions")
+                                .document(reunion.getId())
+                                .delete()
+                                .addOnSuccessListener(aVoid ->
+                                        Toast.makeText(reunionActivity.this, "Réunion supprimée", Toast.LENGTH_SHORT).show()
+                                )
+                                .addOnFailureListener(e ->
+                                        Toast.makeText(reunionActivity.this, "Erreur : " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                );
+                    })
+                    .setNegativeButton("Annuler", null)
+                    .show();
+        });
+    }
+
+//*****************************
+private void setupCardViewPasse(View cardView, Reunion reunion) {
+    TextView titreReunion = cardView.findViewById(R.id.titreReunion);
+    TextView dateReunion = cardView.findViewById(R.id.dateReunion);
+    TextView lieuReunion = cardView.findViewById(R.id.lieuReunion);
+    TextView participantsReunion = cardView.findViewById(R.id.participants);
+
+    titreReunion.setText(reunion.getTitre());
+    lieuReunion.setText(reunion.getLieu());
+    participantsReunion.setText(reunion.getParticipantsCount() + " participants");
+
+    try {
+        dateReunion.setText(convertDate(reunion.getDate()) + " , " + reunion.getHeure());
+    } catch (Exception e) {
+        dateReunion.setText(reunion.getDate() + " , " + reunion.getHeure());
+    }
+}
 
 
 

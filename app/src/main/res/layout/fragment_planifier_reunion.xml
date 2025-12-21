@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="15dp"
-    android:background="#F5F5F5"
-    android:layout_gravity="center"
-    >
+    android:background="#CC000000"
+    android:padding="20dp">
 
+    <!-- CARD -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_gravity="center">
+        android:background="@drawable/cotearrondi"
+        android:padding="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:gravity="center_horizontal">
 
-        <!-- Titre principal -->
 
+    <!-- Close -->
         <TextView
             android:id="@+id/close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:textSize="30dp"
-            android:text="X"/>
+            android:text="✕"
+            android:textSize="22sp" />
+
+        <!-- Titre -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nouvelle réunion"
-            android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="18sp"
             android:gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="5dp" />
 
         <!-- Sous-titre -->
         <TextView
@@ -41,83 +46,83 @@
             android:layout_height="wrap_content"
             android:text="Planifiez une nouvelle réunion pour votre équipe"
             android:textColor="@color/grey"
+            android:textSize="12sp"
             android:gravity="center"
-            android:layout_marginBottom="30dp"
-            />
-        <!-- Type de congé -->
+            android:layout_marginBottom="20dp" />
+
+        <!-- Titre réunion -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Titre de la réunion"
+            android:text="Titre de la réunion *"
             android:textStyle="bold"
+            android:textSize="14sp"
             android:layout_marginBottom="5dp" />
 
         <EditText
             android:id="@+id/titrereunion"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ex:Réunion d'équipe "
-            android:inputType="text"
-            android:layout_marginBottom="20dp"
+            android:layout_height="40dp"
+            android:hint="Ex : Réunion d'équipe"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="10dp"
+            android:layout_marginBottom="15dp" />
 
-
-
-        <!-- Date et heure -->
+        <!-- Date & Heure -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!-- Date  -->
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <!-- Date -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_weight="1"
-                android:layout_marginRight="5dp">
+                android:orientation="vertical"
+                android:layout_marginEnd="5dp">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Date"
+                    android:text="Date *"
                     android:textStyle="bold"
-                    android:layout_marginBottom="5dp" />
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/dateReunion"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint=" jj/mm/aaaa "
+                    android:layout_height="40dp"
+                    android:hint="jj/mm/aaaa"
                     android:inputType="date"
-                    android:layout_marginBottom="20dp"
                     android:background="@drawable/border"
-                    android:padding="5dp"/>
+                    android:padding="10dp" />
             </LinearLayout>
 
-
-            <!-- Heure  -->
+            <!-- Heure -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_weight="1"
-                android:layout_marginLeft="5dp">
+                android:orientation="vertical"
+                android:layout_marginStart="5dp">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Heure"
+                    android:text="Heure *"
                     android:textStyle="bold"
-                    android:layout_marginBottom="5dp" />
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/heureReunion"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint=" -- : --  "
+                    android:layout_height="40dp"
+                    android:hint="-- : --"
                     android:inputType="time"
-                    android:layout_marginBottom="20dp"
                     android:background="@drawable/border"
-                    android:padding="5dp"/>
+                    android:padding="10dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -125,72 +130,64 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lieu "
+            android:text="Lieu *"
             android:textStyle="bold"
-            android:layout_marginBottom="5dp" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/lieuReunion"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint=" salle de conference A"
-            android:inputType="text"
-            android:layout_marginBottom="20dp"
+            android:layout_height="40dp"
+            android:hint="Salle de conférence A"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="10dp"
+            android:layout_marginBottom="15dp" />
 
-        <!-- Departement-->
+        <!-- Département -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Département"
+            android:text="Département *"
             android:textStyle="bold"
-            android:layout_marginBottom="5dp" />
+            android:textSize="14sp" />
 
         <Spinner
             android:id="@+id/departementReunion"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_height="40dp"
             android:background="@drawable/border"
-            android:padding="5dp"
+            android:padding="10dp"
             android:entries="@array/departements"
-            />
+            android:layout_marginBottom="15dp" />
 
-        <!-- Description  -->
+        <!-- Description -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description (optionnelle) "
+            android:text="Description (optionnelle)"
             android:textStyle="bold"
-            android:layout_marginBottom="5dp" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/descriptionReunion"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint=" Ordre du jour et points à discuter"
-            android:textSize="15dp"
-            android:inputType="textLongMessage"
-            android:layout_marginBottom="30dp"
+            android:layout_height="80dp"
+            android:hint="Ordre du jour et points à discuter"
             android:background="@drawable/border"
-            android:padding="5dp"/>
+            android:padding="10dp"
+            android:gravity="top"
+            android:layout_marginBottom="20dp" />
 
-
-        <!-- button d envoyer -->
+        <!-- Bouton -->
         <Button
             android:id="@+id/btnCreerReunion"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="Créer la réunion"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@null"
-            android:textSize="15dp"
             android:textColor="#FFFFFF"
+            android:textSize="14sp"
             android:background="@drawable/border_button"
-            app:backgroundTint="@null"
-            android:padding="0dp"
-            />
+            app:backgroundTint="@null" />
 
     </LinearLayout>
 </ScrollView>
