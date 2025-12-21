@@ -308,6 +308,19 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                         startActivity(new Intent(this, ReunionEmployeActivity.class)));
             }
 
+            LinearLayout prsenceLayout = findViewById(R.id.presencefooter);
+            if (prsenceLayout != null) {
+                prsenceLayout.setOnClickListener(v ->
+                        startActivity(new Intent(this, PresenceActivity.class)));
+            }
+            LinearLayout congelerLayout = findViewById(R.id.congesfooter);
+            if (congelerLayout != null) {
+                congelerLayout.setOnClickListener(v ->
+                        startActivity(new Intent(this, CongesEmploye.class)));
+            }
+
+
+
         } catch (Exception e) {
             Log.e(TAG, "Erreur setupNavigation: " + e.getMessage());
         }
@@ -480,51 +493,42 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                     }
 
                     backgroundExecutor.execute(() -> {
-                        boolean presenceMarqueeFirestore = false;
+                        boolean isPresent = false;
+                        boolean isAbsentJustifie = false;
 
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                             for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
                                 String status = doc.getString("status");
+
                                 if ("present".equals(status)) {
-                                    presenceMarqueeFirestore = true;
+                                    isPresent = true;
                                     break;
+                                } else if ("absent_justifie".equals(status)) {
+                                    isAbsentJustifie = true;
                                 }
                             }
                         }
 
-                        // Sauvegarder dans les préférences
-                        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean(KEY_PRESENCE_MARKED_TODAY, presenceMarqueeFirestore);
-                        editor.apply();
-
-                        // Calculer l'heure actuelle
-                        Calendar now = Calendar.getInstance();
-                        int currentHour = now.get(Calendar.HOUR_OF_DAY);
-                        int currentMinute = now.get(Calendar.MINUTE);
-                        int totalMinutes = (currentHour * 60) + currentMinute;
-                        int seuil9h = 9 * 60;
-
                         final String etatText;
                         final int etatColor;
                         final int iconResource;
-                        final boolean showNotification;
 
-                        if (presenceMarqueeFirestore) {
+                        if (isPresent) {
+                            // 🟢 PRESENT
                             etatText = "Marquée";
                             etatColor = Color.parseColor("#0FAC71");
                             iconResource = R.drawable.approuve;
-                            showNotification = false;
+
+                        } else if (isAbsentJustifie) {
+                            // 🟠 ABSENT JUSTIFIÉ
+                            etatText = "Absent justifié";
+                            etatColor = Color.parseColor("#FFA500");
+                            iconResource = R.drawable.valider_red;
+
                         } else {
-                            if (totalMinutes >= seuil9h) {
-                                etatText = "Non marquée";
-                                etatColor = Color.parseColor("#FF0000");
-                                showNotification = true;
-                            } else {
-                                etatText = "Non marquée";
-                                etatColor = Color.parseColor("#666666");
-                                showNotification = false;
-                            }
+                            // 🔴 NON MARQUÉ
+                            etatText = "Non marquée";
+                            etatColor = Color.parseColor("#FF0000");
                             iconResource = R.drawable.refuse;
                         }
 
@@ -536,8 +540,7 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                                     iconepresence.setImageResource(iconResource);
 
                                     if (notifPresence != null) {
-                                        notifPresence.setVisibility(showNotification ? VISIBLE : View.GONE);
-                                        if (showNotification) notifPresence.setText("!");
+                                        notifPresence.setVisibility(View.GONE);
                                     }
                                 }
                             } catch (Exception e) {
@@ -545,9 +548,9 @@ public class AcceuilEmployeActivity extends AppCompatActivity {
                             }
                         });
 
-                        // Déclencher une mise à jour des notifications
                         scheduleNotificationsUpdate();
                     });
+
                 });
     }
 

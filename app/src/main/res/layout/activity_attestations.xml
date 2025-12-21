@@ -7,20 +7,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AttestationsActivity"
-    android:background="#F5F5F5">
+    android:background="#F5F5F5"
+    android:fitsSystemWindows="true"
+    >
 
     <!-- SCROLLVIEW -->
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="70dp"
+
         >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
+            android:paddingBottom="80dp"
+
           >
 
             <!-- HEADER -->
@@ -255,7 +259,9 @@
         android:background="@color/white"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:paddingHorizontal="3dp"
+        android:paddingBottom="5dp"
+        >
 
         <!-- Bottom nav icons : reused structure -->
         <LinearLayout
@@ -269,15 +275,15 @@
 
             <ImageView
                 android:id="@+id/accueil"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/home" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey" />
         </LinearLayout>
@@ -294,15 +300,15 @@
 
             <ImageView
 
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/employe" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Employés"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey" />
         </LinearLayout>
@@ -319,15 +325,15 @@
 
             <ImageView
 
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/conge" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Congés"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey" />
         </LinearLayout>
@@ -344,15 +350,15 @@
 
             <ImageView
 
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/reunion" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Réunions"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey" />
         </LinearLayout>
@@ -369,15 +375,15 @@
 
             <ImageView
 
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/profil" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey"
 

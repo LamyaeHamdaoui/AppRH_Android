@@ -173,8 +173,8 @@ public class ProfileEmployeActivity extends AppCompatActivity implements Deconne
                     textReunions = (TextView) footerReunions.getChildAt(1);
                 }
                 if (footerProfil != null && footerProfil.getChildCount() > 1) {
-                    iconProfile = (ImageView) footerProfil.getChildAt(0);
-                    textProfile = (TextView) footerProfil.getChildAt(1);
+                    iconProfile = (ImageView) footerProfil.getChildAt(1);
+                    textProfile = (TextView) footerProfil.getChildAt(2);
                 }
             });
         });

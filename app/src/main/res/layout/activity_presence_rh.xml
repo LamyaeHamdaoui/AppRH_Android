@@ -6,20 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PresenceRhActivity"
-    android:background="#F5F5F5">
+    android:background="#F5F5F5"
+    android:fitsSystemWindows="true"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_anchorGravity="center"
+        android:layout_height="wrap_content"
         android:id="@+id/scrollView2"
         app:layout_anchor="@+id/scrollView2"
-        android:layout_marginBottom="70dp">
+        android:paddingTop="30dp"
+       >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="80dp">
 
             <!-- ***** header ****** -->
             <LinearLayout
@@ -384,7 +387,9 @@
         android:background="@color/white"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:paddingHorizontal="3dp"
+        android:paddingBottom="5dp"
+        >
         <LinearLayout
             android:id="@+id/footerAccueil"
             android:layout_width="0dp"
@@ -396,8 +401,8 @@
 
             <ImageView
                 android:id="@+id/accueil"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/home" />
 
             <TextView
@@ -405,7 +410,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Accueil"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
@@ -424,8 +429,8 @@
 
             <ImageView
                 android:id="@+id/employes"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/employe" />
 
             <TextView
@@ -435,7 +440,7 @@
                 android:layout_marginTop="2dp"
                 android:text="Employés"
                 android:textColor="@color/grey"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -450,8 +455,8 @@
 
             <ImageView
                 android:id="@+id/conge"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/conge" />
 
             <TextView
@@ -459,7 +464,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Congés"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
@@ -475,8 +480,8 @@
 
             <ImageView
                 android:id="@+id/reunions"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/reunion" />
 
             <TextView
@@ -484,7 +489,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Réunions"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>
@@ -499,8 +504,8 @@
 
             <ImageView
                 android:id="@+id/profil"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:maxWidth="30dp"
                 android:src="@drawable/profil"/>
 
@@ -509,7 +514,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profil"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 android:textColor="@color/grey"/>
         </LinearLayout>

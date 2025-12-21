@@ -191,7 +191,7 @@ public class CongesActivity extends AppCompatActivity {
         if (accueilLayout != null) {
             accueilLayout.setOnClickListener(v -> {
                 setActiveFooterItem(R.id.accueilLayout);
-                Intent intent = new Intent(CongesActivity.this, MainActivity.class);
+                Intent intent = new Intent(CongesActivity.this, AcceuilRhActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 overridePendingTransition(R.navigation.slide_in_right, R.navigation.slide_out_left);
