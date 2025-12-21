@@ -81,8 +81,8 @@ public class ModifierReunionActivity extends AppCompatActivity {
                 String description = descriptionReunion.getText().toString().trim();
 
                 // Vérification des champs obligatoires
-                if (titre.isEmpty() || date.isEmpty() || heure.isEmpty() || lieu.isEmpty() || description.isEmpty() || departement.equals("Sélectionnez un département")) {
-                    Toast.makeText(ModifierReunionActivity.this, "Tous les champs sont obligatoires !", Toast.LENGTH_SHORT).show();
+                if (titre.isEmpty() || date.isEmpty() || heure.isEmpty() || lieu.isEmpty()  || departement.equals("Sélectionnez un département")) {
+                    Toast.makeText(ModifierReunionActivity.this, "Veuillez remplir tous les champs obligatoires.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

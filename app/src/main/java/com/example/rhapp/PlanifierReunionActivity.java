@@ -62,8 +62,8 @@ public class PlanifierReunionActivity extends AppCompatActivity {
             String description = descriptionReunion.getText().toString().trim();
 
             // Vérifier que tous les champs sont remplis
-            if (titre.isEmpty() || date.isEmpty() || heure.isEmpty() || lieu.isEmpty() || description.isEmpty() || departement.equals("Sélectionnez un département")) {
-                Toast.makeText(this, "Tous les champs sont obligatoires !", Toast.LENGTH_SHORT).show();
+            if (titre.isEmpty() || date.isEmpty() || heure.isEmpty() || lieu.isEmpty() || departement.equals("Sélectionnez un département")) {
+                Toast.makeText(this, "Veuillez remplir tous les champs obligatoires.", Toast.LENGTH_SHORT).show();
                 return;
             }
 

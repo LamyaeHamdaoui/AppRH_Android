@@ -1,9 +1,7 @@
 package com.example.rhapp;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,14 +9,9 @@ import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.*;
-
 import com.google.firebase.auth.*;
-// Importation de Firestore
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-// Suppression des imports de Realtime Database
-// import com.google.firebase.database.DatabaseReference;
-// import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,9 +19,9 @@ public class MainActivity extends AppCompatActivity {
     private EditText emailBox, motDePasseBox;
     private Button connecteBtn, createAccBtn;
     private TextView forgottenPasswordBtn;
+    private LinearLayout mainLayout; // On va utiliser un conteneur pour tout masquer
 
     private FirebaseAuth mAuth;
-    // Remplacement de Realtime Database par Firestore
     private FirebaseFirestore db;
 
     @Override
@@ -37,22 +30,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        // Initialisation de Firestore
         db = FirebaseFirestore.getInstance();
 
         initializeViews();
-        setupClickListeners();
-        setupBackPressedHandler();
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        // --- ÉTAPE 1 : MASQUER L'INTERFACE IMMÉDIATEMENT ---
+        if (mainLayout != null) mainLayout.setVisibility(View.GONE);
 
+        // --- ÉTAPE 2 : VÉRIFICATION DE CONNEXION ---
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
+            // Utilisateur déjà loggé -> Vérification du rôle direct
             checkUserRoleAndRedirect(currentUser.getUid());
+        } else {
+            // Personne n'est connecté -> On montre enfin l'interface
+            showLoginUI();
         }
     }
 
@@ -62,189 +55,99 @@ public class MainActivity extends AppCompatActivity {
         connecteBtn = findViewById(R.id.connecteBtn);
         createAccBtn = findViewById(R.id.createAccBtn);
         forgottenPasswordBtn = findViewById(R.id.forgottenPasswordBtn);
+
+        // IMPORTANT : Essayez de trouver le layout parent (souvent un ScrollView ou LinearLayout)
+        // Si vous n'avez pas d'ID sur le parent, utilisez le findViewById(android.R.id.content)
+        // ou ajoutez android:id="@+id/main_container" dans votre XML
+        mainLayout = findViewById(R.id.main_container);
     }
 
-    private void setupClickListeners() {
-
-        connecteBtn.setOnClickListener(v -> loginUser());
-
-        createAccBtn.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, CreateAccActivity.class));
-        });
-
-        forgottenPasswordBtn.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, ForgottenPasswordActivity.class));
-        });
+    private void showLoginUI() {
+        if (mainLayout != null) mainLayout.setVisibility(View.VISIBLE);
+        setupClickListeners();
+        setupBackPressedHandler();
     }
 
-    private void setupBackPressedHandler() {
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                // Ferme l'application
-                finishAffinity();
-            }
-        });
+    private void checkUserRoleAndRedirect(String userId) {
+        db.collection("Users").document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String role = document.getString("role");
+                            executeRedirection(role);
+                        } else {
+                            // Erreur : User Auth existe mais pas dans Firestore
+                            mAuth.signOut();
+                            showLoginUI();
+                        }
+                    } else {
+                        // Erreur réseau ou autre
+                        mAuth.signOut();
+                        showLoginUI();
+                    }
+                });
     }
+
+    private void executeRedirection(String role) {
+        if (role == null) {
+            mAuth.signOut();
+            showLoginUI();
+            return;
+        }
+
+        Intent intent;
+        if (role.equalsIgnoreCase("rh")) {
+            intent = new Intent(MainActivity.this, AcceuilRhActivity.class);
+        } else {
+            intent = new Intent(MainActivity.this, AcceuilEmployeActivity.class);
+        }
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    // --- LE RESTE DU CODE (SANS MODIFICATION D'IDS) ---
 
     private void loginUser() {
-
         String email = emailBox.getText().toString().trim();
         String password = motDePasseBox.getText().toString().trim();
 
         if (!validateInputs(email, password)) return;
 
         connecteBtn.setEnabled(false);
-        connecteBtn.setText("Connexion...");
-
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-
-                    connecteBtn.setEnabled(true);
-                    connecteBtn.setText("Se connecter");
-
                     if (task.isSuccessful()) {
-
-                        FirebaseUser user = mAuth.getCurrentUser();
-
-                        if (user != null) {
-
-                            // 1. Vérification OBLIGATOIRE de l'email
-                            // NOTE: Dans le flux précédent, la vérification d'email a été remplacée
-                            // par la vérification OTP dans ValidationEmailActivity.
-                            // Si vous utilisez cette ancienne logique, vous devez l'adapter.
-                            /* if (!user.isEmailVerified()) {
-                                FirebaseAuth.getInstance().signOut();
-                                Toast.makeText(MainActivity.this,
-                                        "Veuillez vérifier votre email avant de vous connecter.",
-                                        Toast.LENGTH_LONG).show();
-                                return;
-                            }
-                            */
-
-                            // 2. Email vérifié, on récupère le rôle et on redirige
-                            Toast.makeText(MainActivity.this,
-                                    "Connexion réussie", Toast.LENGTH_SHORT).show();
-
-                            checkUserRoleAndRedirect(user.getUid());
-
-                        } else {
-                            Toast.makeText(MainActivity.this,
-                                    "Erreur utilisateur. Réessayez.", Toast.LENGTH_LONG).show();
-                            mAuth.signOut();
-                        }
-
+                        checkUserRoleAndRedirect(mAuth.getCurrentUser().getUid());
                     } else {
-
-                        String message = "Erreur de connexion.";
-                        Exception e = task.getException();
-
-                        if (e instanceof FirebaseAuthInvalidUserException) {
-                            message = "Aucun utilisateur trouvé pour cet email.";
-                        } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                            message = "Email ou mot de passe incorrect.";
-                        } else if (e != null) {
-                            message = e.getMessage();
-                            Log.e(TAG, "Erreur de connexion : " + message);
-                        }
-
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-                    }
-                });
-    }
-
-    /**
-     * Récupère le rôle de l'utilisateur depuis Firestore et redirige vers l'activité appropriée.
-     */
-    private void checkUserRoleAndRedirect(String userId) {
-
-        // 1. Récupérer le document utilisateur dans la collection "Users"
-        db.collection("Users").document(userId).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            // 2. Récupérer la valeur du champ 'role'
-                            String role = document.getString("role");
-                            Log.d(TAG, "Rôle de l'utilisateur récupéré : " + role);
-
-                            // 3. Redirection basée sur le rôle
-                            redirectToActivity(role);
-
-                        } else {
-                            // Cas où l'utilisateur existe dans Auth mais pas dans Firestore (rare)
-                            mAuth.signOut();
-                            connecteBtn.setEnabled(true);
-                        }
-                    } else {
-                        // Erreur de lecture de la base de données
-                        Log.e(TAG, "Erreur de lecture Firestore: ", task.getException());
-                        Toast.makeText(MainActivity.this,
-                                "Erreur de base de données. Réessayez.",
-                                Toast.LENGTH_LONG).show();
-                        mAuth.signOut();
                         connecteBtn.setEnabled(true);
+                        Toast.makeText(this, "Échec de connexion", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    /**
-     * Redirige l'utilisateur vers l'écran d'accueil basé sur son rôle.
-     */
-    private void redirectToActivity(String role) {
-        Class<?> destinationActivity;
-
-        if (role == null) {
-            // Si le rôle est null ou non défini après la connexion
-            Toast.makeText(MainActivity.this, "Rôle non défini.", Toast.LENGTH_LONG).show();
-            mAuth.signOut();
-            return;
-        }
-
-        // --- CORRECTION DE LA LOGIQUE DE REDIRECTION BASÉE SUR LE RÔLE ---
-        switch (role.toLowerCase()) {
-            case "employe":
-                destinationActivity = AcceuilEmployeActivity.class;
-                break;
-            case "rh":
-                destinationActivity = AcceuilRhActivity.class;
-                break;
-            default:
-                // Redirection par défaut (si le rôle est inconnu ou manquant)
-                destinationActivity = AcceuilEmployeActivity.class;
-                Log.w(TAG, "Rôle non reconnu: " + role + ". Redirection par défaut vers AcceuilEmployeActivity.");
-                break;
-        }
-
-        Intent intent = new Intent(MainActivity.this, destinationActivity);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+    private void setupClickListeners() {
+        connecteBtn.setOnClickListener(v -> loginUser());
+        createAccBtn.setOnClickListener(v -> startActivity(new Intent(this, CreateAccActivity.class)));
+        forgottenPasswordBtn.setOnClickListener(v -> startActivity(new Intent(this, ForgottenPasswordActivity.class)));
     }
 
+    private void setupBackPressedHandler() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() { finishAffinity(); }
+        });
+    }
 
     private boolean validateInputs(String email, String password) {
-        // ... (Logique de validation inchangée, elle est correcte)
-        if (TextUtils.isEmpty(email)) {
-            emailBox.setError("L'email est requis");
-            return false;
+        if (TextUtils.isEmpty(email) || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailBox.setError("Email invalide"); return false;
         }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailBox.setError("Email invalide");
-            return false;
+        if (TextUtils.isEmpty(password) || password.length() < 6) {
+            motDePasseBox.setError("Mot de passe trop court"); return false;
         }
-
-        if (TextUtils.isEmpty(password)) {
-            motDePasseBox.setError("Mot de passe requis");
-            return false;
-        }
-
-        if (password.length() < 6) {
-            motDePasseBox.setError("Minimum 6 caractères");
-            return false;
-        }
-
         return true;
     }
 }

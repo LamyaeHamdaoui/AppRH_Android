@@ -180,7 +180,7 @@ public class EmployeActivity extends AppCompatActivity {
         TextView email = card.findViewById(R.id.email);
         TextView telephone = card.findViewById(R.id.telephone);
         TextView dateEmbauche = card.findViewById(R.id.dateEmbauche);
-        TextView soldeConge = card.findViewById(R.id.soldeConge);
+        //TextView soldeConge = card.findViewById(R.id.soldeConge);
 
         np.setText(emp.getPrenom().charAt(0) + "" + emp.getNom().charAt(0));
         nomComplet.setText(emp.getNomComplet());
@@ -197,7 +197,8 @@ public class EmployeActivity extends AppCompatActivity {
             dateEmbauche.setText("Date inconnue");
         }
 
-        soldeConge.setText(emp.getSoldeConge() + " jours");
+        //
+        // soldeConge.setText(emp.getSoldeConge() + " jours");
 
         card.findViewById(R.id.editEmploye).setOnClickListener(v -> ouvrirFragmentEditEmploye(emp.getId()));
         card.findViewById(R.id.deleteEmploye).setOnClickListener(v -> supprimerEmploye(emp.getId()));

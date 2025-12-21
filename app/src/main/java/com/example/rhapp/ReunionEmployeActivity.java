@@ -37,7 +37,7 @@ public class ReunionEmployeActivity extends AppCompatActivity {
 
 
     private FirebaseFirestore db;
-    // ⚠️ Variable de contrôle pour savoir si on doit rafraîchir
+    // Variable de contrôle pour savoir si on doit rafraîchir
     private boolean shouldRefresh = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,7 +364,7 @@ public class ReunionEmployeActivity extends AppCompatActivity {
             rest = "Demain ";
         }
         else {
-            rest = "Dans -"+JourResrant+ " Jour ";
+            rest = "Dans "+JourResrant+ " Jour ";
         }
         return rest ;
     }
